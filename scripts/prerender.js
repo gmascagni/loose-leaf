@@ -32,7 +32,7 @@ allMethods.forEach((method) => {
 
   const pageTitle = `How to Steep ${method.name} - loose-leaf | Specialty Tea Guide`;
   const pageDescription = method.description || `Step-by-step loose leaf steeping guide, leaf-to-water ratio, temperature, and infusion phases for ${method.name}.`;
-  const canonicalUrl = `https://thebrew.app/methods/${method.id}`;
+  const canonicalUrl = `https://loose-leaf.thebrew.app/methods/${method.id}`;
   const totalSec = (method.phases || []).reduce((acc, p) => acc + (p.durationSec || 0), 0);
   const totalMinutes = Math.ceil(totalSec / 60) || 3;
 
@@ -95,7 +95,7 @@ allMethods.forEach((method) => {
     <div id="prerender-seo" style="max-width: 800px; margin: 0 auto; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #EBF7EE; background: #08110B; min-height: 100vh;">
       <header style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 30px;">
         <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #7EA98E; font-weight: bold;">
-          LooseLeaf • Specialty Loose Leaf Tea Guide
+          loose-leaf • Specialty Loose-Leaf Tea Guide
         </span>
         <h1 style="font-size: 32px; font-family: Georgia, serif; margin: 10px 0; color: #FFFFFF;">${method.name}</h1>
         <p style="font-size: 16px; line-height: 1.6; color: #A2B9AB;">${method.description}</p>
@@ -149,7 +149,7 @@ fs.mkdirSync(guideRootDir, { recursive: true });
 
 const waterGuideTitle = 'Tea Water Chemistry & Mineral Formulation Guide | loose-leaf';
 const waterGuideDesc = 'Master specialty tea water chemistry: optimal mineral balance (GH & KH), Lotus drop formulations, and flavor extraction balance for fine teas.';
-const waterGuideUrl = 'https://thebrew.app/guides/tea-water-chemistry';
+const waterGuideUrl = 'https://loose-leaf.thebrew.app/guides/tea-water-chemistry';
 
 let waterHtml = templateHtml;
 waterHtml = waterHtml.replace(/<title>.*?<\/title>/i, `<title>${waterGuideTitle}</title>`);

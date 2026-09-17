@@ -1,79 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://thebrew.app/</loc>
+    <loc>https://loose-leaf.thebrew.app/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <!-- Specialty Tea Steeping Methods -->
   <url>
-    <loc>https://thebrew.app/methods/darjeeling_tea</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/darjeeling_tea</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/chai_masala</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/chai_masala</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/english_breakfast</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/english_breakfast</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/earl_grey</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/earl_grey</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/green_tea</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/green_tea</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/matcha_tea</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/matcha_tea</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/oolong_tea</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/oolong_tea</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/ceylon_tea</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/ceylon_tea</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/white_tea</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/white_tea</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/turmeric_tea</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/turmeric_tea</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/puerh_tea</loc>
+    <loc>https://loose-leaf.thebrew.app/methods/puerh_tea</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <!-- Tea Guides & Features -->
   <url>
-    <loc>https://thebrew.app/guides/tea-water-chemistry</loc>
+    <loc>https://loose-leaf.thebrew.app/guides/tea-water-chemistry</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/purveyors</loc>
+    <loc>https://loose-leaf.thebrew.app/purveyors</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/academy</loc>
+    <loc>https://loose-leaf.thebrew.app/academy</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://thebrew.app/sitemap.xml
+Sitemap: https://loose-leaf.thebrew.app/sitemap.xml

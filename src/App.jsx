@@ -266,9 +266,9 @@ export default function App() {
         }
 
         updatePageSeo(
-          `How to Steep ${found.name} | LooseLeaf`,
+          `How to Steep ${found.name} | loose-leaf`,
           found.description,
-          `https://thebrew.app/methods/${found.id}`
+          `https://loose-leaf.thebrew.app/methods/${found.id}`
         );
 
         const jsonLdData = getMethodJsonLd(found);
@@ -287,9 +287,9 @@ export default function App() {
       setIsRoasterShowcaseView(false);
       setIsWaterLabOpen(true);
       updatePageSeo(
-        'Tea Water Chemistry & Mineral Formulation Guide | LooseLeaf',
+        'Tea Water Chemistry & Mineral Formulation Guide | loose-leaf',
         'Master specialty tea water chemistry: optimal GH/KH mineral balance for delicate greens, high mountain oolongs, and brisk black teas.',
-        'https://thebrew.app/guides/tea-water-chemistry'
+        'https://loose-leaf.thebrew.app/guides/tea-water-chemistry'
       );
     } else if (path.startsWith('/purveyors') || path.startsWith('/roasters') || path.startsWith('/roaster')) {
       if (path.includes('partner') || path.includes('info')) {
@@ -302,24 +302,24 @@ export default function App() {
         }
       }
       updatePageSeo(
-        'Specialty Tea Purveyors & Historic Tea Houses | LooseLeaf',
+        'Specialty Tea Purveyors & Historic Tea Houses | loose-leaf',
         'Explore verified specialty tea purveyors, historic gardens, and certified steeping parameters.',
-        'https://thebrew.app/purveyors'
+        'https://loose-leaf.thebrew.app/purveyors'
       );
     } else if (path.startsWith('/academy') || path.startsWith('/videos')) {
       setIsVideoAcademyOpen(true);
       updatePageSeo(
-        'Tea Academy & Video Masterclasses | LooseLeaf',
+        'Tea Academy & Video Masterclasses | loose-leaf',
         'Watch curated 4K specialty tea masterclasses, Gongfu Cha demonstrations, matcha whisking, and water chemistry with synchronized timers.',
-        'https://thebrew.app/academy'
+        'https://loose-leaf.thebrew.app/academy'
       );
     } else if (path.includes('smart-tin-scanner') || path.includes('smart-bag-scanner') || path.startsWith('/demo') || path.startsWith('/scanner') || path.startsWith('/scan')) {
       setIsRoasterShowcaseView(false);
       setIsScannerOpen(true);
       updatePageSeo(
-        'Smart Tea Tin Barcode & QR Scanner | LooseLeaf',
+        'Smart Tea Tin Barcode & QR Scanner | loose-leaf',
         'Scan any specialty tea tin barcode or Smart Tin QR code to automatically dial in leaf-to-water ratio, temperature, and steeping countdown in seconds.',
-        'https://thebrew.app/demo/smart-tin-scanner'
+        'https://loose-leaf.thebrew.app/demo/smart-tin-scanner'
       );
     } else if (path === '/' || path === '') {
       setIsRoasterShowcaseView(false);
@@ -346,9 +346,9 @@ export default function App() {
         setCurrentStep(1);
       }
       updatePageSeo(
-        'LooseLeaf — The Fine Tea & Steeping Guide',
+        'loose-leaf — The Fine Tea & Steeping Guide',
         'Precision specialty loose leaf tea ratio scaler, multi-phase countdown timer, orthodox leaf grade visual guide, and botanical terroir compendium.',
-        'https://thebrew.app/'
+        'https://loose-leaf.thebrew.app/'
       );
 
       const existingScript = document.getElementById('json-ld-structured-data');
