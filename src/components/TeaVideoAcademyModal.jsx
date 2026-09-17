@@ -303,6 +303,12 @@ export default function TeaVideoAcademyModal({
                             src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
                             alt={video.title}
                             loading="lazy"
+                            onError={(e) => {
+                              if (!e.currentTarget.dataset.fallback) {
+                                e.currentTarget.dataset.fallback = 'true';
+                                e.currentTarget.src = `https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`;
+                              }
+                            }}
                             className="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90 group-hover:opacity-100"
                           />
                           
@@ -571,6 +577,12 @@ export default function TeaVideoAcademyModal({
                         <img
                           src={`https://img.youtube.com/vi/${v.youtubeId}/hqdefault.jpg`}
                           alt={v.title}
+                          onError={(e) => {
+                            if (!e.currentTarget.dataset.fallback) {
+                              e.currentTarget.dataset.fallback = 'true';
+                              e.currentTarget.src = `https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`;
+                            }
+                          }}
                           className="w-full h-full object-cover group-hover:scale-105 transition"
                         />
                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center">

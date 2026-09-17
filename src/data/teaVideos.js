@@ -16,7 +16,7 @@ export const VIDEO_CATEGORIES = [
 export const TEA_VIDEOS = [
   {
     id: 'meileaf-gongfu-masterclass',
-    youtubeId: 'bBlyG3v0cHQ',
+    youtubeId: 'Ia4oup1v4tU',
     title: 'The 14 Steps of Gong Fu Tea Brewing (Step-by-Step Guide)',
     creator: 'Mei Leaf',
     creatorBadge: 'Tea Master & Sommelier',
@@ -46,10 +46,10 @@ export const TEA_VIDEOS = [
   },
   {
     id: 'ippodo-matcha-ceremony',
-    youtubeId: '3U18SvhPqT8',
+    youtubeId: 'qvXWrZKm0QM',
     title: 'How to Whisk Authentic Ceremonial Matcha (Usucha)',
-    creator: 'Ippodo Tea Co. Kyoto',
-    creatorBadge: 'Kyoto Tea Master (Est. 1717)',
+    creator: 'Japanese Culinary Masterclass',
+    creatorBadge: 'Traditional Chasen Technique',
     creatorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80',
     category: 'matcha',
     methodId: 'matcha_tea',
@@ -76,9 +76,9 @@ export const TEA_VIDEOS = [
   },
   {
     id: 'darjeeling-first-flush-guide',
-    youtubeId: 'xPqU0wWbV2A',
+    youtubeId: 'hfh_hQGERIg',
     title: 'Himalayan Darjeeling First Flush: Steeping the Champagne of Teas',
-    creator: 'Vahdam Master Blender',
+    creator: 'Darjeeling Tea Direct',
     creatorBadge: 'Orthodox Tea Taster',
     creatorAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80',
     category: 'chai_black',
@@ -106,7 +106,7 @@ export const TEA_VIDEOS = [
   },
   {
     id: 'ranveer-authentic-masala-chai',
-    youtubeId: 'v3gO8zVbZ2U',
+    youtubeId: '4pPT79wHhM8',
     title: 'The Art of Traditional Masala Chai Simmering',
     creator: 'Chef Ranveer Brar',
     creatorBadge: 'Culinary Master & Historian',
@@ -136,9 +136,9 @@ export const TEA_VIDEOS = [
   },
   {
     id: 'ippodo-sencha-green-tea',
-    youtubeId: 'm4XgY6v-mR8',
+    youtubeId: 'VF2PbweYc4E',
     title: 'Sencha & Gyokuro: The Japanese Low-Temperature Extraction Secret',
-    creator: 'Japanese Tea Sommelier',
+    creator: 'Tezumi Japanese Tea',
     creatorBadge: 'Nihoncha Certified Instructor',
     creatorAvatar: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=120&q=80',
     category: 'green_white',
