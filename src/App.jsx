@@ -16,7 +16,7 @@ import UserProfileDashboard from './components/UserProfileDashboard';
 import GlobalSearchModal from './components/GlobalSearchModal';
 import AuthModal from './components/AuthModal';
 import CommunityHubModal from './components/CommunityHubModal';
-import LocalCoffeeFinderModal from './components/LocalCoffeeFinderModal';
+import LocalTeaFinderModal from './components/LocalTeaFinderModal';
 import ShopDrawer from './components/ShopDrawer';
 import WorldNewsSection from './components/WorldNewsSection';
 import BarcodeScannerModal from './components/BarcodeScannerModal';
@@ -24,23 +24,21 @@ import WaterChemistryModal from './components/WaterChemistryModal';
 import RoasterPortalModal from './components/RoasterPortalModal';
 import RoasterInfoPage from './components/RoasterInfoPage';
 import RoasterProfilePage from './components/RoasterProfilePage';
-import CoffeeVideoAcademyModal from './components/CoffeeVideoAcademyModal';
+import TeaVideoAcademyModal from './components/TeaVideoAcademyModal';
 import Footer from './components/Footer';
 import { AppOrchestratorProvider } from './context/AppOrchestratorContext';
-import { BREW_METHODS } from './data/brewData';
+import { BREW_METHODS, TEA_METHODS } from './data/brewData';
 import { initGA, trackEvent } from './utils/analytics';
 import { getMethodJsonLd, updatePageSeo } from './utils/seo';
-import { syncCloudCatalog } from './data/roasterRegistry';
-import { ChevronRight, ChevronLeft, Sparkles, Coffee } from 'lucide-react';
-
-const DEFAULT_LOCAL_PROFILES = [];
+import { syncCloudTeaCatalog } from './data/roasterRegistry';
+import { ChevronRight, ChevronLeft, Sparkles, Leaf } from 'lucide-react';
 
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Main Application State
-  const [trackMode, setTrackMode] = useState('coffee'); // 'coffee' | 'tea'
+  // Pure Tea Application State
+  const trackMode = 'tea';
   const [unitSystem, setUnitSystem] = useState('imperial'); // 'imperial' | 'metric'
   const [isMuted, setIsMuted] = useState(false);
   const [currentStep, setCurrentStep] = useState(1); // 1 | 2 | 3 | 4
@@ -48,9 +46,8 @@ export default function App() {
   // User Accounts State (Persisted in localStorage)
   const [usersList, setUsersList] = useState(() => {
     try {
-      const saved = localStorage.getItem('the_brew_app_local_users');
+      const saved = localStorage.getItem('looseleaf_local_users') || localStorage.getItem('the_brew_app_local_users');
       const list = saved ? JSON.parse(saved) : [];
-      // Clean up any historical fake personas
       return list.filter((u) => u && u.username !== '@barista_pro' && u.email !== 'alex@specialtybrew.org');
     } catch {
       return [];
@@ -60,9 +57,10 @@ export default function App() {
   // Currently Active Logged In User (Persisted in localStorage)
   const [currentUser, setCurrentUser] = useState(() => {
     try {
-      const saved = localStorage.getItem('the_brew_app_active_user');
+      const saved = localStorage.getItem('looseleaf_active_user') || localStorage.getItem('the_brew_app_active_user');
       const user = saved ? JSON.parse(saved) : null;
       if (user && (user.username === '@barista_pro' || user.email === 'alex@specialtybrew.org')) {
+        localStorage.removeItem('looseleaf_active_user');
         localStorage.removeItem('the_brew_app_active_user');
         return null;
       }
@@ -75,7 +73,7 @@ export default function App() {
   // Sync usersList and currentUser to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('the_brew_app_local_users', JSON.stringify(usersList));
+      localStorage.setItem('looseleaf_local_users', JSON.stringify(usersList));
     } catch (err) {
       console.warn('Unable to persist usersList to localStorage:', err);
     }
@@ -84,18 +82,18 @@ export default function App() {
   useEffect(() => {
     try {
       if (currentUser) {
-        localStorage.setItem('the_brew_app_active_user', JSON.stringify(currentUser));
+        localStorage.setItem('looseleaf_active_user', JSON.stringify(currentUser));
       } else {
-        localStorage.removeItem('the_brew_app_active_user');
+        localStorage.removeItem('looseleaf_active_user');
       }
     } catch (err) {
       console.warn('Unable to persist currentUser to localStorage:', err);
     }
   }, [currentUser]);
 
-  // Synchronize Cloud Firestore roaster & coffee registry in background
+  // Synchronize Cloud Firestore purveyor & tea registry in background
   useEffect(() => {
-    syncCloudCatalog().catch(() => {});
+    syncCloudTeaCatalog().catch(() => {});
   }, []);
 
   // Platform Modal States
@@ -105,7 +103,7 @@ export default function App() {
   const [isCommunityOpen, setIsCommunityOpen] = useState(false);
   const [isRecipeBuilderOpen, setIsRecipeBuilderOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isLocalCoffeeOpen, setIsLocalCoffeeOpen] = useState(false);
+  const [isLocalTeaOpen, setIsLocalTeaOpen] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isWaterLabOpen, setIsWaterLabOpen] = useState(false);
   const [isRoasterPortalOpen, setIsRoasterPortalOpen] = useState(false);
@@ -113,34 +111,51 @@ export default function App() {
   const [roasterPrefillBarcode, setRoasterPrefillBarcode] = useState('');
   const [roasterPrefillBean, setRoasterPrefillBean] = useState(null);
   const [isRoasterShowcaseView, setIsRoasterShowcaseView] = useState(false);
-  const [selectedRoasterSlug, setSelectedRoasterSlug] = useState('methodical');
+  const [selectedRoasterSlug, setSelectedRoasterSlug] = useState('ippodo');
   const [isVideoAcademyOpen, setIsVideoAcademyOpen] = useState(false);
   const [selectedAcademyVideoId, setSelectedAcademyVideoId] = useState(null);
-  const [dialedInCoffee, setDialedInCoffee] = useState(null);
+  const [dialedInTea, setDialedInTea] = useState(null);
 
-  // Handler for Brew Along With Video Action
+  // Active Method & Scaling State
+  const methods = BREW_METHODS.tea || TEA_METHODS || BREW_METHODS;
+  const [activeMethod, setActiveMethod] = useState(methods[0]);
+  const [cupCount, setCupCount] = useState(2);
+  const [cupMl, setCupMl] = useState(240);
+  const [customRatio, setCustomRatio] = useState(null);
+  const [customWaterMl, setCustomWaterMl] = useState(null);
+
+  // Masterclass & Split Screen State
+  const [activeVideo, setActiveVideo] = useState(null);
+
+  // Initialize Analytics on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      initGA(window.GA_MEASUREMENT_ID || 'G-VT2YZ4KHHB');
+    }
+  }, []);
+
+  // Handler for Steeping Along With Video Action
   const handleBrewWithVideo = (video) => {
     if (!video || !video.recipeSync) return;
-    const { methodId, ratio, waterTempF } = video.recipeSync;
-    const allMethods = [...BREW_METHODS.coffee, ...BREW_METHODS.tea];
+    const { methodId, ratio } = video.recipeSync;
+    const allMethods = BREW_METHODS.tea || TEA_METHODS || BREW_METHODS;
     const targetMethod = allMethods.find(m => m.id === methodId) || allMethods[0];
     setActiveMethod(targetMethod);
     if (ratio) {
       setCustomRatio(ratio);
     }
-    setTrackMode('coffee');
     setIsVideoAcademyOpen(false);
-    setCurrentStep(4); // Advance straight to the active guided timer so user brews along
+    setCurrentStep(4); // Advance straight to the active guided timer
     navigate(`/methods/${targetMethod.id}`);
     setTimeout(() => {
       const timerEl = document.getElementById('step-4') || document.querySelector('main');
       if (timerEl) timerEl.scrollIntoView({ behavior: 'smooth' });
     }, 150);
-    trackEvent('brew_with_video_applied', { video_id: video.id, method_id: targetMethod.id, ratio });
+    trackEvent('steep_with_video_applied', { video_id: video.id, method_id: targetMethod.id, ratio });
   };
 
-  // Handler for Brew News navigation (resets sub-views and smoothly scrolls)
-  const handleOpenBrewNews = () => {
+  // Handler for Tea News navigation
+  const handleOpenTeaNews = () => {
     if (isRoasterShowcaseView) {
       setIsRoasterShowcaseView(false);
       navigate('/');
@@ -157,135 +172,105 @@ export default function App() {
     setTimeout(() => tryScroll(0), 60);
   };
 
-  // Handler for Specialty Roaster Showcase Navigation
+  // Handler for Specialty Tea Purveyors Showcase Navigation
   const handleOpenRoasterShowcase = () => {
     if (isRoasterShowcaseView) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setIsRoasterShowcaseView(true);
-      navigate('/roasters');
+      navigate('/purveyors');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
-  // Handlers for Scanned / Roaster Dial-In Actions
-  const handleApplyScannedRecipe = (scannedBean) => {
-    if (!scannedBean) return;
+  // Handlers for Scanned / Purveyor Dial-In Actions
+  const handleApplyScannedRecipe = (scannedTea) => {
+    if (!scannedTea) return;
 
-    // 1. Immediately exit Roaster Showcase or Scanner overlay
     setIsRoasterShowcaseView(false);
     setIsScannerOpen(false);
 
-    // 2. Extract ratio, dose, and water volume
-    const ratio = Number(scannedBean.recommendedRatio || scannedBean.extraction?.ratio || 16);
+    const ratio = Number(scannedTea.recommendedRatio || scannedTea.extraction?.ratio || 50);
     setCustomRatio(ratio);
 
-    const waterAmount = Number(scannedBean.waterGrams || (scannedBean.dryDoseGrams ? Math.round(scannedBean.dryDoseGrams * ratio) : 320));
+    const waterAmount = Number(scannedTea.waterGrams || (scannedTea.dryDoseGrams ? Math.round(scannedTea.dryDoseGrams * ratio) : 240));
     setCustomWaterMl(waterAmount);
     setCupCount(1);
     setCupMl(waterAmount);
 
-    // 3. Resolve target brew method
-    const targetMethodId = scannedBean.brewMethod || scannedBean.extraction?.method || 'pour_over';
-    const allMethods = [...BREW_METHODS.coffee, ...BREW_METHODS.tea];
+    const targetMethodId = scannedTea.brewMethod || scannedTea.extraction?.method || 'darjeeling_tea';
+    const allMethods = BREW_METHODS.tea || TEA_METHODS || BREW_METHODS;
     const targetMethod = allMethods.find(m => m.id === targetMethodId || m.id.includes(targetMethodId) || targetMethodId.includes(m.id)) || allMethods[0];
 
     setActiveMethod(targetMethod);
-    setTrackMode('coffee');
-    setDialedInCoffee(scannedBean);
+    setDialedInTea(scannedTea);
 
-    // 4. Advance straight to Step 4 (Guided Brew Timer) and navigate URL
     setCurrentStep(4);
     navigate(`/methods/${targetMethod.id}`);
 
-    // 5. Smooth scroll down to the timer
     setTimeout(() => {
       const timerEl = document.getElementById('step-4') || document.querySelector('main');
       if (timerEl) timerEl.scrollIntoView({ behavior: 'smooth' });
     }, 150);
 
-    trackEvent('dial_in_recipe_applied', {
-      roaster: scannedBean.roaster,
-      bean: scannedBean.beanName,
+    trackEvent('dial_in_tea_applied', {
+      purveyor: scannedTea.purveyor || scannedTea.roaster,
+      tea: scannedTea.teaName || scannedTea.beanName,
       method: targetMethod.id,
       ratio
     });
   };
 
-  const handleSaveScannedToJournal = (scannedBean) => {
-    if (!scannedBean) return;
+  const handleSaveScannedToJournal = (scannedTea) => {
+    if (!scannedTea) return;
     try {
       const existing = JSON.parse(localStorage.getItem('the_brew_app_journal_v1') || '[]');
       const newEntry = {
         id: Date.now().toString(),
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        trackMode: 'coffee',
-        methodName: scannedBean.brewMethod ? scannedBean.brewMethod.replace(/_/g, ' ') : 'Pour Over',
-        beanName: scannedBean.beanName,
-        roaster: scannedBean.roaster,
-        doseStr: '18.0 g',
-        waterStr: `${18 * (scannedBean.recommendedRatio || 16)} mL`,
-        ratioStr: `1 : ${scannedBean.recommendedRatio || 16}`,
-        grindStr: scannedBean.recommendedGrind || 'Medium-Fine',
-        tempStr: `${scannedBean.tempF || 200}°F`,
+        trackMode: 'tea',
+        methodName: scannedTea.brewMethod ? scannedTea.brewMethod.replace(/_/g, ' ') : 'Specialty Tea',
+        beanName: scannedTea.teaName || scannedTea.beanName,
+        roaster: scannedTea.purveyor || scannedTea.roaster,
+        doseStr: '4.5 g',
+        waterStr: `${Math.round(4.5 * (scannedTea.recommendedRatio || 50))} mL`,
+        ratioStr: `1 : ${scannedTea.recommendedRatio || 50}`,
+        grindStr: scannedTea.recommendedGrind || 'Whole Leaf',
+        tempStr: `${scannedTea.tempF || 190}°F`,
         rating: 5,
         isFavorite: true,
-        tastingNotes: scannedBean.tastingNotes || [],
-        notes: `${scannedBean.notes} (Origin: ${scannedBean.origin}, Altitude: ${scannedBean.elevation})`
+        tastingNotes: scannedTea.tastingNotes || [],
+        notes: `${scannedTea.notes || ''} (Origin: ${scannedTea.origin || 'Single Garden'}, Elevation: ${scannedTea.elevation || 'High Mountain'})`
       };
       localStorage.setItem('the_brew_app_journal_v1', JSON.stringify([newEntry, ...existing]));
       setIsJournalOpen(true);
     } catch (err) {
-      console.error('Error saving scanned bean to journal', err);
+      console.error('Error saving scanned tea to journal', err);
     }
   };
-
-  // Active Method & Scaling State
-  const methods = BREW_METHODS[trackMode] || BREW_METHODS.coffee;
-  const [activeMethod, setActiveMethod] = useState(methods[0]);
-  const [cupCount, setCupCount] = useState(2);
-  const [cupMl, setCupMl] = useState(240);
-  const [customRatio, setCustomRatio] = useState(null);
-  const [customWaterMl, setCustomWaterMl] = useState(null);
-
-  // Masterclass & Split Screen State
-  const [isSplitScreen, setIsSplitScreen] = useState(false);
-  const [activeVideo, setActiveVideo] = useState(null);
-
-  // Initialize Analytics on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      initGA(window.GA_MEASUREMENT_ID || 'G-VT2YZ4KHHB');
-    }
-  }, []);
 
   // Synchronize React Router URL with Active Method and Steps
   useEffect(() => {
     const path = location.pathname;
 
-    if (path.startsWith('/methods/')) {
+    if (path.startsWith('/methods/') || path.startsWith('/tea/')) {
       setIsRoasterShowcaseView(false);
-      const methodId = path.replace('/methods/', '').replace(/\/$/, '');
-      const allMethods = [...BREW_METHODS.coffee, ...BREW_METHODS.tea];
+      const methodId = path.replace('/methods/', '').replace('/tea/', '').replace(/\/$/, '');
+      const allMethods = BREW_METHODS.tea || TEA_METHODS || BREW_METHODS;
       const found = allMethods.find(m => m.id === methodId);
 
       if (found) {
         setActiveMethod(found);
-        if (found.category && found.category !== trackMode) {
-          setTrackMode(found.category);
-        }
         if (currentStep === 1) {
           setCurrentStep(2);
         }
 
-        // Update Dynamic SEO & JSON-LD Structured Data
         updatePageSeo(
-          `How to Brew ${found.name}`,
+          `How to Steep ${found.name} | LooseLeaf`,
           found.description,
           `https://thebrew.app/methods/${found.id}`
         );
 
-        // Inject / Update JSON-LD Script tag in <head>
         const jsonLdData = getMethodJsonLd(found);
         if (jsonLdData) {
           let script = document.getElementById('json-ld-structured-data');
@@ -298,21 +283,16 @@ export default function App() {
           script.textContent = JSON.stringify(jsonLdData);
         }
       }
-    } else if (path.startsWith('/guides/coffee-water-chemistry') || path.startsWith('/guides/water-chemistry-gh-kh')) {
+    } else if (path.startsWith('/guides/tea-water-chemistry') || path.startsWith('/guides/water-chemistry-gh-kh')) {
       setIsRoasterShowcaseView(false);
       setIsWaterLabOpen(true);
-      const isGhKh = path.startsWith('/guides/water-chemistry-gh-kh');
       updatePageSeo(
-        isGhKh
-          ? 'Coffee Water Chemistry: GH vs. KH Cheat Sheet | The Brew App'
-          : 'Coffee Water Chemistry & Extraction Yield Guide | The Brew App',
-        'Master coffee water chemistry: SCA water specs, Lotus drop recipes, DIY mineral recipes (GH & KH), and extraction yield optimization for specialty coffee.',
-        isGhKh
-          ? 'https://thebrew.app/guides/water-chemistry-gh-kh'
-          : 'https://thebrew.app/guides/coffee-water-chemistry'
+        'Tea Water Chemistry & Mineral Formulation Guide | LooseLeaf',
+        'Master specialty tea water chemistry: optimal GH/KH mineral balance for delicate greens, high mountain oolongs, and brisk black teas.',
+        'https://thebrew.app/guides/tea-water-chemistry'
       );
-    } else if (path.startsWith('/roasters') || path.startsWith('/roaster')) {
-      if (path === '/roasters/partner' || path === '/roasters/info') {
+    } else if (path.startsWith('/purveyors') || path.startsWith('/roasters') || path.startsWith('/roaster')) {
+      if (path.includes('partner') || path.includes('info')) {
         setIsRoasterInfoOpen(true);
       } else {
         setIsRoasterShowcaseView(true);
@@ -322,75 +302,61 @@ export default function App() {
         }
       }
       updatePageSeo(
-        'Specialty Coffee Roaster Showcase & Dial-In Lab | The Brew App',
-        'Explore verified specialty coffee roasters, authentic origin stories, and certified dial-in recipes with golden ratios, grind sizes, and water chemistry.',
-        'https://thebrew.app/roasters'
+        'Specialty Tea Purveyors & Historic Tea Houses | LooseLeaf',
+        'Explore verified specialty tea purveyors, historic gardens, and certified steeping parameters.',
+        'https://thebrew.app/purveyors'
       );
     } else if (path.startsWith('/academy') || path.startsWith('/videos')) {
       setIsVideoAcademyOpen(true);
       updatePageSeo(
-        'Coffee Academy & Video Masterclasses | The Brew App',
-        'Watch curated 4K specialty coffee tutorials, roaster origins, water science, and dial-in masterclasses with synchronized brew timers.',
+        'Tea Academy & Video Masterclasses | LooseLeaf',
+        'Watch curated 4K specialty tea masterclasses, Gongfu Cha demonstrations, matcha whisking, and water chemistry with synchronized timers.',
         'https://thebrew.app/academy'
       );
-    } else if (path.includes('smart-bag-scanner') || path.startsWith('/demo') || path.startsWith('/scanner') || path.startsWith('/scan')) {
+    } else if (path.includes('smart-tin-scanner') || path.includes('smart-bag-scanner') || path.startsWith('/demo') || path.startsWith('/scanner') || path.startsWith('/scan')) {
       setIsRoasterShowcaseView(false);
       setIsScannerOpen(true);
       updatePageSeo(
-        'Smart Bag Barcode & QR Scanner Demo | The Brew App',
-        'Scan any specialty coffee bag barcode or Smart Bag QR code to automatically dial in grind size, golden ratios, and water temperature in seconds.',
-        'https://thebrew.app/demo/smart-bag-scanner'
+        'Smart Tea Tin Barcode & QR Scanner | LooseLeaf',
+        'Scan any specialty tea tin barcode or Smart Tin QR code to automatically dial in leaf-to-water ratio, temperature, and steeping countdown in seconds.',
+        'https://thebrew.app/demo/smart-tin-scanner'
       );
     } else if (path === '/' || path === '') {
       setIsRoasterShowcaseView(false);
-      // Check for Smart Bag deep link query parameters or video parameter:
       const searchParams = new URLSearchParams(location.search);
       const videoParam = searchParams.get('video');
       if (videoParam) {
         setSelectedAcademyVideoId(videoParam);
         setIsVideoAcademyOpen(true);
       }
-      const roasterParam = searchParams.get('roaster');
-      const beanParam = searchParams.get('bean');
+      const purveyorParam = searchParams.get('purveyor') || searchParams.get('roaster');
+      const teaParam = searchParams.get('tea') || searchParams.get('bean');
       const stepParam = searchParams.get('step');
       if (stepParam) {
         setCurrentStep(parseInt(stepParam));
-      } else if (roasterParam || beanParam) {
+      } else if (purveyorParam || teaParam) {
         const methodParam = searchParams.get('method');
         const ratioParam = parseFloat(searchParams.get('ratio'));
-        const allMethods = [...BREW_METHODS.coffee, ...BREW_METHODS.tea];
+        const allMethods = BREW_METHODS.tea || TEA_METHODS || BREW_METHODS;
         const found = allMethods.find(m => m.id === methodParam) || allMethods[0];
         setActiveMethod(found);
         if (ratioParam) setCustomRatio(ratioParam);
-        setTrackMode('coffee');
         setCurrentStep(2);
       } else {
         setCurrentStep(1);
       }
       updatePageSeo(
-        'The Art of Extraction',
-        'Precision specialty coffee & fine tea extraction ratio scaler, multi-phase countdown timer, burr grinder macro texture guide, and troubleshooting compendium.',
+        'LooseLeaf — The Fine Tea & Steeping Guide',
+        'Precision specialty loose leaf tea ratio scaler, multi-phase countdown timer, orthodox leaf grade visual guide, and botanical terroir compendium.',
         'https://thebrew.app/'
       );
 
-      // Clean up JSON-LD on homepage
       const existingScript = document.getElementById('json-ld-structured-data');
       if (existingScript) {
         existingScript.remove();
       }
     }
   }, [location.pathname, location.search]);
-
-  // Sync active method when track mode switches
-  const handleTrackSwitch = (newTrack) => {
-    setTrackMode(newTrack);
-    const newMethods = BREW_METHODS[newTrack] || BREW_METHODS.coffee;
-    setActiveMethod(newMethods[0]);
-    setCustomRatio(null);
-    setCustomWaterMl(null);
-    if (setActiveVideo) setActiveVideo(null);
-    trackEvent('switch_track_mode', { track_mode: newTrack });
-  };
 
   const handleSelectMethodFromGrid = (method) => {
     setActiveMethod(method);
@@ -402,28 +368,25 @@ export default function App() {
     trackEvent('select_method', { method_id: method.id, method_name: method.name });
   };
 
-  const isCoffee = trackMode === 'coffee';
-  const isTea = trackMode === 'tea';
-
-  // Sync body theme class whenever track changes
+  // Sync body theme class
   useEffect(() => {
-    document.body.className = `theme-${trackMode}`;
-  }, [trackMode]);
+    document.body.className = 'theme-tea';
+  }, []);
 
-  // Scroll to top smoothly when changing steps so mobile screens always show the active step container
+  // Scroll to top smoothly when changing steps
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [currentStep]);
   
-  // Guarantee active method belongs to current track
+  // Guarantee active method belongs to current catalog
   const currentActiveMethod = (activeMethod && methods.some(m => m.id === activeMethod.id))
     ? activeMethod
     : (methods.length > 0 ? methods[0] : null);
 
   // Calculated Water Volume & Dose
-  const effectiveRatio = customRatio !== null ? customRatio : (currentActiveMethod?.ratio || 15);
+  const effectiveRatio = customRatio !== null ? customRatio : (currentActiveMethod?.ratio || 50);
   const calculatedTotalWaterMl = customWaterMl !== null ? customWaterMl : (cupCount * cupMl);
   const dryDoseGrams = calculatedTotalWaterMl > 0 ? Math.round((calculatedTotalWaterMl / effectiveRatio) * 10) / 10 : 0;
 
@@ -432,9 +395,9 @@ export default function App() {
       onApplyRecipeToTimer={handleApplyScannedRecipe}
       onSaveRecipeToJournal={handleSaveScannedToJournal}
       onOpenScanner={() => setIsScannerOpen(true)}
-      onOpenPackagingStudio={(coffee) => {
-        if (coffee?.packaging?.upc) setRoasterPrefillBarcode(coffee.packaging.upc);
-        if (coffee) setRoasterPrefillBean(coffee);
+      onOpenPackagingStudio={(tea) => {
+        if (tea?.packaging?.upc) setRoasterPrefillBarcode(tea.packaging.upc);
+        if (tea) setRoasterPrefillBean(tea);
         setIsRoasterPortalOpen(true);
       }}
       onOpenWaterLab={() => setIsWaterLabOpen(true)}
@@ -442,41 +405,28 @@ export default function App() {
       onOpenJournal={() => setIsJournalOpen(true)}
       navigate={navigate}
     >
-      <div className={`min-h-screen font-sans flex flex-col transition-colors duration-700 relative ${
-        isCoffee
-          ? 'bg-[#0E0906] text-[#F8F5F1] selection:bg-[#C48B56] selection:text-[#140C08]'
-          : 'bg-[#08110B] text-[#EBF7EE] selection:bg-sage-400 selection:text-[#07130B]'
-      }`}>
+      <div className="min-h-screen font-sans flex flex-col transition-colors duration-700 relative bg-[#08110B] text-[#EBF7EE] selection:bg-sage-400 selection:text-[#07130B]">
 
-      {/* High-Definition Extraction Method Background Image Overlay */}
+      {/* High-Definition Steeping Method Background Image Overlay */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 md:opacity-40 transition-all duration-1000">
         <img
-          key={currentActiveMethod?.heroImage || trackMode}
-          src={currentActiveMethod?.heroImage || (isCoffee ? '/pour_over_hero.jpg' : '/tea_ceremony.jpg')}
-          alt={currentActiveMethod?.name || 'Extraction Background'}
+          key={currentActiveMethod?.heroImage || 'tea_background'}
+          src={currentActiveMethod?.heroImage || '/tea_ceremony.jpg'}
+          alt={currentActiveMethod?.name || 'Steeping Background'}
           className="w-full h-full object-cover object-center filter blur-[2px] scale-105 transform transition-transform duration-1000 brightness-90 contrast-110"
         />
-        <div className={`absolute inset-0 ${
-          isCoffee
-            ? 'bg-gradient-to-b from-[#0E0906]/80 via-[#0E0906]/55 to-[#0E0906]/90'
-            : 'bg-gradient-to-b from-[#08110B]/80 via-[#08110B]/55 to-[#08110B]/90'
-        }`} />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#08110B]/80 via-[#08110B]/55 to-[#08110B]/90" />
       </div>
       
-      {/* 100% Bulletproof Sticky Top Header Container */}
-      <header className={`sticky top-0 z-50 backdrop-blur-2xl transition-all duration-700 border-b shadow-2xl ${
-        isCoffee
-          ? 'bg-[#160E09]/95 border-[#A66E38]/40 shadow-[0_10px_30px_rgba(166,110,56,0.15)]'
-          : 'bg-[#0B1710]/95 border-sage-500/40 shadow-[0_10px_30px_rgba(94,150,106,0.15)]'
-      }`}>
+      {/* Sticky Top Header Container */}
+      <header className="sticky top-0 z-50 backdrop-blur-2xl transition-all duration-700 border-b shadow-2xl bg-[#0B1710]/95 border-sage-500/40 shadow-[0_10px_30px_rgba(94,150,106,0.15)]">
         <Header
           trackMode={trackMode}
-          setTrackMode={handleTrackSwitch}
           onOpenJournal={() => setIsJournalOpen(true)}
           onOpenSearch={() => setIsSearchOpen(true)}
           onOpenProfile={() => setIsProfileOpen(true)}
           onOpenCommunity={() => setIsCommunityOpen(true)}
-          onOpenLocalCoffee={() => setIsLocalCoffeeOpen(true)}
+          onOpenLocalTea={() => setIsLocalTeaOpen(true)}
           onOpenAuth={() => setIsAuthModalOpen(true)}
           onOpenScanner={() => setIsScannerOpen(true)}
           onOpenWaterLab={() => setIsWaterLabOpen(true)}
@@ -485,13 +435,13 @@ export default function App() {
           onOpenRoasterShowcase={handleOpenRoasterShowcase}
           isRoasterShowcaseView={isRoasterShowcaseView}
           onOpenVideoAcademy={() => setIsVideoAcademyOpen(true)}
-          onOpenNews={handleOpenBrewNews}
+          onOpenNews={handleOpenTeaNews}
           isMuted={isMuted}
           onToggleMute={() => setIsMuted(!isMuted)}
           currentUser={currentUser}
         />
         
-        {/* Step Progress Bar Pinned Inside Sticky Top Bar (hidden in Roaster Showcase) */}
+        {/* Step Progress Bar Pinned Inside Sticky Top Bar (hidden in Purveyors Showcase) */}
         {!isRoasterShowcaseView && (
           <StepIndicator
             currentStep={currentStep}
@@ -520,15 +470,19 @@ export default function App() {
                 setIsRoasterShowcaseView(false);
                 navigate('/');
               }}
-              onBrewCoffee={(coffee) => {
+              onBrewTea={(tea) => {
                 setIsRoasterShowcaseView(false);
-                handleApplyScannedRecipe(coffee);
+                handleApplyScannedRecipe(tea);
               }}
-              onOpenWaterLabWithProfile={(waterProfile) => {
+              onBrew={(tea) => {
+                setIsRoasterShowcaseView(false);
+                handleApplyScannedRecipe(tea);
+              }}
+              onOpenWaterLabWithProfile={() => {
                 setIsWaterLabOpen(true);
               }}
-              onOpenRoasterPortalWithBean={(bean) => {
-                setRoasterPrefillBean(bean);
+              onOpenRoasterPortalWithBean={(tea) => {
+                setRoasterPrefillBean(tea);
                 setIsRoasterPortalOpen(true);
               }}
               onOpenRoasterInfo={() => {
@@ -541,7 +495,6 @@ export default function App() {
               {currentStep === 1 && (
             <MethodSelectorGrid
               trackMode={trackMode}
-              setTrackMode={setTrackMode}
               methods={methods}
               activeMethod={currentActiveMethod}
               setActiveMethod={handleSelectMethodFromGrid}
@@ -596,7 +549,7 @@ export default function App() {
                 unitSystem={unitSystem}
               />
 
-              {isCoffee && <GrindVisualGuide activeMethod={currentActiveMethod} />}
+              <GrindVisualGuide activeMethod={currentActiveMethod} />
 
               {/* Step Navigation Controls */}
               <div className="flex items-center justify-between pt-6 border-t border-white/10">
@@ -610,11 +563,9 @@ export default function App() {
 
                 <button
                   onClick={() => setCurrentStep(4)}
-                  className={`py-3.5 px-8 rounded-2xl font-extrabold text-xs flex items-center gap-2 shadow-2xl hover:scale-105 active:scale-95 transition-all ${
-                    isCoffee ? 'btn-tactile-coffee text-[#140C08]' : 'btn-tactile-tea text-white'
-                  }`}
+                  className="py-3.5 px-8 rounded-2xl font-extrabold text-xs flex items-center gap-2 shadow-2xl hover:scale-105 active:scale-95 transition-all btn-tactile-tea text-white"
                 >
-                  <span>Step 04: Guided Brew Timer</span>
+                  <span>Step 04: Guided Steeping Timer</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
@@ -622,20 +573,20 @@ export default function App() {
             </div>
           )}
 
-          {/* STEP 04: GUIDED BREW TIMER */}
+          {/* STEP 04: GUIDED STEEPING TIMER */}
           {currentStep === 4 && (
             <div id="step-4" className="animate-fade-in space-y-6">
-              {dialedInCoffee && (
-                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 backdrop-blur-md shadow-lg">
+              {dialedInTea && (
+                <div className="p-4 rounded-2xl bg-emerald-500/10 border border-sage-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 backdrop-blur-md shadow-lg">
                   <div className="flex items-center gap-3">
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                     <div>
-                      <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-amber-gold font-bold flex items-center gap-1.5">
+                      <div className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-sage-300 font-bold flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5" />
-                        <span>Roaster Certified Dial-In Active</span>
+                        <span>Purveyor Certified Dial-In Active</span>
                       </div>
                       <div className="text-sm sm:text-base font-serif font-bold text-cream-light">
-                        {dialedInCoffee.roaster} • {dialedInCoffee.beanName}
+                        {dialedInTea.purveyor || dialedInTea.roaster} • {dialedInTea.teaName || dialedInTea.beanName}
                       </div>
                     </div>
                   </div>
@@ -643,19 +594,19 @@ export default function App() {
                     <span>1:{effectiveRatio}</span>
                     <span>•</span>
                     <span>{dryDoseGrams}g : {calculatedTotalWaterMl}g</span>
-                    {(dialedInCoffee.tempF || dialedInCoffee.extraction?.tempF) && (
+                    {(dialedInTea.tempF || dialedInTea.extraction?.tempF) && (
                       <>
                         <span>•</span>
-                        <span className="text-amber-gold font-bold">
-                          {dialedInCoffee.tempF || dialedInCoffee.extraction?.tempF}°F
+                        <span className="text-sage-300 font-bold">
+                          {dialedInTea.tempF || dialedInTea.extraction?.tempF}°F
                         </span>
                       </>
                     )}
-                    {(dialedInCoffee.recommendedGrind || dialedInCoffee.extraction?.grind) && (
+                    {(dialedInTea.recommendedGrind || dialedInTea.extraction?.grind) && (
                       <>
                         <span>•</span>
                         <span className="text-cream-light font-bold">
-                          {dialedInCoffee.recommendedGrind || dialedInCoffee.extraction?.grind}
+                          {dialedInTea.recommendedGrind || dialedInTea.extraction?.grind}
                         </span>
                       </>
                     )}
@@ -693,7 +644,7 @@ export default function App() {
           {/* Collapsible Equipment & Gear Store Drawer */}
           <ShopDrawer trackMode={trackMode} activeMethod={currentActiveMethod} />
 
-          {/* Brew News Dispatch Section */}
+          {/* Tea News Dispatch Section */}
           <WorldNewsSection trackMode={trackMode} />
         </>
       )}
@@ -719,7 +670,7 @@ export default function App() {
               handleSelectMethodFromGrid(method);
             }}
             onSelectRecipe={(recipe) => {
-              const allMethods = [...BREW_METHODS.coffee, ...BREW_METHODS.tea];
+              const allMethods = BREW_METHODS.tea || TEA_METHODS || BREW_METHODS;
               const match = allMethods.find(m => m.id === recipe.methodId);
               if (match) {
                 handleSelectMethodFromGrid(match);
@@ -728,7 +679,7 @@ export default function App() {
               setCurrentStep(2);
               setIsSearchOpen(false);
             }}
-            onSelectOrigin={(origin) => {
+            onSelectOrigin={() => {
               setCurrentStep(3);
               setIsSearchOpen(false);
               setTimeout(() => {
@@ -747,7 +698,7 @@ export default function App() {
             onOpenAuth={() => setIsAuthModalOpen(true)}
             onOpenRecipeBuilder={() => setIsRecipeBuilderOpen(true)}
             onSelectRecipe={(recipe) => {
-              const allMethods = [...BREW_METHODS.coffee, ...BREW_METHODS.tea];
+              const allMethods = BREW_METHODS.tea || TEA_METHODS || BREW_METHODS;
               const match = allMethods.find(m => m.id === recipe.methodId);
               if (match) {
                 handleSelectMethodFromGrid(match);
@@ -757,7 +708,7 @@ export default function App() {
             }}
           />
 
-          {/* Barista User Profile Modal */}
+          {/* Steeper User Profile Modal */}
           <UserProfileDashboard
             isOpen={isProfileOpen}
             onClose={() => setIsProfileOpen(false)}
@@ -787,10 +738,10 @@ export default function App() {
             onLogout={() => setCurrentUser(null)}
           />
 
-          {/* Specialty Coffee Shop Finder Modal */}
-          <LocalCoffeeFinderModal
-            isOpen={isLocalCoffeeOpen}
-            onClose={() => setIsLocalCoffeeOpen(false)}
+          {/* Specialty Tea Room Finder Modal */}
+          <LocalTeaFinderModal
+            isOpen={isLocalTeaOpen}
+            onClose={() => setIsLocalTeaOpen(false)}
             trackMode={trackMode}
           />
 
@@ -799,7 +750,7 @@ export default function App() {
             isOpen={isScannerOpen}
             onClose={() => {
               setIsScannerOpen(false);
-              if (location.pathname.includes('smart-bag-scanner') || location.pathname.startsWith('/demo') || location.pathname.startsWith('/scanner') || location.pathname.startsWith('/scan')) {
+              if (location.pathname.includes('smart-tin-scanner') || location.pathname.includes('smart-bag-scanner') || location.pathname.startsWith('/demo') || location.pathname.startsWith('/scanner') || location.pathname.startsWith('/scan')) {
                 navigate('/', { replace: true });
               }
             }}
@@ -813,7 +764,7 @@ export default function App() {
             onOpenRoasterInfo={() => setIsRoasterInfoOpen(true)}
           />
 
-          {/* Specialty Roaster Partner Information & Contact HQ Page */}
+          {/* Specialty Tea Purveyor Partner Information & Contact HQ Page */}
           <RoasterInfoPage
             isOpen={isRoasterInfoOpen}
             onClose={() => setIsRoasterInfoOpen(false)}
@@ -823,7 +774,7 @@ export default function App() {
             }}
           />
 
-          {/* Specialty Roaster Partner Portal & Smart Bag Packaging Generator Modal */}
+          {/* Specialty Tea Purveyor Portal & Smart Tin Packaging Studio Modal */}
           <RoasterPortalModal
             isOpen={isRoasterPortalOpen}
             onClose={() => {
@@ -836,14 +787,14 @@ export default function App() {
             onSelectBeanToBrew={handleApplyScannedRecipe}
           />
 
-          {/* Coffee Water Chemistry Lab Modal */}
+          {/* Tea Water Chemistry Lab Modal */}
           <WaterChemistryModal
             isOpen={isWaterLabOpen}
             onClose={() => setIsWaterLabOpen(false)}
           />
 
-          {/* YouTube-Powered Coffee Video Academy & Masterclass Hub */}
-          <CoffeeVideoAcademyModal
+          {/* YouTube-Powered Tea Video Academy & Masterclass Hub */}
+          <TeaVideoAcademyModal
             isOpen={isVideoAcademyOpen}
             onClose={() => {
               setIsVideoAcademyOpen(false);

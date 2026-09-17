@@ -4,7 +4,6 @@ import {
   X,
   Search,
   Sparkles,
-  Coffee,
   Flame,
   Droplets,
   Store,
@@ -22,10 +21,10 @@ import {
   Film,
   BookOpen
 } from 'lucide-react';
-import { COFFEE_VIDEOS, VIDEO_CATEGORIES } from '../data/coffeeVideos';
+import { TEA_VIDEOS, VIDEO_CATEGORIES } from '../data/teaVideos';
 import { trackEvent } from '../utils/analytics';
 
-export default function CoffeeVideoAcademyModal({
+export default function TeaVideoAcademyModal({
   isOpen,
   onClose,
   onBrewWithVideo,
@@ -33,10 +32,10 @@ export default function CoffeeVideoAcademyModal({
 }) {
   const [selectedVideo, setSelectedVideo] = useState(() => {
     if (initialVideoId) {
-      const found = COFFEE_VIDEOS.find((v) => v.id === initialVideoId || v.youtubeId === initialVideoId);
+      const found = TEA_VIDEOS.find((v) => v.id === initialVideoId || v.youtubeId === initialVideoId);
       if (found) return found;
     }
-    return COFFEE_VIDEOS.find((v) => v.featured) || COFFEE_VIDEOS[0];
+    return TEA_VIDEOS.find((v) => v.featured) || TEA_VIDEOS[0];
   });
 
   // viewMode: 'library' | 'player'
@@ -49,7 +48,7 @@ export default function CoffeeVideoAcademyModal({
   // Sync if initialVideoId changes dynamically
   useEffect(() => {
     if (initialVideoId) {
-      const found = COFFEE_VIDEOS.find((v) => v.id === initialVideoId || v.youtubeId === initialVideoId);
+      const found = TEA_VIDEOS.find((v) => v.id === initialVideoId || v.youtubeId === initialVideoId);
       if (found) {
         setSelectedVideo(found);
         setViewMode('player');
@@ -59,78 +58,88 @@ export default function CoffeeVideoAcademyModal({
 
   // Filtered videos based on category and search
   const filteredVideos = useMemo(() => {
-    return COFFEE_VIDEOS.filter((video) => {
+    return TEA_VIDEOS.filter((video) => {
       const matchesCategory = activeCategory === 'all' || video.category === activeCategory;
-      if (!matchesCategory) return false;
-
-      if (!searchQuery.trim()) return true;
-      const q = searchQuery.toLowerCase();
-      return (
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
         video.title.toLowerCase().includes(q) ||
         video.creator.toLowerCase().includes(q) ||
-        video.description.toLowerCase().includes(q) ||
-        (video.recipeSync && video.recipeSync.methodName.toLowerCase().includes(q))
-      );
+        video.description.toLowerCase().includes(q);
+      return matchesCategory && matchesSearch;
     });
   }, [activeCategory, searchQuery]);
 
   if (!isOpen) return null;
 
+  // Handle Play Video Click
   const handleWatchVideo = (video) => {
     setSelectedVideo(video);
     setViewMode('player');
-    trackEvent('select_academy_video', {
-      video_id: video.id,
-      title: video.title,
-      creator: video.creator
-    });
+    trackEvent('video_academy_watch_click', { videoId: video.id, title: video.title });
   };
 
+  // Handle Load Recipe / Steep With Video
   const handleBrewClick = (video) => {
-    trackEvent('brew_along_video_click', {
-      video_id: video.id,
-      title: video.title,
-      ratio: video.recipeSync?.ratio,
-      methodId: video.recipeSync?.methodId
-    });
-    if (onBrewWithVideo) {
-      onBrewWithVideo(video);
+    if (video.recipeSync && onBrewWithVideo) {
+      onBrewWithVideo(video.recipeSync);
+      trackEvent('video_academy_brew_sync', { videoId: video.id, recipe: video.recipeSync.methodName });
+      onClose();
     }
-    onClose();
   };
 
+  // Share current video link
   const handleShareVideo = (video) => {
-    const shareUrl = `https://thebrew.app/?video=${video.youtubeId}`;
+    const url = `${window.location.origin}${window.location.pathname}?video=${video.id || video.youtubeId}`;
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        setCopiedLink(true);
-        setTimeout(() => setCopiedLink(false), 2500);
-      });
+      navigator.clipboard.writeText(url);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+      trackEvent('video_academy_share_copied', { videoId: video.id });
+    }
+  };
+
+  // Category Icon Mapping
+  const getCategoryIcon = (id) => {
+    switch (id) {
+      case 'gongfu':
+        return <Sparkles className="w-3.5 h-3.5 text-sage-300" />;
+      case 'matcha':
+        return <Flame className="w-3.5 h-3.5 text-emerald-400" />;
+      case 'green_white':
+        return <Droplets className="w-3.5 h-3.5 text-cyan-400" />;
+      case 'chai_black':
+        return <Store className="w-3.5 h-3.5 text-amber-400" />;
+      case 'water_science':
+        return <FlaskConical className="w-3.5 h-3.5 text-blue-400" />;
+      default:
+        return <Sparkles className="w-3.5 h-3.5 text-sage-300" />;
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/90 backdrop-blur-xl animate-fade-in">
-      <div
-        className="relative w-full max-w-6xl bg-[#120D0A] border-2 border-[#A66E38]/50 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.9)] overflow-hidden flex flex-col max-h-[94vh]"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="video-academy-title"
-      >
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="video-academy-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/85 backdrop-blur-xl animate-fade-in"
+    >
+      <div className="relative w-full max-w-6xl max-h-[92vh] flex flex-col rounded-3xl bg-[#09150E] border-2 border-sage-500/40 shadow-2xl overflow-hidden text-cream-light">
+        
         {/* Top Header Bar */}
-        <div className="p-4 sm:p-5 bg-gradient-to-r from-[#20150E] via-[#160E09] to-[#0D0805] border-b border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+        <div className="p-4 sm:p-5 bg-gradient-to-r from-[#07130B] via-[#0B1E12] to-[#08170E] border-b border-white/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-gold shadow-lg shadow-amber-500/20 shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-sage-300 shadow-lg shadow-emerald-500/20 shrink-0">
               <Tv className="w-5 h-5 animate-pulse" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-amber-gold">
-                  Coffee Academy
+                <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-sage-300">
+                  Tea Academy
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-red-600/20 text-red-400 font-mono text-[9px] font-bold border border-red-500/30 flex items-center gap-1">
+                <span className="px-2 py-0.5 rounded-full bg-emerald-600/20 text-emerald-300 font-mono text-[9px] font-bold border border-emerald-500/30 flex items-center gap-1">
                   <Play className="w-2.5 h-2.5 fill-current" />
-                  {COFFEE_VIDEOS.length} Masterclasses
+                  {TEA_VIDEOS.length} Masterclasses
                 </span>
               </div>
               <h2 id="video-academy-title" className="font-serif text-lg sm:text-xl font-bold text-cream-light leading-tight">
@@ -147,7 +156,7 @@ export default function CoffeeVideoAcademyModal({
                 onClick={() => setViewMode('library')}
                 className={`px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition flex items-center gap-1.5 ${
                   viewMode === 'library'
-                    ? 'bg-amber-gold text-espresso-950 shadow-md font-extrabold'
+                    ? 'bg-sage-400 text-slate-950 shadow-md font-extrabold'
                     : 'text-cream-soft hover:text-white'
                 }`}
                 title="Browse Full Video Catalog"
@@ -161,7 +170,7 @@ export default function CoffeeVideoAcademyModal({
                 onClick={() => setViewMode('player')}
                 className={`px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition flex items-center gap-1.5 ${
                   viewMode === 'player'
-                    ? 'bg-amber-gold text-espresso-950 shadow-md font-extrabold'
+                    ? 'bg-sage-400 text-slate-950 shadow-md font-extrabold'
                     : 'text-cream-soft hover:text-white'
                 }`}
                 title="Watch Selected Video"
@@ -171,22 +180,10 @@ export default function CoffeeVideoAcademyModal({
               </button>
             </div>
 
-            <a
-              href="https://www.youtube.com/@TheBrewapp?sub_confirmation=1"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackEvent('youtube_subscribe_modal_header_click')}
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold shadow-md transition"
-              title="Subscribe to The Brew App on YouTube"
-            >
-              <Play className="w-3 h-3 fill-current" />
-              <span>Subscribe</span>
-            </a>
-
             <button
               onClick={onClose}
               className="p-2 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] text-cream-soft hover:text-white border border-white/10 transition shrink-0"
-              title="Close Coffee Academy"
+              title="Close Tea Academy"
             >
               <X className="w-5 h-5" />
             </button>
@@ -202,21 +199,21 @@ export default function CoffeeVideoAcademyModal({
           {viewMode === 'library' && (
             <div className="space-y-6 animate-fade-in">
               {/* Academy Hero Introduction Banner */}
-              <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#20150E] via-[#2A180F] to-[#170E08] border border-amber-500/40 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-[#07130B] via-[#0E2617] to-[#07150C] border border-sage-500/40 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div className="space-y-1.5 max-w-2xl">
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-gold font-mono text-[10px] font-extrabold uppercase tracking-wider border border-amber-500/30">
+                    <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-sage-300 font-mono text-[10px] font-extrabold uppercase tracking-wider border border-emerald-500/30">
                       Curated Masterclasses
                     </span>
                     <span className="text-xs font-mono text-cream-soft/70">
-                      World Barista Champions • Artisan Roasters • Extraction Science
+                      Tea Masters • Historic Gardens • Botanical Science
                     </span>
                   </div>
                   <h3 className="font-serif text-xl sm:text-2xl font-bold text-cream-light leading-snug">
-                    Specialty Coffee Masterclasses & Dial-In Guides
+                    Fine Tea Masterclasses & Steeping Guides
                   </h3>
                   <p className="text-xs sm:text-sm text-cream-soft/80 font-sans">
-                    Explore {COFFEE_VIDEOS.length} hand-picked video tutorials covering pour-over mechanics, espresso dialing, water chemistry, and roastery origins. Every masterclass synchronizes directly with our guided brew timers.
+                    Explore {TEA_VIDEOS.length} hand-picked video tutorials covering Gongfu ceremony, Matcha whisking, water chemistry, and historic tea terroirs. Every masterclass synchronizes directly with our guided steeping timers.
                   </p>
                 </div>
 
@@ -224,10 +221,10 @@ export default function CoffeeVideoAcademyModal({
                   <button
                     type="button"
                     onClick={() => setViewMode('player')}
-                    className="px-4 py-2.5 rounded-2xl btn-tactile-amber text-espresso-950 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition shrink-0 self-stretch sm:self-auto justify-center"
+                    className="px-4 py-2.5 rounded-2xl btn-tactile-tea text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg hover:scale-105 active:scale-95 transition shrink-0 self-stretch sm:self-auto justify-center"
                   >
                     <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Watch Featured Video ({selectedVideo.creator})</span>
+                    <span>Watch Featured ({selectedVideo.creator})</span>
                   </button>
                 )}
               </div>
@@ -240,21 +237,23 @@ export default function CoffeeVideoAcademyModal({
                     {VIDEO_CATEGORIES.map((cat) => {
                       const isActive = activeCategory === cat.id;
                       const count = cat.id === 'all' 
-                        ? COFFEE_VIDEOS.length 
-                        : COFFEE_VIDEOS.filter(v => v.category === cat.id).length;
+                        ? TEA_VIDEOS.length 
+                        : TEA_VIDEOS.filter(v => v.category === cat.id).length;
                       return (
                         <button
                           key={cat.id}
+                          type="button"
                           onClick={() => setActiveCategory(cat.id)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition-all border flex items-center gap-1.5 ${
+                          className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition whitespace-nowrap border shrink-0 ${
                             isActive
-                              ? 'btn-tactile-amber text-espresso-950 shadow-md shadow-amber-gold/20 scale-102 font-extrabold'
-                              : 'bg-black/40 text-cream-soft hover:text-cream-light hover:bg-white/[0.06] border-white/10'
+                              ? 'bg-sage-400 text-slate-950 border-sage-300 shadow-md font-black'
+                              : 'bg-white/[0.04] text-cream-soft hover:text-white border-white/10 hover:bg-white/[0.08]'
                           }`}
                         >
+                          {getCategoryIcon(cat.id)}
                           <span>{cat.label}</span>
                           <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                            isActive ? 'bg-black/30 text-espresso-950 font-bold' : 'bg-white/10 text-cream-soft'
+                            isActive ? 'bg-slate-950/20 text-slate-950 font-black' : 'bg-black/40 text-cream-soft/60'
                           }`}>
                             {count}
                           </span>
@@ -263,99 +262,109 @@ export default function CoffeeVideoAcademyModal({
                     })}
                   </div>
 
-                  {/* Search Bar */}
-                  <div className="relative w-full sm:w-72 shrink-0">
-                    <Search className="w-4 h-4 text-amber-gold absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  {/* Search Input */}
+                  <div className="relative min-w-[240px]">
+                    <Search className="w-4 h-4 text-cream-soft/50 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search masterclasses, baristas..."
-                      className="w-full pl-10 pr-4 py-2 rounded-xl bg-black/60 border border-white/15 text-xs text-cream-light placeholder-cream-soft/40 focus:outline-none focus:border-amber-gold transition"
+                      placeholder="Search masterclasses..."
+                      className="w-full pl-9 pr-8 py-2 bg-black/50 border border-white/10 rounded-xl text-xs font-mono text-cream-light placeholder:text-cream-soft/40 focus:outline-none focus:border-sage-400 transition"
                     />
                     {searchQuery && (
                       <button
                         onClick={() => setSearchQuery('')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-cream-soft/60 hover:text-white text-xs"
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-cream-soft/50 hover:text-cream-light"
                       >
-                        ✕
+                        <X className="w-3.5 h-3.5" />
                       </button>
                     )}
                   </div>
                 </div>
 
                 {/* Video Cards Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredVideos.map((video) => {
-                    const isCurrent = selectedVideo && selectedVideo.id === video.id;
+                    const isCurrent = selectedVideo?.id === video.id;
                     return (
                       <div
                         key={video.id}
                         onClick={() => handleWatchVideo(video)}
-                        className={`rounded-2xl border overflow-hidden transition-all duration-300 flex flex-col justify-between cursor-pointer group shadow-xl hover:-translate-y-1 ${
+                        className={`group relative rounded-3xl bg-[#0B1B11] border transition overflow-hidden cursor-pointer flex flex-col shadow-lg hover:shadow-xl hover:-translate-y-0.5 ${
                           isCurrent
-                            ? 'bg-amber-500/15 border-amber-gold ring-2 ring-amber-gold/50 shadow-amber-900/30'
-                            : 'bg-[#150F0B] border-white/10 hover:border-amber-gold/40 hover:bg-[#1C140E]'
+                            ? 'border-sage-400 ring-2 ring-sage-400/40'
+                            : 'border-white/10 hover:border-sage-500/40'
                         }`}
                       >
-                        {/* Thumbnail Frame */}
+                        {/* Thumbnail Container */}
                         <div className="relative aspect-video w-full overflow-hidden bg-black">
                           <img
                             src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
                             alt={video.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 filter brightness-95"
                             loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90 group-hover:opacity-100"
                           />
                           
-                          {/* Dark Vignette Overlay */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                          {/* Duration Badge */}
+                          <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-lg bg-black/80 backdrop-blur-md text-white font-mono text-[10px] font-bold flex items-center gap-1 border border-white/10">
+                            <Clock className="w-2.5 h-2.5 text-sage-300" />
+                            <span>{video.duration}</span>
+                          </div>
 
-                          {/* Play Badge Center */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-12 h-12 rounded-full bg-black/60 border border-amber-gold/60 backdrop-blur-sm flex items-center justify-center text-amber-gold shadow-lg group-hover:scale-110 group-hover:bg-amber-gold group-hover:text-espresso-950 transition-all duration-300">
+                          {/* Featured Pill */}
+                          {video.featured && (
+                            <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-lg bg-emerald-500/90 backdrop-blur-md text-white font-mono text-[9px] font-black uppercase tracking-wider flex items-center gap-1 shadow">
+                              <Sparkles className="w-2.5 h-2.5" />
+                              <span>Featured Masterclass</span>
+                            </div>
+                          )}
+
+                          {/* Hover Play Overlay */}
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                            <div className="w-12 h-12 rounded-full bg-emerald-500/90 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition">
                               <Play className="w-5 h-5 fill-current ml-0.5" />
                             </div>
                           </div>
-
-                          {/* Duration Tag */}
-                          <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md bg-black/80 text-[10px] font-mono text-cream-light font-bold border border-white/15">
-                            {video.duration}
-                          </div>
-
-                          {/* Category Chip */}
-                          <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-sm text-[10px] font-mono text-amber-gold uppercase tracking-wider font-bold border border-amber-gold/30">
-                            {video.recipeSync?.methodName || video.category.replace('_', ' ')}
-                          </div>
                         </div>
 
-                        {/* Content Details */}
-                        <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                        {/* Card Content */}
+                        <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                           <div>
+                            {/* Creator Row */}
                             <div className="flex items-center gap-2 mb-1.5">
-                              <img
-                                src={video.creatorAvatar}
-                                alt={video.creator}
-                                className="w-5 h-5 rounded-full object-cover border border-amber-gold/40"
-                              />
-                              <span className="text-[11px] font-mono font-bold text-amber-gold/90 truncate">
+                              {video.creatorAvatar && (
+                                <img
+                                  src={video.creatorAvatar}
+                                  alt={video.creator}
+                                  className="w-5 h-5 rounded-full object-cover border border-white/20"
+                                />
+                              )}
+                              <span className="text-[11px] font-mono font-bold text-sage-300 truncate">
                                 {video.creator}
                               </span>
-                              <span className="text-[10px] font-mono text-cream-soft/50">• {video.creatorBadge || 'Specialty Barista'}</span>
+                              {video.creatorBadge && (
+                                <span className="text-[9px] font-mono text-cream-soft/60 truncate">
+                                  • {video.creatorBadge}
+                                </span>
+                              )}
                             </div>
 
-                            <h4 className="font-serif text-sm font-bold text-cream-light leading-snug line-clamp-2 group-hover:text-amber-gold transition-colors">
+                            {/* Title */}
+                            <h4 className="font-serif text-sm font-bold text-cream-light group-hover:text-sage-300 transition line-clamp-2 leading-snug">
                               {video.title}
                             </h4>
-                            
-                            <p className="text-xs text-cream-soft/70 font-sans line-clamp-2 mt-1">
+
+                            {/* Description snippet */}
+                            <p className="text-xs text-cream-soft/75 line-clamp-2 mt-1 font-sans">
                               {video.description}
                             </p>
                           </div>
 
-                          {/* Footer Actions */}
-                          <div className="pt-2.5 border-t border-white/10 flex items-center justify-between gap-2 text-xs font-mono">
-                            <span className="text-[10px] text-cream-soft/60">
-                              {video.views} views
+                          {/* Bottom Action Footer */}
+                          <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
+                            <span className="text-[10px] font-mono text-cream-soft/60">
+                              {video.views} Views
                             </span>
 
                             <div className="flex items-center gap-1.5">
@@ -366,11 +375,11 @@ export default function CoffeeVideoAcademyModal({
                                     e.stopPropagation();
                                     handleBrewClick(video);
                                   }}
-                                  className="px-2 py-1 rounded-lg bg-amber-gold/20 hover:bg-amber-gold hover:text-espresso-950 text-amber-gold text-[10px] font-bold border border-amber-gold/40 transition flex items-center gap-1"
-                                  title="Load this recipe into the brew timer"
+                                  className="px-2 py-1 rounded-lg bg-sage-400/20 hover:bg-sage-400 hover:text-slate-950 text-sage-300 text-[10px] font-bold border border-sage-400/40 transition flex items-center gap-1"
+                                  title="Load this steeping recipe into the timer"
                                 >
-                                  <Coffee className="w-3 h-3" />
-                                  <span>Brew 1:{video.recipeSync.ratio}</span>
+                                  <Sparkles className="w-3 h-3" />
+                                  <span>Steep 1:{video.recipeSync.ratio}</span>
                                 </button>
                               )}
 
@@ -418,15 +427,15 @@ export default function CoffeeVideoAcademyModal({
                 <button
                   type="button"
                   onClick={() => setViewMode('library')}
-                  className="px-4 py-2 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] text-cream-light hover:text-amber-gold border border-white/15 text-xs font-mono font-bold flex items-center gap-2 transition active:scale-95 shadow"
+                  className="px-4 py-2 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] text-cream-light hover:text-sage-300 border border-white/15 text-xs font-mono font-bold flex items-center gap-2 transition active:scale-95 shadow"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>← Back to Masterclass Library ({COFFEE_VIDEOS.length} Videos)</span>
+                  <span>← Back to Masterclass Library ({TEA_VIDEOS.length} Videos)</span>
                 </button>
 
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-mono text-cream-soft/70 hidden sm:inline">Now Playing:</span>
-                  <span className="px-2.5 py-1 rounded-full bg-amber-gold/20 text-amber-gold font-mono text-xs font-bold border border-amber-gold/40">
+                  <span className="px-2.5 py-1 rounded-full bg-sage-400/20 text-sage-300 font-mono text-xs font-bold border border-sage-400/40">
                     {selectedVideo.creator}
                   </span>
                 </div>
@@ -435,33 +444,28 @@ export default function CoffeeVideoAcademyModal({
               {/* Main Theater Player Container */}
               <div
                 id="academy-theater-player"
-                className="rounded-3xl bg-[#1A120B] border border-amber-gold/30 p-4 sm:p-6 shadow-2xl space-y-5"
+                className="rounded-3xl bg-[#0B1A10] border border-sage-500/30 p-4 sm:p-6 shadow-2xl space-y-5"
               >
                 {/* 16:9 Responsive YouTube Embed */}
-                <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-black border border-white/10 shadow-2xl group">
+                <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-black shadow-inner border border-white/10">
                   <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${selectedVideo.youtubeId}?autoplay=1&modestbranding=1&rel=0&color=white`}
+                    src={`https://www.youtube-nocookie.com/embed/${selectedVideo.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
                     title={selectedVideo.title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
-                    className="w-full h-full border-0"
+                    className="absolute inset-0 w-full h-full"
                   />
                 </div>
 
-                {/* Theater Video Meta & Brew-Along Sync Section */}
-                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pt-2">
-                  <div className="space-y-2 max-w-3xl">
-                    <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
-                      <span className="px-2.5 py-1 rounded-full bg-amber-gold/20 text-amber-gold font-bold border border-amber-gold/40">
-                        {selectedVideo.creatorBadge || 'Barista Champion'}
+                {/* Video Info Header */}
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 pt-2">
+                  <div className="space-y-2 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-2 py-0.5 rounded-md bg-sage-400/20 text-sage-300 font-mono text-[10px] font-bold uppercase tracking-wider border border-sage-400/30">
+                        {selectedVideo.category.toUpperCase().replace('_', ' ')}
                       </span>
-                      <span className="text-cream-soft/60 flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-amber-gold" />
-                        {selectedVideo.duration}
-                      </span>
-                      <span className="text-cream-soft/60 flex items-center gap-1">
-                        <Eye className="w-3.5 h-3.5 text-amber-gold" />
-                        {selectedVideo.views} views
+                      <span className="text-xs font-mono text-cream-soft/70">
+                        {selectedVideo.duration} • {selectedVideo.views} Views
                       </span>
                     </div>
 
@@ -469,45 +473,60 @@ export default function CoffeeVideoAcademyModal({
                       {selectedVideo.title}
                     </h3>
 
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={selectedVideo.creatorAvatar}
-                        alt={selectedVideo.creator}
-                        className="w-8 h-8 rounded-full object-cover border border-amber-gold/40 shadow"
-                      />
-                      <span className="font-mono text-xs font-bold text-amber-gold">
-                        {selectedVideo.creator}
-                      </span>
-                      <span className="text-stone-500 text-xs font-mono">•</span>
-                      <p className="text-xs text-cream-soft/80 font-sans">
-                        {selectedVideo.description}
-                      </p>
+                    <div className="flex items-center gap-2.5 pt-1">
+                      {selectedVideo.creatorAvatar && (
+                        <img
+                          src={selectedVideo.creatorAvatar}
+                          alt={selectedVideo.creator}
+                          className="w-7 h-7 rounded-full object-cover border border-white/20 shadow"
+                        />
+                      )}
+                      <div>
+                        <div className="text-xs font-mono font-bold text-cream-light">
+                          {selectedVideo.creator}
+                        </div>
+                        {selectedVideo.creatorBadge && (
+                          <div className="text-[10px] font-mono text-sage-300">
+                            {selectedVideo.creatorBadge}
+                          </div>
+                        )}
+                      </div>
                     </div>
+
+                    <p className="text-xs sm:text-sm text-cream-soft/80 font-sans leading-relaxed pt-2">
+                      {selectedVideo.description}
+                    </p>
                   </div>
 
-                  {/* Brew-Along Interactive Card */}
+                  {/* Sync Recipe with Steeping Timer Box */}
                   {selectedVideo.recipeSync && (
-                    <div className="w-full lg:w-auto p-4 rounded-2xl bg-black/60 border border-amber-gold/50 shadow-xl flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-stretch gap-4 shrink-0">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-1.5 text-[10px] font-mono font-extrabold uppercase tracking-wider text-amber-gold">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-gold" />
-                          <span>Interactive Brew Sync</span>
+                    <div className="w-full md:w-80 rounded-2xl bg-black/60 border border-sage-500/40 p-4 space-y-3 shadow-lg shrink-0">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                        <span className="text-[10px] font-mono uppercase tracking-widest text-sage-300 font-extrabold flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-sage-300" />
+                          <span>Dialed-In Steeping Recipe</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-emerald-400 font-bold">
+                          Ready to Sync
+                        </span>
+                      </div>
+
+                      <div className="space-y-1.5 text-xs font-mono">
+                        <div className="font-bold text-cream-light">
+                          {selectedVideo.recipeSync.methodName}
                         </div>
-                        <div className="text-xs font-mono text-cream-soft/90">
-                          Method: <strong className="text-white">{selectedVideo.recipeSync.methodName}</strong>
-                        </div>
-                        <div className="text-[11px] font-mono text-cream-soft/70">
-                          Golden Ratio: <span className="text-amber-gold font-bold">1:{selectedVideo.recipeSync.ratio}</span> • Temp: <span className="text-cyan-300 font-bold">{selectedVideo.recipeSync.waterTempF}°F</span>
+                        <div className="text-stone-300 text-[11px]">
+                          Target Ratio: <span className="text-sage-300 font-bold">1:{selectedVideo.recipeSync.ratio}</span> • Temp: <span className="text-cyan-300 font-bold">{selectedVideo.recipeSync.waterTempF}°F ({selectedVideo.recipeSync.waterTempC}°C)</span>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-2 w-full">
                         <button
                           onClick={() => handleBrewClick(selectedVideo)}
-                          className="flex-1 py-2.5 px-4 rounded-xl btn-tactile-amber text-espresso-950 font-mono text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-amber-gold/20 hover:scale-105 active:scale-95 transition"
+                          className="flex-1 py-2.5 px-4 rounded-xl btn-tactile-tea text-white font-mono text-xs font-extrabold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 hover:scale-105 active:scale-95 transition"
                         >
-                          <Coffee className="w-4 h-4" />
-                          <span>Brew With This Video</span>
+                          <Sparkles className="w-4 h-4" />
+                          <span>Steep With This Video</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
 
@@ -528,25 +547,25 @@ export default function CoffeeVideoAcademyModal({
               <div className="space-y-3 pt-4 border-t border-white/10">
                 <div className="flex items-center justify-between">
                   <h4 className="font-serif text-base font-bold text-cream-light flex items-center gap-2">
-                    <Film className="w-4 h-4 text-amber-gold" />
+                    <Film className="w-4 h-4 text-sage-300" />
                     <span>Up Next • More Masterclasses in the Academy</span>
                   </h4>
                   <button
                     type="button"
                     onClick={() => setViewMode('library')}
-                    className="text-amber-gold hover:underline text-xs font-mono font-bold flex items-center gap-1"
+                    className="text-sage-300 hover:underline text-xs font-mono font-bold flex items-center gap-1"
                   >
-                    <span>View All {COFFEE_VIDEOS.length} Masterclasses</span>
+                    <span>View All {TEA_VIDEOS.length} Masterclasses</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {COFFEE_VIDEOS.filter(v => v.id !== selectedVideo.id).slice(0, 4).map((v) => (
+                  {TEA_VIDEOS.filter(v => v.id !== selectedVideo.id).slice(0, 4).map((v) => (
                     <div
                       key={v.id}
                       onClick={() => handleWatchVideo(v)}
-                      className="p-3 rounded-2xl bg-[#170E08] border border-white/10 hover:border-amber-gold/40 cursor-pointer transition group shadow-md flex gap-3 items-center"
+                      className="p-3 rounded-2xl bg-[#09170E] border border-white/10 hover:border-sage-400/40 cursor-pointer transition group shadow-md flex gap-3 items-center"
                     >
                       <div className="relative w-20 h-14 rounded-xl overflow-hidden bg-black shrink-0">
                         <img
@@ -555,12 +574,12 @@ export default function CoffeeVideoAcademyModal({
                           className="w-full h-full object-cover group-hover:scale-105 transition"
                         />
                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                          <Play className="w-4 h-4 text-amber-gold fill-current" />
+                          <Play className="w-4 h-4 text-sage-300 fill-current" />
                         </div>
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-[10px] font-mono text-amber-gold truncate">{v.creator}</div>
-                        <h5 className="font-serif text-xs font-bold text-cream-light line-clamp-2 group-hover:text-amber-gold leading-tight">
+                        <div className="text-[10px] font-mono text-sage-300 truncate">{v.creator}</div>
+                        <h5 className="font-serif text-xs font-bold text-cream-light line-clamp-2 group-hover:text-sage-300 leading-tight">
                           {v.title}
                         </h5>
                       </div>
@@ -576,8 +595,8 @@ export default function CoffeeVideoAcademyModal({
             <span>
               All video streams hosted directly via YouTube. Zero video storage overhead or server egress cost.
             </span>
-            <span className="text-amber-gold font-bold">
-              © {new Date().getFullYear()} The Brew App • Coffee Academy
+            <span className="text-sage-300 font-bold">
+              © {new Date().getFullYear()} LooseLeaf • Tea Video Academy
             </span>
           </div>
 

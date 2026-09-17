@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { X, User, Flame, Award, Sparkles, Coffee, Leaf, Shield, CheckCircle2, Bookmark, Edit3, LogOut, HelpCircle, ChevronDown, ChevronUp, Target } from 'lucide-react';
+import { X, User, Flame, Award, Sparkles, Leaf, Shield, CheckCircle2, Bookmark, Edit3, LogOut, HelpCircle, ChevronDown, ChevronUp, Target } from 'lucide-react';
 import { BADGES_DATA } from '../data/badgesData';
 
 export default function UserProfileDashboard({ isOpen, onClose, trackMode, currentUser, onOpenAuth, onLogout }) {
   if (!isOpen) return null;
 
   const [showInstructions, setShowInstructions] = useState(false);
-  const isCoffee = trackMode === 'coffee';
-
-  // 1. Read actual brew logs from device's private journal
+// 1. Read actual brew logs from device's private journal
   const journalLogs = (() => {
     try {
       const raw = localStorage.getItem('the_brew_app_journal_v1');
@@ -86,7 +84,7 @@ export default function UserProfileDashboard({ isOpen, onClose, trackMode, curre
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-fade-in">
-      <div className="relative max-w-3xl w-full rounded-3xl bg-[#14110E] border-2 border-amber-gold/50 p-6 md:p-8 shadow-2xl overflow-y-auto max-h-[90vh] text-cream-light">
+      <div className="relative max-w-3xl w-full rounded-3xl bg-[#14110E] border-2 border-sage-500/50 p-6 md:p-8 shadow-2xl overflow-y-auto max-h-[90vh] text-cream-light">
         
         {/* Modal Close Button */}
         <button
@@ -102,11 +100,11 @@ export default function UserProfileDashboard({ isOpen, onClose, trackMode, curre
             <img
               src={profile.avatar}
               alt={profile.displayName}
-              className="w-20 h-20 rounded-full object-cover border-2 border-amber-gold shadow-xl"
+              className="w-20 h-20 rounded-full object-cover border-2 border-sage-500 shadow-xl"
             />
           ) : (
-            <div className="w-20 h-20 rounded-full bg-amber-500/15 border-2 border-amber-gold/60 flex items-center justify-center shadow-xl flex-shrink-0">
-              <User className="w-10 h-10 text-amber-gold" />
+            <div className="w-20 h-20 rounded-full bg-sage-500/15 border-2 border-sage-500/60 flex items-center justify-center shadow-xl flex-shrink-0">
+              <User className="w-10 h-10 text-sage-300" />
             </div>
           )}
 
@@ -114,10 +112,10 @@ export default function UserProfileDashboard({ isOpen, onClose, trackMode, curre
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h3 className="font-serif text-2xl font-bold text-cream-light flex items-center justify-center sm:justify-start gap-2">
-                  <span>{profile ? profile.displayName : 'Guest Barista'}</span>
-                  {profile && <Shield className="w-4 h-4 text-amber-gold fill-current" />}
+                  <span>{profile ? profile.displayName : 'Guest Steeper'}</span>
+                  {profile && <Shield className="w-4 h-4 text-sage-300 fill-current" />}
                 </h3>
-                <span className="text-xs font-mono text-amber-gold font-bold">
+                <span className="text-xs font-mono text-sage-300 font-bold">
                   {profile ? `${profile.username} • On-Device Profile` : '@guest • On-Device Session'}
                 </span>
               </div>
@@ -125,7 +123,7 @@ export default function UserProfileDashboard({ isOpen, onClose, trackMode, curre
               <div className="flex items-center justify-center gap-2">
                 {profile ? (
                   <>
-                    <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-gold border border-amber-400/40 text-xs font-mono font-bold">
+                    <span className="px-3 py-1 rounded-full bg-sage-500/20 text-sage-300 border border-sage-400/40 text-xs font-mono font-bold">
                       Active Profile
                     </span>
                     {onOpenAuth && (
@@ -134,7 +132,7 @@ export default function UserProfileDashboard({ isOpen, onClose, trackMode, curre
                           onClose();
                           onOpenAuth();
                         }}
-                        className="p-1.5 px-3 rounded-xl bg-white/10 text-amber-gold hover:bg-white/20 border border-amber-gold/30 transition-all flex items-center gap-1 text-xs font-bold font-mono"
+                        className="p-1.5 px-3 rounded-xl bg-white/10 text-sage-300 hover:bg-white/20 border border-sage-500/30 transition-all flex items-center gap-1 text-xs font-bold font-mono"
                         title="Edit Your Profile Info & Avatar"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
@@ -162,7 +160,7 @@ export default function UserProfileDashboard({ isOpen, onClose, trackMode, curre
                         onClose();
                         onOpenAuth();
                       }}
-                      className="py-2 px-4 rounded-xl btn-tactile-amber text-espresso-950 font-bold font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-lg active:scale-95 transition-all"
+                      className="py-2 px-4 rounded-xl btn-tactile-tea text-espresso-950 font-bold font-mono text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-lg active:scale-95 transition-all"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
                       <span>Create Profile</span>
@@ -173,39 +171,39 @@ export default function UserProfileDashboard({ isOpen, onClose, trackMode, curre
             </div>
 
             <p className="text-xs text-stone-300 mt-2 leading-relaxed font-normal">
-              {profile?.bio || 'You are brewing as an anonymous guest. All tasting notes and custom recipes save directly to your browser.'}
+              {profile?.bio || 'You are steeping as an anonymous guest. All tasting notes and custom recipes save directly to your browser.'}
             </p>
           </div>
         </div>
 
         {/* Stats Grid: Real Brew Streak, Real Total Brews, Real Badges */}
         <div className="grid grid-cols-3 gap-3 mb-8 text-center font-mono">
-          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-400/30">
-            <div className="flex items-center justify-center space-x-1 text-amber-gold text-lg font-bold">
-              <Flame className="w-5 h-5 text-amber-gold animate-bounce" />
+          <div className="p-4 rounded-2xl bg-sage-500/10 border border-sage-400/30">
+            <div className="flex items-center justify-center space-x-1 text-sage-300 text-lg font-bold">
+              <Flame className="w-5 h-5 text-sage-300 animate-bounce" />
               <span>{realStreak} {realStreak === 1 ? 'Day' : 'Days'}</span>
             </div>
-            <span className="text-[10px] text-stone-400 font-sans uppercase font-bold tracking-wider block mt-1">Daily Brew Streak</span>
+            <span className="text-[10px] text-stone-400 font-sans uppercase font-bold tracking-wider block mt-1">Daily Steeping Streak</span>
           </div>
 
           <div className="p-4 rounded-2xl bg-black/40 border border-white/10">
             <div className="text-lg font-bold text-cream-light">{totalBrewsLogged}</div>
-            <span className="text-[10px] text-stone-400 font-sans uppercase font-bold tracking-wider block mt-1">Total Brews Logged</span>
+            <span className="text-[10px] text-stone-400 font-sans uppercase font-bold tracking-wider block mt-1">Total Steeps Logged</span>
           </div>
 
           <div className="p-4 rounded-2xl bg-black/40 border border-white/10">
-            <div className="text-lg font-bold text-amber-gold">{unlockedBadgeIds.length} / {BADGES_DATA.length}</div>
+            <div className="text-lg font-bold text-sage-300">{unlockedBadgeIds.length} / {BADGES_DATA.length}</div>
             <span className="text-[10px] text-stone-400 font-sans uppercase font-bold tracking-wider block mt-1">Badges Unlocked</span>
           </div>
         </div>
 
         {/* Badges Unlock Guide Accordion Header */}
-        <div className="mb-6 rounded-2xl bg-amber-500/10 border border-amber-gold/30 p-4">
+        <div className="mb-6 rounded-2xl bg-sage-500/10 border border-sage-500/30 p-4">
           <button
             onClick={() => setShowInstructions(!showInstructions)}
             className="w-full flex items-center justify-between text-left font-bold text-cream-light text-xs uppercase tracking-wider"
           >
-            <div className="flex items-center gap-2 text-amber-gold">
+            <div className="flex items-center gap-2 text-sage-300">
               <Target className="w-4 h-4" />
               <span>📖 How to Unlock Badges & Achievements Guide</span>
             </div>
@@ -216,18 +214,18 @@ export default function UserProfileDashboard({ isOpen, onClose, trackMode, curre
           </button>
 
           {showInstructions && (
-            <div className="mt-4 pt-3 border-t border-amber-gold/20 space-y-2 text-xs font-sans text-stone-300 leading-relaxed animate-fade-in">
+            <div className="mt-4 pt-3 border-t border-sage-500/20 space-y-2 text-xs font-sans text-stone-300 leading-relaxed animate-fade-in">
               <p className="font-semibold text-cream-light">
                 Earn badges and level up your tastemaker status by performing real brewing activities across the platform:
               </p>
               <ul className="space-y-1.5 list-disc list-inside font-mono text-[11px] text-stone-300">
-                <li><strong className="text-amber-gold">☕ First Extraction:</strong> Log your very first brew in the Personal Tasting Journal or Guided Brew Timer.</li>
-                <li><strong className="text-amber-gold">✨ Golden Ratio Master:</strong> Scale any coffee brew to the exact SCA standard 1:16 ratio.</li>
-                <li><strong className="text-amber-gold">🔥 3-Day & 7-Day Streaks:</strong> Log at least 1 brew daily for consecutive days to maintain your active streak.</li>
-                <li><strong className="text-amber-gold">🌊 Pour Over Aficionado:</strong> Complete 5 V60 pour-over brews using the multi-phase timer.</li>
-                <li><strong className="text-amber-gold">🏺 Immersion Master:</strong> Complete 5 French Press immersion brews.</li>
-                <li><strong className="text-amber-gold">🌍 Terroir Atlas Explorer:</strong> Explore terroirs & agronomy across 5 growing origins.</li>
-                <li><strong className="text-amber-gold">📜 Master Alchemist:</strong> Design and save a custom recipe in the Personal Recipe Studio.</li>
+                <li><strong className="text-sage-300">🍵 First Steeping:</strong> Log your very first loose-leaf tea steeping in LooseLeaf.</li>
+                <li><strong className="text-sage-300">✨ Steep Ratio Master:</strong> Steep using exact leaf-to-water ratio precision.</li>
+                <li><strong className="text-sage-300">🔥 3-Day & 7-Day Tea Ritual:</strong> Steep specialty loose-leaf tea for consecutive days to maintain your active ritual.</li>
+                <li><strong className="text-sage-300">🫖 Gongfu Cha Master:</strong> Master high-ratio Gaiwan multi-steeping across 5 sessions.</li>
+                <li><strong className="text-sage-300">🥣 Ceremonial Matcha Artisan:</strong> Whisk ceremonial stone-ground tencha into rich micro-foam.</li>
+                <li><strong className="text-sage-300">🌍 Terroir Explorer:</strong> Explore terroirs & agronomy across growing regions.</li>
+                <li><strong className="text-sage-300">📜 Master Alchemist:</strong> Design and save a custom recipe in the Personal Recipe Studio.</li>
               </ul>
             </div>
           )}
@@ -236,7 +234,7 @@ export default function UserProfileDashboard({ isOpen, onClose, trackMode, curre
         {/* Gamification Achievements & Badges Grid */}
         <div className="mb-8">
           <div className="font-bold text-cream-light text-xs uppercase tracking-wider mb-4 flex items-center gap-2">
-            <Award className="w-4 h-4 text-amber-gold" />
+            <Award className="w-4 h-4 text-sage-300" />
             <span>Tastemaker Achievements & Badges ({unlockedBadgeIds.length} Unlocked)</span>
           </div>
 
@@ -248,14 +246,14 @@ export default function UserProfileDashboard({ isOpen, onClose, trackMode, curre
                   key={badge.id}
                   className={`p-3.5 rounded-2xl border text-center transition-all ${
                     isUnlocked
-                      ? 'bg-amber-500/15 border-amber-gold/50 text-cream-light shadow-lg'
+                      ? 'bg-sage-500/15 border-sage-500/50 text-cream-light shadow-lg'
                       : 'bg-black/30 border-white/10 opacity-40 grayscale'
                   }`}
                 >
                   <div className="text-2xl mb-1">{badge.icon}</div>
                   <div className="font-extrabold text-xs truncate">{badge.name}</div>
                   <div className="text-[9px] text-stone-400 mt-1 leading-tight line-clamp-2">{badge.description}</div>
-                  <div className="mt-2 text-[8px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-black/50 border border-white/10 text-amber-gold">
+                  <div className="mt-2 text-[8px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-black/50 border border-white/10 text-sage-300">
                     {isUnlocked ? '✓ Unlocked' : '🔒 Locked'}
                   </div>
                 </div>

@@ -1,56 +1,7 @@
-// Curated Master Recipes & Signature Extraction Protocols
-// Verified standard techniques from recognized champions, educators, and traditions.
+// Curated Master Recipes & Signature Steeping Protocols for LooseLeaf
+// Verified standard techniques from recognized tea masters, tea sommeliers, and traditions.
 
 export const CURATED_MASTER_RECIPES = [
-  {
-    id: 'rec_v60_yirgacheffe',
-    title: 'SCA Benchmark 5-Pour Conical Extraction',
-    technique: 'Specialty Coffee Association Protocol',
-    badge: 'SCA Benchmark',
-    methodId: 'pour_over',
-    methodName: 'Hario V60 Dripper',
-    trackMode: 'coffee',
-    beanName: 'Ethiopia Yirgacheffe Washed / Light Roast',
-    roasterName: 'Single-Origin Recommendation',
-    ratio: 16.6,
-    dryDoseGrams: 15.0,
-    waterAmountMl: 250.0,
-    waterTempC: 96,
-    grindSetting: 'Medium-Fine (600–700 µm)',
-    totalTimeSec: 180,
-    description: 'Precision multi-pour extraction optimizing sweetness, clarity, and delicate floral bergamot notes with zero astringency.',
-    steps: [
-      { order: 1, durationSec: 45, waterMl: 50, action: 'Bloom Pour (3x dose) & Gentle Swirl' },
-      { order: 2, durationSec: 15, waterMl: 100, action: 'First Concentric Spiral Pour' },
-      { order: 3, durationSec: 20, waterMl: 150, action: 'Second Spiral Pour to Maintain Slurry Temp' },
-      { order: 4, durationSec: 20, waterMl: 200, action: 'Third Spiral Pour to Agitate Grounds' },
-      { order: 5, durationSec: 20, waterMl: 250, action: 'Final Center Pour & Leveling Swirl' },
-      { order: 6, durationSec: 60, waterMl: 250, action: 'Even Drawdown onto Flat Bed' }
-    ]
-  },
-  {
-    id: 'rec_fp_hoffmann',
-    title: 'The Ultimate French Press Immersion Technique',
-    technique: 'James Hoffmann World Champion Protocol',
-    badge: 'Champion Technique',
-    methodId: 'french_press',
-    methodName: 'French Press',
-    trackMode: 'coffee',
-    beanName: 'Guatemala / Colombia Medium Roast',
-    roasterName: 'Washed or Natural Specialty Lot',
-    ratio: 15.0,
-    dryDoseGrams: 30.0,
-    waterAmountMl: 450.0,
-    waterTempC: 98,
-    grindSetting: 'Medium-Coarse (800–1000 µm)',
-    totalTimeSec: 540,
-    description: 'Zero-press settling method. Breaking the crust at 4 minutes and skimming surface foam creates a clean, sediment-free cup with rich body.',
-    steps: [
-      { order: 1, durationSec: 240, waterMl: 450, action: 'Full Rapid Water Pour & 4-Minute Unstirred Steep' },
-      { order: 2, durationSec: 30, waterMl: 450, action: 'Gently Break Crust with Spoon & Skim Floating Foam' },
-      { order: 3, durationSec: 270, waterMl: 450, action: 'Rest 5 Minutes (Particles Settle; Do Not Plunge to Bottom)' }
-    ]
-  },
   {
     id: 'rec_gaiwan_alishan',
     title: 'Traditional High Mountain Gongfu Multi-Steep',
@@ -76,30 +27,74 @@ export const CURATED_MASTER_RECIPES = [
     ]
   },
   {
-    id: 'rec_aeropress_inverted',
-    title: 'World AeroPress Inverted Bloom Method',
-    technique: 'Competition Inverted Protocol',
-    badge: 'Competition Favorite',
-    methodId: 'aeropress',
-    methodName: 'AeroPress',
-    trackMode: 'coffee',
-    beanName: 'Kenya / Ethiopia Washed Single Origin',
-    roasterName: 'Light to Medium-Light Roast',
-    ratio: 14.0,
-    dryDoseGrams: 16.0,
-    waterAmountMl: 224.0,
-    waterTempC: 90,
-    grindSetting: 'Medium-Fine (500–600 µm)',
-    totalTimeSec: 150,
-    description: 'Inverted orientation ensures full immersion without preliminary bypass dripping, delivering high extraction yield with bright juicy acidity.',
+    id: 'rec_matcha_usucha',
+    title: 'Kyoto Ceremonial Usucha Matcha Protocol',
+    technique: 'Traditional Uji Chasen Whisk Method',
+    badge: 'Ceremonial Protocol',
+    methodId: 'matcha_tea',
+    methodName: 'Ceremonial Matcha (Usucha)',
+    trackMode: 'tea',
+    beanName: 'Uji First-Harvest Ceremonial Tencha',
+    roasterName: 'Stone-Ground Kyoto Heritage Mill',
+    ratio: 35.0,
+    dryDoseGrams: 2.0,
+    waterAmountMl: 70.0,
+    waterTempC: 80,
+    grindSetting: 'Stone-Ground Tencha Powder (<15 µm)',
+    totalTimeSec: 80,
+    description: 'Stone-ground green tea whisked with bamboo Chasen in a preheated ceramic Chawan to generate rich, silky micro-foam with intense sweet umami.',
     steps: [
-      { order: 1, durationSec: 30, waterMl: 60, action: 'Inverted Setup: Add grounds, pour bloom water, stir 10 seconds' },
-      { order: 2, durationSec: 30, waterMl: 224, action: 'Pour remaining water to 224g, attach rinsed filter cap' },
-      { order: 3, durationSec: 45, waterMl: 224, action: 'Carefully flip onto decanter and begin steady 30-second press' },
-      { order: 4, durationSec: 30, waterMl: 224, action: 'Stop press at hiss to avoid harsh late-stage fines' }
+      { order: 1, durationSec: 20, waterMl: 0, action: 'Warm bowl with hot water, wipe dry, sift 2g matcha powder' },
+      { order: 2, durationSec: 15, waterMl: 70, action: 'Pour 70mL 80°C soft water along inner edge of bowl' },
+      { order: 3, durationSec: 45, waterMl: 70, action: 'Whisk briskly from wrist in W-motion until dense green foam crowns bowl' }
+    ]
+  },
+  {
+    id: 'rec_darjeeling_muscatel',
+    title: 'Himalayan Darjeeling First Flush Infusion',
+    technique: 'Estate Tasting Protocol',
+    badge: 'Himalayan Benchmark',
+    methodId: 'darjeeling_tea',
+    methodName: 'Himalayan Darjeeling',
+    trackMode: 'tea',
+    beanName: 'Darjeeling FTGFOP1 First Flush',
+    roasterName: 'Single-Estate Himalayan Lot',
+    ratio: 50.0,
+    dryDoseGrams: 5.0,
+    waterAmountMl: 250.0,
+    waterTempC: 88,
+    grindSetting: 'Orthodox Whole Leaf',
+    totalTimeSec: 225,
+    description: 'Careful temperature moderation at 88°C preserves delicate muscatel grape esters, fresh peach skin, and wildflower honey aromatics without astringency.',
+    steps: [
+      { order: 1, durationSec: 15, waterMl: 0, action: 'Warm porcelain teapot and discard warming water' },
+      { order: 2, durationSec: 180, waterMl: 250, action: 'Pour 88°C water gently over leaves. Steep undisturbed for 3 minutes' },
+      { order: 3, durationSec: 30, waterMl: 250, action: 'Strain completely into teacup to prevent over-extraction' }
+    ]
+  },
+  {
+    id: 'rec_royal_masala_chai',
+    title: 'Traditional Brahmaputra Valley Simmered Chai',
+    technique: 'Slow Decoction Protocol',
+    badge: 'Heritage Recipe',
+    methodId: 'chai_masala',
+    methodName: 'Masala Chai',
+    trackMode: 'tea',
+    beanName: 'Assam CTC Estate Black Tea',
+    roasterName: 'Cracked Whole Botanicals & Spices',
+    ratio: 25.0,
+    dryDoseGrams: 10.0,
+    waterAmountMl: 250.0,
+    waterTempC: 98,
+    grindSetting: 'CTC Granular & Cracked Spices',
+    totalTimeSec: 390,
+    description: 'Decoction simmer extracting essential oils from green cardamom, Ceylon cinnamon, ginger root, and black pepper, bound with rich milk and Assam black tea.',
+    steps: [
+      { order: 1, durationSec: 240, waterMl: 250, action: 'Boil crushed spices and Assam CTC tea in water for 4 minutes' },
+      { order: 2, durationSec: 120, waterMl: 250, action: 'Add milk and cane sugar; bring to three consecutive rolling froths' },
+      { order: 3, durationSec: 30, waterMl: 250, action: 'Strain through fine mesh strainer directly into mug' }
     ]
   }
 ];
 
-// Backward-compatible alias for existing imports
 export const COMMUNITY_RECIPES = CURATED_MASTER_RECIPES;

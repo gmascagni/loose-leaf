@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, X, Sparkles, Plus, Coffee, Leaf } from 'lucide-react';
+import { BookOpen, X, Sparkles, Plus, Leaf } from 'lucide-react';
 import RecipeExplorer from './RecipeExplorer';
 
 export default function CommunityHubModal({
@@ -15,16 +15,16 @@ export default function CommunityHubModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-xl animate-fade-in">
-      <div className="relative w-full max-w-6xl bg-[#120F0D] border-2 border-amber-gold/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="relative w-full max-w-6xl bg-[#120F0D] border-2 border-sage-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Modal Header */}
-        <div className="p-5 md:p-6 bg-gradient-to-r from-amber-950/70 via-[#1A1613] to-espresso-950 border-b border-white/10 flex items-center justify-between">
+        <div className="p-5 md:p-6 bg-gradient-to-r from-emerald-950/70 via-[#0E1611] to-[#08110B] border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-3 rounded-2xl bg-amber-gold text-espresso-950 shadow-lg shadow-amber-gold/20 flex items-center justify-center font-bold">
+            <div className="p-3 rounded-2xl bg-sage-500 text-cream-light shadow-lg shadow-amber-gold/20 flex items-center justify-center font-bold">
               <BookOpen className="w-6 h-6" />
             </div>
             <div>
-              <div className="inline-flex items-center space-x-2 text-[10px] font-mono font-extrabold uppercase tracking-widest text-amber-gold">
+              <div className="inline-flex items-center space-x-2 text-[10px] font-mono font-extrabold uppercase tracking-widest text-sage-300">
                 <Sparkles className="w-3.5 h-3.5 animate-pulse" />
                 <span>Extraction Vault & Personal Studio</span>
               </div>

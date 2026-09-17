@@ -5,87 +5,76 @@
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  <!-- Coffee Extraction Methods -->
+  <!-- Specialty Tea Steeping Methods -->
   <url>
-    <loc>https://thebrew.app/methods/classic_pour_over</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://thebrew.app/methods/pour_over</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://thebrew.app/methods/chemex</loc>
+    <loc>https://thebrew.app/methods/darjeeling_tea</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/aeropress</loc>
+    <loc>https://thebrew.app/methods/chai_masala</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/french_press</loc>
+    <loc>https://thebrew.app/methods/english_breakfast</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/espresso</loc>
+    <loc>https://thebrew.app/methods/earl_grey</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/moka_pot</loc>
+    <loc>https://thebrew.app/methods/green_tea</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/siphon</loc>
+    <loc>https://thebrew.app/methods/matcha_tea</loc>
     <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thebrew.app/methods/oolong_tea</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thebrew.app/methods/ceylon_tea</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thebrew.app/methods/white_tea</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thebrew.app/methods/turmeric_tea</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thebrew.app/methods/puerh_tea</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Tea Guides & Features -->
+  <url>
+    <loc>https://thebrew.app/guides/tea-water-chemistry</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/cold_brew</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <!-- Specialty Tea Infusion Methods -->
-  <url>
-    <loc>https://thebrew.app/methods/gongfu_tea</loc>
+    <loc>https://thebrew.app/purveyors</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://thebrew.app/methods/matcha</loc>
+    <loc>https://thebrew.app/academy</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://thebrew.app/methods/western_tea</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thebrew.app/methods/kyusu_sencha</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thebrew.app/methods/chai_decoction</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <!-- Water Chemistry & Extraction Guides -->
-  <url>
-    <loc>https://thebrew.app/guides/coffee-water-chemistry</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://thebrew.app/guides/water-chemistry-gh-kh</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
 </urlset>

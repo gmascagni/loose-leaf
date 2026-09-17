@@ -17,7 +17,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
   const handleExportFullBackup = () => {
     try {
       const backupData = {
-        app: 'The Brew App',
+        app: 'LooseLeaf',
         version: 1,
         exportedAt: new Date().toISOString(),
         currentUser,
@@ -29,7 +29,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `the_brew_app_full_backup_${Date.now()}.json`);
+      downloadAnchor.setAttribute("download", `looseleaf_full_backup_${Date.now()}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -58,7 +58,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
           alert('Backup restored successfully! All journal logs, custom recipes, and profile data have been loaded.');
           window.location.reload();
         } else {
-          alert('Invalid backup file. Please provide a valid The Brew App backup JSON.');
+          alert('Invalid backup file. Please provide a valid LooseLeaf backup JSON.');
         }
       } catch (err) {
         alert('Could not parse backup file. Please ensure it is valid JSON.');
@@ -111,7 +111,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
         email: cleanEmail,
         username: cleanHandle,
         displayName: displayName.trim() || cleanEmail.split('@')[0],
-        bio: bio.trim() || 'Specialty Coffee & Fine Tea Enthusiast',
+        bio: bio.trim() || 'Specialty Tea & Botanical Enthusiast',
         avatar: avatar || AVATAR_PRESETS[0].url,
         role: 'user',
         streakDays: 1,
@@ -133,7 +133,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
         email: cleanEmail,
         username: cleanHandle,
         displayName: displayName.trim() || cleanEmail.split('@')[0],
-        bio: bio.trim() || 'Specialty Coffee & Fine Tea Enthusiast',
+        bio: bio.trim() || 'Specialty Tea & Botanical Enthusiast',
         avatar: avatar || AVATAR_PRESETS[0].url,
         role: 'user'
       };
@@ -146,7 +146,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl animate-fade-in">
-      <div className="relative max-w-md w-full rounded-3xl bg-[#14110E] border-2 border-amber-gold/50 p-6 md:p-8 shadow-2xl overflow-y-auto max-h-[90vh] text-cream-light">
+      <div className="relative max-w-md w-full rounded-3xl bg-[#14110E] border-2 border-sage-500/50 p-6 md:p-8 shadow-2xl overflow-y-auto max-h-[90vh] text-cream-light">
         
         {/* Modal Close Button */}
         <button
@@ -157,9 +157,9 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
         </button>
 
         {/* Header Tabs */}
-        <div className="flex items-center space-x-2 text-xs font-mono font-extrabold uppercase tracking-widest text-amber-gold mb-2">
+        <div className="flex items-center space-x-2 text-xs font-mono font-extrabold uppercase tracking-widest text-sage-300 mb-2">
           <Sparkles className="w-4 h-4 animate-pulse" />
-          <span>Local Barista Profile & Data Studio</span>
+          <span>Tea Master Profile & Data Studio</span>
         </div>
 
         <h3 className="font-serif text-2xl font-bold text-cream-light mb-1">
@@ -168,7 +168,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
             : mode === 'edit'
             ? 'Manage Your Profile'
             : mode === 'signup'
-            ? 'Create Local Barista Profile'
+            ? 'Create Local Tea Profile'
             : 'Select Active Profile'}
         </h3>
 
@@ -179,7 +179,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
         </p>
 
         {currentUser && (
-          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-gold/30 text-xs font-mono mb-4 text-amber-gold flex items-center justify-between">
+          <div className="p-3 rounded-xl bg-sage-500/10 border border-sage-500/30 text-xs font-mono mb-4 text-sage-300 flex items-center justify-between">
             <span>Active: <strong>{currentUser.displayName} ({currentUser.username})</strong></span>
             {onLogout && (
               <button
@@ -203,7 +203,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
             <button
               type="button"
               onClick={() => { setMode('login'); setErrorMessage(''); }}
-              className={`flex-1 py-2 px-2.5 rounded-xl transition-all whitespace-nowrap ${mode === 'login' ? 'bg-amber-gold text-espresso-950 shadow' : 'text-stone-400 hover:text-cream-light'}`}
+              className={`flex-1 py-2 px-2.5 rounded-xl transition-all whitespace-nowrap ${mode === 'login' ? 'bg-sage-500 text-espresso-950 shadow' : 'text-stone-400 hover:text-cream-light'}`}
             >
               Select Profile
             </button>
@@ -211,7 +211,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
           <button
             type="button"
             onClick={() => { setMode('signup'); setErrorMessage(''); }}
-            className={`flex-1 py-2 px-2.5 rounded-xl transition-all whitespace-nowrap ${mode === 'signup' ? 'bg-amber-gold text-espresso-950 shadow' : 'text-stone-400 hover:text-cream-light'}`}
+            className={`flex-1 py-2 px-2.5 rounded-xl transition-all whitespace-nowrap ${mode === 'signup' ? 'bg-sage-500 text-espresso-950 shadow' : 'text-stone-400 hover:text-cream-light'}`}
           >
             Create Profile
           </button>
@@ -219,7 +219,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
             <button
               type="button"
               onClick={() => { setMode('edit'); setErrorMessage(''); }}
-              className={`flex-1 py-2 px-2.5 rounded-xl transition-all whitespace-nowrap ${mode === 'edit' ? 'bg-amber-gold text-espresso-950 shadow' : 'text-stone-400 hover:text-cream-light'}`}
+              className={`flex-1 py-2 px-2.5 rounded-xl transition-all whitespace-nowrap ${mode === 'edit' ? 'bg-sage-500 text-espresso-950 shadow' : 'text-stone-400 hover:text-cream-light'}`}
             >
               Edit Profile
             </button>
@@ -227,7 +227,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
           <button
             type="button"
             onClick={() => { setMode('backup'); setErrorMessage(''); }}
-            className={`flex-1 py-2 px-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${mode === 'backup' ? 'bg-amber-gold text-espresso-950 shadow' : 'text-stone-400 hover:text-cream-light'}`}
+            className={`flex-1 py-2 px-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${mode === 'backup' ? 'bg-sage-500 text-espresso-950 shadow' : 'text-stone-400 hover:text-cream-light'}`}
           >
             <RefreshCw className="w-3 h-3" />
             <span>Backup & Sync</span>
@@ -258,17 +258,17 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
             </div>
 
             <div className="p-4 rounded-2xl bg-black/50 border border-white/10 space-y-3">
-              <div className="flex items-center space-x-2 text-xs font-mono font-bold text-amber-gold uppercase tracking-wider">
+              <div className="flex items-center space-x-2 text-xs font-mono font-bold text-sage-300 uppercase tracking-wider">
                 <Download className="w-4 h-4" />
                 <span>Export Full Data Backup (.json)</span>
               </div>
               <p className="text-xs text-stone-400 leading-relaxed">
-                Save an archival snapshot of your entire journal logs, custom recipe studio creations, bookmarked recipes, and local barista profile.
+                Save an archival snapshot of your entire journal logs, custom recipe studio creations, bookmarked recipes, and local tea profile.
               </p>
               <button
                 type="button"
                 onClick={handleExportFullBackup}
-                className="w-full py-3 rounded-xl btn-tactile-amber text-espresso-950 font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
+                className="w-full py-3 rounded-xl btn-tactile-tea text-espresso-950 font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all"
               >
                 <Download className="w-4 h-4" />
                 <span>Download Full Backup (JSON)</span>
@@ -276,7 +276,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
             </div>
 
             <div className="p-4 rounded-2xl bg-black/50 border border-white/10 space-y-3">
-              <div className="flex items-center space-x-2 text-xs font-mono font-bold text-amber-gold uppercase tracking-wider">
+              <div className="flex items-center space-x-2 text-xs font-mono font-bold text-sage-300 uppercase tracking-wider">
                 <Upload className="w-4 h-4" />
                 <span>Restore / Transfer from Backup</span>
               </div>
@@ -284,7 +284,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
                 Switching devices, clearing browser cache, or restoring from a previous export? Load your backup file here.
               </p>
               <label className="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-cream-light font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer border border-white/10 active:scale-95 transition-all">
-                <Upload className="w-4 h-4 text-amber-gold" />
+                <Upload className="w-4 h-4 text-sage-300" />
                 <span>Select Backup File to Restore</span>
                 <input
                   type="file"
@@ -296,7 +296,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
             </div>
 
             <div className="p-3 rounded-xl bg-white/5 border border-white/10 flex items-center gap-2.5 text-xs text-stone-400 font-mono">
-              <Smartphone className="w-4 h-4 text-amber-gold flex-shrink-0" />
+              <Smartphone className="w-4 h-4 text-sage-300 flex-shrink-0" />
               <span>Cross-Device Tip: AirDrop, email, or save your JSON backup to iCloud/Drive to keep multiple devices in sync!</span>
             </div>
           </div>
@@ -318,18 +318,18 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
                       }}
                       className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between transition-all ${
                         currentUser?.username === u.username
-                          ? 'bg-amber-gold/20 border-amber-gold text-cream-light'
+                          ? 'bg-sage-500/20 border-sage-500 text-cream-light'
                           : 'bg-black/40 border-white/10 text-stone-300 hover:bg-white/10'
                       }`}
                     >
                       <div className="flex items-center space-x-2.5">
-                        <img src={u.avatar || AVATAR_PRESETS[0].url} alt={u.displayName} className="w-7 h-7 rounded-full object-cover border border-amber-gold/40" />
+                        <img src={u.avatar || AVATAR_PRESETS[0].url} alt={u.displayName} className="w-7 h-7 rounded-full object-cover border border-sage-500/40" />
                         <div>
                           <div className="font-bold text-xs text-cream-light">{u.displayName}</div>
                           <div className="font-mono text-[10px] text-stone-400">{u.username}</div>
                         </div>
                       </div>
-                      <span className="text-[10px] font-mono text-amber-gold font-bold">Use Profile →</span>
+                      <span className="text-[10px] font-mono text-sage-300 font-bold">Use Profile →</span>
                     </button>
                   ))}
                 </div>
@@ -346,7 +346,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="yourname@domain.com"
-              className="w-full p-3 rounded-xl bg-black/50 border border-white/10 text-cream-light focus:outline-none focus:border-amber-gold"
+              className="w-full p-3 rounded-xl bg-black/50 border border-white/10 text-cream-light focus:outline-none focus:border-sage-500"
             />
           </div>
 
@@ -360,7 +360,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="E.g., Sarah Parker"
-                  className="w-full p-3 rounded-xl bg-black/50 border border-white/10 text-cream-light focus:outline-none focus:border-amber-gold"
+                  className="w-full p-3 rounded-xl bg-black/50 border border-white/10 text-cream-light focus:outline-none focus:border-sage-500"
                 />
               </div>
 
@@ -372,7 +372,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="E.g., @sarah_brews"
-                  className="w-full p-3 rounded-xl bg-black/50 border border-white/10 text-cream-light font-mono focus:outline-none focus:border-amber-gold"
+                  className="w-full p-3 rounded-xl bg-black/50 border border-white/10 text-cream-light font-mono focus:outline-none focus:border-sage-500"
                 />
               </div>
 
@@ -380,10 +380,10 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
               <div className="p-4 rounded-2xl bg-black/50 border border-white/10 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-cream-light uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                    <Image className="w-4 h-4 text-amber-gold" />
+                    <Image className="w-4 h-4 text-sage-300" />
                     <span>Choose Profile Icon Avatar</span>
                   </span>
-                  <img src={avatar} alt="Active Avatar" className="w-9 h-9 rounded-full object-cover border-2 border-amber-gold" />
+                  <img src={avatar} alt="Active Avatar" className="w-9 h-9 rounded-full object-cover border-2 border-sage-500" />
                 </div>
 
                 {/* Grid of Preset Avatars */}
@@ -396,13 +396,13 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
                         type="button"
                         onClick={() => setAvatar(preset.url)}
                         className={`relative rounded-xl overflow-hidden border-2 transition-all p-0.5 group ${
-                          isSelected ? 'border-amber-gold ring-2 ring-amber-gold/50 scale-105' : 'border-white/10 opacity-70 hover:opacity-100'
+                          isSelected ? 'border-sage-500 ring-2 ring-amber-gold/50 scale-105' : 'border-white/10 opacity-70 hover:opacity-100'
                         }`}
                         title={preset.label}
                       >
                         <img src={preset.url} alt={preset.label} className="w-full h-12 rounded-lg object-cover" />
                         {isSelected && (
-                          <div className="absolute inset-0 bg-amber-gold/30 flex items-center justify-center">
+                          <div className="absolute inset-0 bg-sage-500/30 flex items-center justify-center">
                             <CheckCircle2 className="w-4 h-4 text-espresso-950 fill-amber-gold" />
                           </div>
                         )}
@@ -419,7 +419,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   placeholder="Share your favorite brew method, origins, or gear setup..."
-                  className="w-full p-3 rounded-xl bg-black/50 border border-white/10 text-cream-light focus:outline-none focus:border-amber-gold"
+                  className="w-full p-3 rounded-xl bg-black/50 border border-white/10 text-cream-light focus:outline-none focus:border-sage-500"
                 ></textarea>
               </div>
             </>
@@ -427,7 +427,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onSaveProfile,
 
           <button
             type="submit"
-            className="w-full mt-4 py-4 rounded-2xl btn-tactile-amber text-espresso-950 font-extrabold text-xs uppercase tracking-wider shadow-xl active:scale-95 transition-all"
+            className="w-full mt-4 py-4 rounded-2xl btn-tactile-tea text-espresso-950 font-extrabold text-xs uppercase tracking-wider shadow-xl active:scale-95 transition-all"
           >
             {mode === 'edit' ? 'Save Profile Changes' : mode === 'signup' ? 'Save Profile to Device' : 'Use Profile'}
           </button>

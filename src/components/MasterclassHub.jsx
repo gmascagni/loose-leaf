@@ -18,8 +18,8 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
 
   const activeMethodId = activeMethod?.id;
 
-  // STAGE 1: FILTER STRICTLY BY TRACK MODE ('coffee' | 'tea')
-  const trackVideos = MASTERCLASSES.filter((item) => item.track === trackMode);
+  // Curated tea masterclasses and steeping walkthroughs
+  const trackVideos = MASTERCLASSES;
 
   // STAGE 2: FILTER BY ACTIVE METHOD PREFERENCE WITHIN TRACK
   let filteredVideos = trackVideos.filter((item) => {
@@ -67,15 +67,15 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
       {/* Section Header & Expand/Collapse Trigger */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-2 text-xs font-mono font-extrabold uppercase tracking-widest text-amber-gold mb-1">
-            <Sparkles className="w-4 h-4 animate-pulse text-amber-gold" />
+          <div className="inline-flex items-center space-x-2 text-xs font-mono font-extrabold uppercase tracking-widest text-sage-300 mb-1">
+            <Sparkles className="w-4 h-4 animate-pulse text-sage-300" />
             <span>Video Masterclasses • {activeMethod?.name || 'Guided Extraction'}</span>
           </div>
           <h3 className="font-serif text-2xl md:text-3xl font-extrabold text-cream-light drop-shadow-md">
             Help Videos ({filteredVideos.length} Tutorials Available)
           </h3>
           <p className="text-xs md:text-sm text-cream-soft/70 mt-1">
-            Curated video tutorials on bean selection, ratio math, pouring mechanics, and extraction for {activeMethod?.name || 'brewing'}.
+            Curated video tutorials on tea cultivar selection, leaf grades, water temperature, vessel warming, and steeping mechanics for {activeMethod?.name || 'steeping'}.
           </p>
         </div>
 
@@ -84,7 +84,7 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
           onClick={handleToggleExpand}
           className={`px-7 py-4 rounded-2xl text-xs font-extrabold uppercase tracking-wider flex items-center gap-2.5 shadow-2xl transition-all active:scale-95 whitespace-nowrap ${
             isExpanded
-              ? 'bg-amber-gold text-espresso-950 hover:bg-amber-gold/90'
+              ? 'bg-sage-500 text-espresso-950 hover:bg-sage-500/90'
               : 'bg-white/[0.08] text-cream-light hover:bg-white/[0.15] border border-white/[0.12]'
           }`}
           title={isExpanded ? 'Collapse Help Videos section' : 'Expand Help Videos section'}
@@ -103,17 +103,17 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
           {currentActiveVideo && (
             <div
               ref={playerRef}
-              className="p-5 md:p-6 rounded-3xl bg-espresso-950/95 border-2 border-amber-gold/50 shadow-2xl overflow-hidden scroll-mt-24 transition-all"
+              className="p-5 md:p-6 rounded-3xl bg-espresso-950/95 border-2 border-sage-500/50 shadow-2xl overflow-hidden scroll-mt-24 transition-all"
             >
               <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
                 <h4 className="font-serif text-xl font-bold text-cream-light flex items-center gap-2.5 drop-shadow">
-                  <Video className="w-6 h-6 text-amber-gold animate-pulse" />
+                  <Video className="w-6 h-6 text-sage-300 animate-pulse" />
                   <span>{currentActiveVideo.title}</span>
                 </h4>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setTheaterModalVideo(currentActiveVideo)}
-                    className="p-2 rounded-xl bg-white/10 text-cream-light hover:text-amber-gold hover:bg-white/20 transition-all flex items-center gap-1.5 text-xs font-mono font-bold"
+                    className="p-2 rounded-xl bg-white/10 text-cream-light hover:text-sage-300 hover:bg-white/20 transition-all flex items-center gap-1.5 text-xs font-mono font-bold"
                     title="Watch in Theater Mode"
                   >
                     <Maximize2 className="w-3.5 h-3.5" />
@@ -124,7 +124,7 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
                       setLocalActiveVideo(null);
                       if (setActiveVideo) setActiveVideo(null);
                     }}
-                    className="text-xs text-stone-400 hover:text-amber-gold font-bold underline"
+                    className="text-xs text-stone-400 hover:text-sage-300 font-bold underline"
                   >
                     Reset Player
                   </button>
@@ -149,7 +149,7 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
 
               {currentActiveVideo.keyTakeaways && (
                 <div className="p-4 rounded-2xl bg-white/5 border border-white/10 shadow-inner">
-                  <div className="text-xs font-mono font-extrabold text-amber-gold uppercase tracking-wider mb-2.5">
+                  <div className="text-xs font-mono font-extrabold text-sage-300 uppercase tracking-wider mb-2.5">
                     Key Technique Takeaways:
                   </div>
                   <ul className="space-y-2 text-xs text-cream-soft/90 font-medium">
@@ -177,7 +177,7 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
                   onClick={() => handleSelectVideo(item, true)}
                   className={`rounded-3xl border transition-all duration-300 overflow-hidden group flex flex-col justify-between hover:-translate-y-1.5 cursor-pointer ${
                     isActive
-                      ? 'bg-amber-gold/20 border-amber-gold shadow-2xl shadow-amber-gold/30 ring-2 ring-amber-gold/60 scale-[1.02]'
+                      ? 'bg-sage-500/20 border-sage-500 shadow-2xl shadow-amber-gold/30 ring-2 ring-amber-gold/60 scale-[1.02]'
                       : 'bg-espresso-900/70 border-white/10 hover:border-white/25 hover:bg-slate-900/80 shadow-xl'
                   }`}
                 >
@@ -195,7 +195,7 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
 
                     {/* Active Playing Badge */}
                     {isActive && (
-                      <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-amber-gold text-espresso-950 text-[10px] font-mono font-extrabold uppercase tracking-wider flex items-center gap-1.5 shadow-xl animate-pulse">
+                      <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-sage-500 text-espresso-950 text-[10px] font-mono font-extrabold uppercase tracking-wider flex items-center gap-1.5 shadow-xl animate-pulse">
                         <span className="w-2 h-2 rounded-full bg-espresso-950 animate-ping" />
                         <span>Now Playing</span>
                       </div>
@@ -211,8 +211,8 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
                     >
                       <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform ${
                         isActive
-                          ? 'bg-amber-gold text-espresso-950 shadow-amber-gold/50'
-                          : 'btn-tactile-amber text-espresso-950'
+                          ? 'bg-sage-500 text-espresso-950 shadow-amber-gold/50'
+                          : 'btn-tactile-tea text-espresso-950'
                       }`}>
                         <Play className="w-5 h-5 fill-current ml-0.5" />
                       </div>
@@ -220,7 +220,7 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
 
                     {/* Duration Badge */}
                     <div className="absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-[10px] font-mono font-bold text-cream-light flex items-center gap-1 border border-white/10">
-                      <Clock className="w-3 h-3 text-amber-gold" />
+                      <Clock className="w-3 h-3 text-sage-300" />
                       <span>{item.duration}</span>
                     </div>
 
@@ -230,19 +230,19 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
                         e.stopPropagation();
                         toggleBookmark(item.id);
                       }}
-                      className="absolute top-2.5 right-2.5 p-2 rounded-full bg-black/60 backdrop-blur-md text-cream-light hover:text-amber-gold transition-colors border border-white/10"
+                      className="absolute top-2.5 right-2.5 p-2 rounded-full bg-black/60 backdrop-blur-md text-cream-light hover:text-sage-300 transition-colors border border-white/10"
                     >
-                      <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-amber-gold text-amber-gold' : ''}`} />
+                      <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-amber-gold text-sage-300' : ''}`} />
                     </button>
                   </div>
 
                   {/* Card Meta Content */}
                   <div className="p-5 flex-1 flex flex-col justify-between">
                     <div>
-                      <div className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-amber-gold mb-1.5">
+                      <div className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-sage-300 mb-1.5">
                         {item.method} Tutorial
                       </div>
-                      <h4 className="font-serif text-sm font-bold text-cream-light mb-2 line-clamp-2 drop-shadow group-hover:text-amber-gold transition-colors">
+                      <h4 className="font-serif text-sm font-bold text-cream-light mb-2 line-clamp-2 drop-shadow group-hover:text-sage-300 transition-colors">
                         {item.title}
                       </h4>
                       <p className="text-xs text-cream-soft/70 line-clamp-2 font-medium">
@@ -257,11 +257,11 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
                       }}
                       className={`mt-5 w-full py-2.5 rounded-2xl text-xs font-extrabold transition-all shadow active:scale-95 flex items-center justify-center gap-2 border ${
                         isActive
-                          ? 'bg-amber-gold text-espresso-950 border-amber-gold font-extrabold shadow-amber-gold/30'
+                          ? 'bg-sage-500 text-espresso-950 border-sage-500 font-extrabold shadow-amber-gold/30'
                           : 'bg-white/10 border-white/15 hover:bg-white/20 text-cream-light'
                       }`}
                     >
-                      <Play className={`w-3.5 h-3.5 fill-current ${isActive ? 'text-espresso-950' : 'text-amber-gold'}`} />
+                      <Play className={`w-3.5 h-3.5 fill-current ${isActive ? 'text-espresso-950' : 'text-sage-300'}`} />
                       <span>{isActive ? 'Playing in Player Above' : 'Watch Tutorial'}</span>
                     </button>
                   </div>
@@ -276,7 +276,7 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
       {/* Full Theater Modal View */}
       {theaterModalVideo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-fade-in">
-          <div className="relative max-w-4xl w-full rounded-3xl bg-espresso-950 border-2 border-amber-gold p-6 shadow-2xl">
+          <div className="relative max-w-4xl w-full rounded-3xl bg-espresso-950 border-2 border-sage-500 p-6 shadow-2xl">
             <button
               onClick={() => setTheaterModalVideo(null)}
               className="absolute top-4 right-4 p-2.5 rounded-full bg-white/10 text-cream-light hover:bg-white/20 transition-all z-10"
@@ -284,7 +284,7 @@ export default function MasterclassHub({ trackMode, activeMethod, activeVideo, s
               <X className="w-5 h-5" />
             </button>
             <h4 className="font-serif text-xl font-bold text-cream-light mb-4 flex items-center gap-2">
-              <Video className="w-5 h-5 text-amber-gold" />
+              <Video className="w-5 h-5 text-sage-300" />
               <span>{theaterModalVideo.title}</span>
             </h4>
             <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black mb-4 border border-white/20 shadow-2xl">

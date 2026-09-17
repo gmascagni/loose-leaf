@@ -1,53 +1,55 @@
-// Roaster Registry & Smart Bag Packaging Code Generator
-// Manages verified partner roasters, custom bean profiles, and packaging QR generation.
+// Tea Purveyor Registry & Smart Tin Packaging QR Generator
+// Manages verified partner tea purveyors, custom tea profiles, and packaging QR generation.
 
 import QRCode from 'qrcode';
 import { doc, setDoc, deleteDoc, getDoc, getDocs, collection, query, where } from 'firebase/firestore';
 import { db } from '../services/firebase.js';
-import { deduplicateCoffees, normalizeRoasterKey } from './roasterShowcaseData.js';
+import { deduplicateTeas, normalizeRoasterKey } from './roasterShowcaseData.js';
 
-const STORAGE_KEY = 'thebrewapp_roaster_registry_v1';
+const STORAGE_KEY = 'looseleaf_purveyor_registry_v1';
+const ROASTER_PROFILES_KEY = 'looseleaf_custom_purveyors_v1';
 
 /**
- * Retrieve all registered coffees (built-in verified catalog + user/roaster registered)
+ * Retrieve all registered teas (built-in verified catalog + user/purveyor registered)
  */
-export function getRegisteredCoffees(builtinCatalog = []) {
+export function getRegisteredTeas(builtinCatalog = []) {
   try {
-    const raw = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
+    const raw = typeof window !== 'undefined' ? (localStorage.getItem(STORAGE_KEY) || localStorage.getItem('thebrewapp_roaster_registry_v1')) : null;
     const customList = raw ? JSON.parse(raw) : [];
-    return deduplicateCoffees([...customList, ...builtinCatalog]);
+    return deduplicateTeas([...customList, ...builtinCatalog]);
   } catch (err) {
-    console.warn('Error reading roaster registry from localStorage:', err);
-    return deduplicateCoffees([...builtinCatalog]);
+    console.warn('Error reading purveyor registry from localStorage:', err);
+    return deduplicateTeas([...builtinCatalog]);
   }
 }
-
 /**
- * Get only custom coffees registered via the Roaster Portal
+ * Get only custom teas registered via the Purveyor Portal
  */
-export function getCustomRoasterCoffees() {
+export function getCustomPurveyorTeas() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = typeof window !== 'undefined' ? (localStorage.getItem(STORAGE_KEY) || localStorage.getItem('thebrewapp_roaster_registry_v1')) : null;
     return raw ? JSON.parse(raw) : [];
   } catch (err) {
-    console.warn('Error reading custom roaster coffees:', err);
+    console.warn('Error reading custom purveyor teas:', err);
     return [];
   }
 }
-
 /**
- * Save or update a coffee in the Roaster Registry
+ * Save or update a tea in the Purveyor Registry
  */
-export function saveRoasterCoffee(coffee) {
-  if (!coffee || !coffee.beanName) {
-    throw new Error('Bean name is required to register a coffee profile.');
+export function savePurveyorTea(tea) {
+  const teaName = tea?.teaName || tea?.beanName || tea?.name;
+  if (!tea || !teaName) {
+    throw new Error('Tea lot name is required to register a profile.');
   }
 
-  const existing = getCustomRoasterCoffees();
-  const id = coffee.id || `roaster_${Date.now()}`;
+  const existing = getCustomPurveyorTeas();
+  const id = tea.id || `tea_${Date.now()}`;
   const record = {
-    ...coffee,
+    ...tea,
     id,
+    teaName,
+    beanName: teaName,
     updatedAt: new Date().toISOString(),
     isCustom: true
   };
@@ -58,7 +60,7 @@ export function saveRoasterCoffee(coffee) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   } catch (err) {
-    console.warn('Storage quota exceeded in saveRoasterCoffee; falling back to lightweight record without oversized image:', err);
+    console.warn('Storage quota exceeded in savePurveyorTea; saving lightweight record:', err);
     try {
       const lightweight = updated.map((c) => ({
         ...c,
@@ -66,7 +68,7 @@ export function saveRoasterCoffee(coffee) {
       }));
       localStorage.setItem(STORAGE_KEY, JSON.stringify(lightweight));
     } catch (fallbackErr) {
-      console.error('Failed to save coffee to localStorage:', fallbackErr);
+      console.error('Failed to save tea to localStorage:', fallbackErr);
     }
   }
 
@@ -75,11 +77,11 @@ export function saveRoasterCoffee(coffee) {
     if (db) {
       const cloudRecord = { ...record };
       if (cloudRecord.logoImage && cloudRecord.logoImage.length > 50000) delete cloudRecord.logoImage;
-      setDoc(doc(db, 'coffees', id), cloudRecord, { merge: true }).catch(e => {
-        console.warn('Firestore coffee sync error:', e);
+      setDoc(doc(db, 'teas', id), cloudRecord, { merge: true }).catch(e => {
+        console.warn('Firestore tea sync error:', e);
       });
       if (record.upc) {
-        setDoc(doc(db, 'coffees', `upc_${record.upc}`), cloudRecord, { merge: true }).catch(() => {});
+        setDoc(doc(db, 'teas', `upc_${record.upc}`), cloudRecord, { merge: true }).catch(() => {});
       }
     }
   } catch (syncErr) {
@@ -88,49 +90,46 @@ export function saveRoasterCoffee(coffee) {
 
   return record;
 }
-
 /**
- * Delete a custom coffee from the Roaster Registry
+ * Delete a custom tea from the Purveyor Registry
  */
-export function deleteRoasterCoffee(id) {
-  const existing = getCustomRoasterCoffees();
+export function deletePurveyorTea(id) {
+  const existing = getCustomPurveyorTeas();
   const filtered = existing.filter((c) => c.id !== id);
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
   } catch (err) {
-    console.error('Failed to delete coffee from localStorage:', err);
+    console.error('Failed to delete tea from localStorage:', err);
   }
 
   try {
     if (db) {
-      deleteDoc(doc(db, 'coffees', id)).catch(() => {});
+      deleteDoc(doc(db, 'teas', id)).catch(() => {});
     }
   } catch (e) {}
 
   return filtered;
 }
-
-const ROASTER_PROFILES_KEY = 'thebrewapp_custom_roasters_v1';
-
 /**
- * Get custom roasters registered via the Roaster Portal
+ * Get custom purveyors registered via the Purveyor Portal
  */
-export function getCustomRoasters() {
+export function getCustomPurveyors() {
   try {
-    const raw = localStorage.getItem(ROASTER_PROFILES_KEY);
+    const raw = typeof window !== 'undefined' ? (localStorage.getItem(ROASTER_PROFILES_KEY) || localStorage.getItem('thebrewapp_custom_roasters_v1')) : null;
     return raw ? JSON.parse(raw) : [];
   } catch (err) {
-    console.warn('Error reading custom roasters from localStorage:', err);
+    console.warn('Error reading custom purveyors from localStorage:', err);
     return [];
   }
 }
+export const getCustomRoasters = getCustomPurveyors;
 
 /**
- * Save or update a custom roaster profile (including uploaded logoImage)
+ * Save or update a custom purveyor profile
  */
-export function saveCustomRoasterProfile(profile) {
+export function saveCustomPurveyorProfile(profile) {
   if (!profile || !profile.name) return null;
-  const existing = getCustomRoasters();
+  const existing = getCustomPurveyors();
   const slug = (profile.slug || profile.name)
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
@@ -146,7 +145,7 @@ export function saveCustomRoasterProfile(profile) {
   try {
     localStorage.setItem(ROASTER_PROFILES_KEY, JSON.stringify(updated));
   } catch (err) {
-    console.warn('Storage quota exceeded in saveCustomRoasterProfile; falling back to lightweight record:', err);
+    console.warn('Storage quota exceeded in saveCustomPurveyorProfile; saving lightweight record:', err);
     try {
       const lightweight = updated.map((r) => ({
         ...r,
@@ -155,7 +154,7 @@ export function saveCustomRoasterProfile(profile) {
       }));
       localStorage.setItem(ROASTER_PROFILES_KEY, JSON.stringify(lightweight));
     } catch (fallbackErr) {
-      console.error('Failed to save roaster profile to localStorage:', fallbackErr);
+      console.error('Failed to save purveyor profile to localStorage:', fallbackErr);
     }
   }
 
@@ -165,61 +164,58 @@ export function saveCustomRoasterProfile(profile) {
       const cloudProfile = { ...record };
       if (cloudProfile.logoImage && cloudProfile.logoImage.length > 50000) delete cloudProfile.logoImage;
       if (cloudProfile.backgroundImage && cloudProfile.backgroundImage.length > 50000) delete cloudProfile.backgroundImage;
-      setDoc(doc(db, 'roasters', slug), cloudProfile, { merge: true }).catch(e => {
-        console.warn('Firestore roaster profile sync error:', e);
+      setDoc(doc(db, 'purveyors', slug), cloudProfile, { merge: true }).catch(e => {
+        console.warn('Firestore purveyor profile sync error:', e);
       });
     }
   } catch (syncErr) {
-    console.warn('Firestore roaster sync failed:', syncErr);
+    console.warn('Firestore purveyor sync failed:', syncErr);
   }
 
   return record;
 }
+export const saveCustomRoasterProfile = saveCustomPurveyorProfile;
 
 /**
- * Asynchronously query Cloud Firestore for a coffee by UPC barcode or coffee ID
+ * Asynchronously query Cloud Firestore for a tea by UPC barcode or tea ID
  */
-export async function fetchRemoteCoffeeByCode(code) {
+export async function fetchRemoteTeaByCode(code) {
   if (!code || !db) return null;
   const cleanCode = String(code).trim();
   try {
     // 1. Direct O(1) alias check (upc_...)
-    const aliasRef = doc(db, 'coffees', `upc_${cleanCode}`);
+    const aliasRef = doc(db, 'teas', `upc_${cleanCode}`);
     const aliasSnap = await getDoc(aliasRef);
     if (aliasSnap.exists()) return aliasSnap.data();
 
     // 2. Direct ID check
-    const directRef = doc(db, 'coffees', cleanCode);
+    const directRef = doc(db, 'teas', cleanCode);
     const directSnap = await getDoc(directRef);
     if (directSnap.exists()) return directSnap.data();
 
     // 3. Query by upc field
-    const q = query(collection(db, 'coffees'), where('upc', '==', cleanCode));
+    const q = query(collection(db, 'teas'), where('upc', '==', cleanCode));
     const qSnap = await getDocs(q);
     if (!qSnap.empty) {
       return qSnap.docs[0].data();
     }
   } catch (err) {
-    console.warn('Error fetching coffee from Firestore:', err);
+    console.warn('Error fetching tea from Firestore:', err);
   }
   return null;
 }
-
 /**
- * Sync Cloud Firestore catalog with local cache
-/**
- * Purge stale duplicate roasters and duplicate coffees from local storage
+ * Purge stale duplicate purveyors and duplicate teas from local storage
  */
 export function cleanupLocalRegistry() {
   if (typeof window === 'undefined') return;
   try {
-    // 1. Clean Roaster Profiles (filter out built-in showcase roasters and deduplicate custom ones)
-    const rawRoasters = localStorage.getItem(ROASTER_PROFILES_KEY);
-    if (rawRoasters) {
-      const roasters = JSON.parse(rawRoasters);
-      const seen = new Set(['methodical', 'onyx', 'black-white']);
+    const rawPurveyors = localStorage.getItem(ROASTER_PROFILES_KEY);
+    if (rawPurveyors) {
+      const purveyors = JSON.parse(rawPurveyors);
+      const seen = new Set(['ippodo', 'yunnan-sourcing', 'vahdam']);
       const cleaned = [];
-      for (const r of roasters) {
+      for (const r of purveyors) {
         if (!r) continue;
         const k = normalizeRoasterKey(r.id || r.slug || r.name);
         if (k && !seen.has(k)) {
@@ -230,12 +226,11 @@ export function cleanupLocalRegistry() {
       localStorage.setItem(ROASTER_PROFILES_KEY, JSON.stringify(cleaned));
     }
 
-    // 2. Clean Coffees (deduplicate all custom coffees)
-    const rawCoffees = localStorage.getItem(STORAGE_KEY);
-    if (rawCoffees) {
-      const coffees = JSON.parse(rawCoffees);
-      const cleanedCoffees = deduplicateCoffees(coffees);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanedCoffees));
+    const rawTeas = localStorage.getItem(STORAGE_KEY);
+    if (rawTeas) {
+      const teas = JSON.parse(rawTeas);
+      const cleanedTeas = deduplicateTeas(teas);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanedTeas));
     }
   } catch (err) {
     console.warn('Error during local registry cleanup:', err);
@@ -243,69 +238,70 @@ export function cleanupLocalRegistry() {
 }
 
 /**
- * Sync Cloud Firestore catalog with local cache (with strict deduplication)
+ * Sync Cloud Firestore catalog with local cache
  */
 export async function syncCloudCatalog() {
   if (!db || typeof window === 'undefined') return;
   cleanupLocalRegistry();
   try {
-    // 1. Sync Roasters
-    const roasterSnap = await getDocs(collection(db, 'roasters'));
-    if (!roasterSnap.empty) {
-      const remoteRoasters = roasterSnap.docs.map(d => d.data());
-      const localRoasters = getCustomRoasters();
-      const seenBuiltins = new Set(['methodical', 'onyx', 'black-white']);
-      const roasterMap = new Map();
+    const purveyorSnap = await getDocs(collection(db, 'purveyors'));
+    if (!purveyorSnap.empty) {
+      const remotePurveyors = purveyorSnap.docs.map(d => d.data());
+      const localPurveyors = getCustomPurveyors();
+      const seenBuiltins = new Set(['ippodo', 'yunnan-sourcing', 'vahdam']);
+      const purveyorMap = new Map();
 
-      // Only save non-builtin custom roasters into the local custom storage
-      [...remoteRoasters, ...localRoasters].forEach(r => {
+      [...remotePurveyors, ...localPurveyors].forEach(r => {
         if (!r) return;
         const k = normalizeRoasterKey(r.id || r.slug || r.name);
-        if (k && !seenBuiltins.has(k) && !roasterMap.has(k)) {
-          roasterMap.set(k, r);
+        if (k && !seenBuiltins.has(k) && !purveyorMap.has(k)) {
+          purveyorMap.set(k, r);
         }
       });
-      localStorage.setItem(ROASTER_PROFILES_KEY, JSON.stringify(Array.from(roasterMap.values())));
+      localStorage.setItem(ROASTER_PROFILES_KEY, JSON.stringify(Array.from(purveyorMap.values())));
     }
 
-    // 2. Sync Coffees
-    const coffeeSnap = await getDocs(collection(db, 'coffees'));
-    if (!coffeeSnap.empty) {
-      const remoteCoffees = coffeeSnap.docs
+    const teaSnap = await getDocs(collection(db, 'teas'));
+    if (!teaSnap.empty) {
+      const remoteTeas = teaSnap.docs
         .filter(d => !d.id.startsWith('upc_'))
         .map(d => d.data());
-      const localCoffees = getCustomRoasterCoffees();
-      const merged = deduplicateCoffees([...remoteCoffees, ...localCoffees]);
+      const localTeas = getCustomPurveyorTeas();
+      const merged = deduplicateTeas([...remoteTeas, ...localTeas]);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
     }
   } catch (err) {
     console.warn('Background Cloud Firestore sync error:', err);
   }
 }
+export const syncCloudTeaCatalog = syncCloudCatalog;
+
 
 /**
- * Generate a deep-link URL for a coffee profile that opens the Roaster's Portfolio page with dial-in parameters
+ * Generate a deep-link URL for a tea profile that opens the Purveyor's Portfolio page with dial-in parameters
  */
-export function generateSmartBagUrl(coffee, baseUrl) {
-  const origin = baseUrl || (typeof window !== 'undefined' ? window.location.origin : 'https://thebrew.app');
-  if (!coffee) return `${origin}/roasters`;
+export function generateSmartTinUrl(tea, baseUrl) {
+  const origin = baseUrl || (typeof window !== 'undefined' ? window.location.origin : 'https://looseleaf.app');
+  if (!tea) return `${origin}/purveyors`;
 
-  const roasterSlug = (coffee.roaster || 'roasters')
+  const purveyorSlug = (tea.purveyor || tea.roaster || 'purveyors')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
   const params = new URLSearchParams();
-  if (coffee.beanName) params.set('bean', coffee.beanName);
-  if (coffee.id) params.set('coffeeId', coffee.id);
-  if (coffee.brewMethod) params.set('method', coffee.brewMethod);
-  if (coffee.recommendedRatio) params.set('ratio', coffee.recommendedRatio.toString());
-  if (coffee.tempF) params.set('tempF', coffee.tempF.toString());
-  if (coffee.recommendedGrind) params.set('grind', coffee.recommendedGrind);
-  if (coffee.upc) params.set('upc', coffee.upc);
+  const name = tea.teaName || tea.beanName;
+  if (name) params.set('tea', name);
+  if (tea.id) params.set('teaId', tea.id);
+  if (tea.brewMethod) params.set('method', tea.brewMethod);
+  if (tea.recommendedRatio) params.set('ratio', tea.recommendedRatio.toString());
+  if (tea.tempF) params.set('tempF', tea.tempF.toString());
+  if (tea.leafGrade || tea.recommendedGrind) params.set('grade', tea.leafGrade || tea.recommendedGrind);
+  if (tea.upc) params.set('upc', tea.upc);
 
-  return `${origin}/roasters/${roasterSlug}?${params.toString()}`;
+  return `${origin}/purveyors/${purveyorSlug}?${params.toString()}`;
 }
+export const generateSmartBagUrl = generateSmartTinUrl;
 
 /**
  * Generate a high-resolution QR code Data URL for printing packaging stickers
@@ -348,15 +344,16 @@ export async function generateQrCodeSvg(text, options = {}) {
 }
 
 /**
- * Export the roaster's coffees as a portable JSON file
+ * Export the purveyor's teas as a portable JSON file
  */
-export function exportRoasterCatalogJson() {
-  const coffees = getCustomRoasterCoffees();
-  const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(coffees, null, 2));
+export function exportPurveyorCatalogJson() {
+  const teas = getCustomPurveyorTeas();
+  const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(teas, null, 2));
   const downloadAnchor = document.createElement('a');
   downloadAnchor.setAttribute('href', dataStr);
-  downloadAnchor.setAttribute('download', `thebrewapp_roaster_catalog_${Date.now()}.json`);
+  downloadAnchor.setAttribute('download', `looseleaf_purveyor_catalog_${Date.now()}.json`);
   document.body.appendChild(downloadAnchor);
   downloadAnchor.click();
   downloadAnchor.remove();
 }
+export const exportRoasterCatalogJson = exportPurveyorCatalogJson;

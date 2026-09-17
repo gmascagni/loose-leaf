@@ -89,7 +89,7 @@ export default function ProductCard({ product, activeMethod }) {
         <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-400/30 text-[11px] leading-relaxed mb-5">
           <span className="font-extrabold text-amber-gold uppercase tracking-wider block mb-0.5">Why We Recommend This:</span>
           <span className="text-stone-300 font-medium">
-            {product.whyWeRecommend || 'Tested for precise thermal retention, extraction clarity, and barista-grade durability.'}
+            {product.whyWeRecommend || 'Tested for precise thermal retention, extraction clarity, and sommelier-grade durability.'}
           </span>
         </div>
       </div>

@@ -5,13 +5,13 @@ export const VERSION_HISTORY = [
     version: "1.5.0",
     releaseDate: "2026-09-06",
     title: "Specialty Roaster Verification Ecosystem, Smart Bag Studio & War Room CRM Bridge",
-    summary: "Complete artisan coffee roastery onboarding suite. Includes verified roaster showcase profiles (Methodical, Onyx, Black & White), real-time QR code generator studio for retail bag packaging, interactive video onboarding walkthrough, automated backend War Room CRM lead capture, Brew News syndication, and Digital Trail Labs LLC parent company attribution.",
+    summary: "Complete artisan tea purveyor and garden onboarding suite. Includes verified roaster showcase profiles (Methodical, Onyx, Black & White), real-time QR code generator studio for retail bag packaging, interactive video onboarding walkthrough, automated backend War Room CRM lead capture, Brew News syndication, and Digital Trail Labs LLC parent company attribution.",
     highlights: [
       {
         type: "feature",
         badge: "Roaster Showcase",
         title: "Dedicated Artisan Roaster Profiles",
-        description: "Full profiles with roastery origin stories, roasting philosophy (Loring/Diedrich), certified coffee lineups, barista dial-in parameters, Water Lab mineral pairings, and physical cafe locations."
+        description: "Full profiles with tea house origin stories, firing philosophy (wood-fired / stone mill), certified tea harvest lineups, tea master dial-in parameters, Water Lab mineral pairings, and tearoom locations."
       },
       {
         type: "feature",
@@ -29,7 +29,7 @@ export const VERSION_HISTORY = [
         type: "enhancement",
         badge: "Brand & UX",
         title: "Brew News & Digital Trail Labs LLC Attribution",
-        description: "Syndicated coffee & tea news renamed to Brew News; updated parent company attribution to Digital Trail Labs LLC; moved release notes to War Room admin portal."
+        description: "Syndicated tea & botanical news renamed to Brew News; updated parent company attribution to Digital Trail Labs LLC; moved release notes to War Room admin portal."
       }
     ]
   },
@@ -37,7 +37,7 @@ export const VERSION_HISTORY = [
     version: "1.4.4",
     releaseDate: "2026-09-06",
     title: "Laboratory-Verified Commercial Bottled Water Guide & SCA Classification",
-    summary: "Integrated an authentic, laboratory-verified commercial bottled water database into the Coffee Water Chemistry Lab. Includes real mineral ion analyses (TDS, Ca²⁺, Mg²⁺, Na⁺, K⁺, HCO₃⁻, SiO₂, GH, KH, pH) from certified water reports, real-time grocery brand search, SCA compliance ratings, and dilution/remineralization guides.",
+    summary: "Integrated an authentic, laboratory-verified commercial bottled water database into the Tea Water Chemistry Lab. Includes real mineral ion analyses (TDS, Ca²⁺, Mg²⁺, Na⁺, K⁺, HCO₃⁻, SiO₂, GH, KH, pH) from certified water reports, real-time grocery brand search, SCA compliance ratings, and dilution/remineralization guides.",
     highlights: [
       {
         type: "feature",
@@ -47,8 +47,8 @@ export const VERSION_HISTORY = [
       },
       {
         type: "feature",
-        badge: "SCA Standards",
-        title: "SCA Suitability Badging & Practical Barista Tips",
+        badge: "Water Standards",
+        title: "Tea Water Suitability Badging & Practical Infusion Tips",
         description: "Each bottled water is evaluated against SCA brewing standards: Specialty Gold Standards (Crystal Geyser, Volvic, Ashbeck), Soft / Nordic Light styles (Poland Spring, Fiji), Requires 50/50 Dilution (Evian), RO Blank Canvas (Smartwater), and Palate Cleanser Only (San Pellegrino)."
       },
       {
@@ -61,7 +61,7 @@ export const VERSION_HISTORY = [
         type: "enhancement",
         badge: "SEO Guide",
         title: "Prerendered Comprehensive Water Chemistry Article",
-        description: "Updated the prerendered guide at /guides/coffee-water-chemistry with a dedicated commercial bottled water evaluation section detailing hardness vs alkalinity tradeoffs."
+        description: "Updated the prerendered guide at /guides/tea-water-chemistry with a dedicated commercial bottled water evaluation section detailing hardness vs alkalinity tradeoffs."
       }
     ]
   },
@@ -75,13 +75,13 @@ export const VERSION_HISTORY = [
         type: "feature",
         badge: "Spoken Instructions",
         title: "Active Extraction Instruction Spoken As Timer Ticks",
-        description: "Countdown now announces the phase name, time, and complete Active Extraction Instruction (e.g. 'Bloom Phase, 45 seconds. Saturate grounds evenly with 3x coffee weight in circular motion. Let coffee bloom and de-gas.') while the mechanical clock continues clicking in rhythm."
+        description: "Countdown now announces the phase name, time, and complete Active Extraction Instruction (e.g. 'Bloom Phase, 45 seconds. Saturate grounds evenly with gentle circular pour. Awaken whole leaves to release aromatics.') while the mechanical clock continues clicking in rhythm."
       },
       {
         type: "feature",
         badge: "54 Studio Tracks",
         title: "54 Neural British Voice Clips for Every Method",
-        description: "Synthesized 54 studio audio files using Microsoft Edge Neural Voice (en-GB-SoniaNeural) covering all 18 coffee and tea methods with exact extraction instructions and fallback Web Speech API synthesis."
+        description: "Synthesized 54 studio audio files using Microsoft Edge Neural Voice (en-GB-SoniaNeural) covering all 11 tea and botanical steeping methods with exact extraction instructions and fallback Web Speech API synthesis."
       },
       {
         type: "enhancement",
@@ -101,19 +101,19 @@ export const VERSION_HISTORY = [
     version: "1.4.2",
     releaseDate: "2026-09-06",
     title: "Mechanical Clockwork Ticking, Studio Audio Voice & Dual Mute Controls",
-    summary: "Introduced authentic mechanical clockwork escapement ticking every second, tactile switch clicks on all controls, studio British female voice guidance for all 48 coffee/tea extraction phases, and dual prominent mute buttons.",
+    summary: "Introduced authentic mechanical clockwork escapement ticking every second, tactile switch clicks on all controls, studio British female voice guidance for all multi-phase tea steeping infusions, and dual prominent mute buttons.",
     highlights: [
       {
         type: "feature",
         badge: "Clockwork Tick",
         title: "Per-Second Mechanical Clock Ticking",
-        description: "Countdown now plays an authentic mechanical clockwork tick every second (alternating 2600Hz/1950Hz escapement pallet clicks with 360Hz/300Hz body resonance) for true physical barista timer sound."
+        description: "Countdown now plays an authentic mechanical clockwork tick every second (alternating 2600Hz/1950Hz escapement pallet clicks with 360Hz/300Hz body resonance) for true physical tea timer sound."
       },
       {
         type: "feature",
         badge: "Studio Voice",
         title: "Pre-Rendered British Female Voice Guidance",
-        description: "All 48 coffee and tea phases now feature pre-rendered studio voice guidance ('Bloom Phase, 45 seconds', 'First Pulse Pour, 45 seconds', etc.) ensuring loud, reliable audio on both desktop and mobile devices."
+        description: "All tea steeping phases now feature pre-rendered studio voice guidance ('Bloom Phase, 45 seconds', 'First Pulse Pour, 45 seconds', etc.) ensuring loud, reliable audio on both desktop and mobile devices."
       },
       {
         type: "enhancement",
@@ -202,7 +202,7 @@ export const VERSION_HISTORY = [
   {
     version: "1.3.0",
     releaseDate: "2026-09-06",
-    title: "Coffee Water Chemistry Lab & Prerendered SEO Hub",
+    title: "Tea Water Chemistry Lab & Prerendered SEO Hub",
     summary: "Precision mineral recipe calculator and static prerendered educational guide engineered for organic search capture.",
     highlights: [
       {
@@ -215,12 +215,12 @@ export const VERSION_HISTORY = [
         type: "feature",
         badge: "Formulations",
         title: "Lotus Drops & DIY Mineral Concentrates",
-        description: "Drop counts for Lotus Coffee Water minerals alongside gram weights for food-grade Epsom Salt (MgSO4) and Baking Soda (NaHCO3)."
+        description: "Drop counts for Lotus Water minerals alongside gram weights for food-grade Epsom Salt (MgSO4) and Baking Soda (NaHCO3)."
       },
       {
         type: "enhancement",
         badge: "SEO Hub",
-        title: "Static Prerendered Guide (/guides/coffee-water-chemistry)",
+        title: "Static Prerendered Guide (/guides/tea-water-chemistry)",
         description: "Full static prerendering equipped with Article, HowTo, and FAQPage JSON-LD schemas for high-intent search queries."
       }
     ]
@@ -229,7 +229,7 @@ export const VERSION_HISTORY = [
     version: "1.2.0",
     releaseDate: "2026-09-06",
     title: "Native Camera Barcode & QR Scanner",
-    summary: "Instant coffee bean bag ingestion using device hardware cameras and curated specialty roaster presets.",
+    summary: "Instant tea tin and pouch ingestion using device hardware cameras and curated specialty roaster presets.",
     highlights: [
       {
         type: "feature",
@@ -241,7 +241,7 @@ export const VERSION_HISTORY = [
         type: "feature",
         badge: "Database",
         title: "Curated Specialty Roaster SKUs",
-        description: "Pre-seeded catalog for Onyx Coffee Lab, Sey Coffee, Proud Mary, Counter Culture, and Stumptown."
+        description: "Pre-seeded catalog for Ippodo Tea Co., Yunnan Sourcing, and Vahdam Teas."
       },
       {
         type: "enhancement",
@@ -254,7 +254,7 @@ export const VERSION_HISTORY = [
   {
     version: "1.1.0",
     releaseDate: "2026-09-06",
-    title: "World Coffee & Tea News Hardening",
+    title: "World Tea & Botanical News Hardening",
     summary: "Eliminated unescaped HTML entities in syndicated news feeds and implemented defensive entity decoding.",
     highlights: [
       {
@@ -275,7 +275,7 @@ export const VERSION_HISTORY = [
     version: "1.0.0",
     releaseDate: "2026-09-05",
     title: "Foundational Release: Dial-in Station & 18 Extraction Methods",
-    summary: "Comprehensive specialty coffee and fine tea brewing workstation.",
+    summary: "Comprehensive fine loose-leaf tea and Gongfu steeping workstation.",
     highlights: [
       {
         type: "feature",

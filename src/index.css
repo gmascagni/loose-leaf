@@ -12,12 +12,7 @@
   }
 
   /* Dynamic Track Body Root Styles */
-  body.theme-coffee {
-    background-color: #0E0906;
-    color: #F8F5F1;
-  }
-
-  body.theme-tea {
+  body.theme-tea, body {
     background-color: #08110B;
     color: #EBF7EE;
   }
@@ -32,9 +27,7 @@
     transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
   }
 
-  .btn-tactile-coffee:hover,
   .btn-tactile-tea:hover,
-  .btn-tactile-amber:hover,
   .btn-tactile-sage:hover,
   .btn-scale:hover {
     transform: scale(1.04) translateY(-1px);
@@ -47,7 +40,7 @@
 
 /* Luxury Editorial Glassmorphism & Tactile Utilities */
 .glass-panel {
-  background: rgba(22, 18, 15, 0.85);
+  background: rgba(14, 25, 18, 0.85);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -55,44 +48,6 @@
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.12),
     0 24px 48px -12px rgba(0, 0, 0, 0.85),
     0 0 20px 0 rgba(0, 0, 0, 0.5);
-}
-
-/* 1. COFFEE TRACK (BROWN THEME) */
-.glass-panel-coffee, .glass-panel-amber {
-  background: linear-gradient(145deg, rgba(38, 24, 14, 0.94) 0%, rgba(18, 11, 7, 0.97) 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(166, 110, 56, 0.4);
-  box-shadow: 
-    inset 0 1px 1px 0 rgba(232, 195, 158, 0.22),
-    0 24px 48px -12px rgba(14, 11, 8, 0.95),
-    0 0 35px -5px rgba(166, 110, 56, 0.25);
-}
-
-.btn-tactile-coffee, .btn-tactile-amber {
-  background: linear-gradient(180deg, #C48B56 0%, #A66E38 50%, #7E4B21 100%);
-  box-shadow: 
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
-    inset 0 -2px 0 0 rgba(0, 0, 0, 0.4),
-    0 0 25px 2px rgba(166, 110, 56, 0.45);
-  border: 1px solid rgba(232, 195, 158, 0.4);
-  color: #140C08;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.btn-tactile-coffee:hover, .btn-tactile-amber:hover {
-  background: linear-gradient(180deg, #D2A06E 0%, #C48B56 50%, #8B5A2B 100%);
-  box-shadow: 
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
-    0 0 35px 6px rgba(196, 139, 86, 0.65);
-  transform: scale(1.05) translateY(-2px);
-}
-
-.btn-tactile-coffee:active, .btn-tactile-amber:active {
-  transform: scale(0.96) translateY(1px);
-  box-shadow: 
-    inset 0 2px 4px 0 rgba(0, 0, 0, 0.5),
-    0 4px 10px -2px rgba(166, 110, 56, 0.4);
 }
 
 /* 2. TEA TRACK (BOTANICAL SAGE GREEN THEME) */
@@ -172,12 +127,6 @@
 }
 
 /* Metallic Shimmer Text */
-.text-shimmer-coffee {
-  background: linear-gradient(135deg, #FFF8F0 0%, #D2A06E 50%, #FFF8F0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .text-shimmer-tea {
   background: linear-gradient(135deg, #F4FBF6 0%, #8FA899 50%, #F4FBF6 100%);
   -webkit-background-clip: text;

@@ -2,10 +2,10 @@
   "classic_pour_over_0": {
     "filename": "classic_pour_over_phase_0.mp3",
     "url": "/audio/timer/instructions/classic_pour_over_phase_0.mp3",
-    "phrase": "Bloom Phase, 45 seconds. Saturate grounds evenly with 3x coffee weight in circular motion. Let coffee bloom and de-gas.",
+    "phrase": "Bloom Phase, 45 seconds. Rinse and saturate whole leaves evenly with hot water to awaken delicate aromatics.",
     "name": "Bloom Phase",
     "durationSec": 45,
-    "instruction": "Saturate grounds evenly with 3x coffee weight in circular motion. Let coffee bloom and de-gas."
+    "instruction": "Rinse and saturate whole leaves evenly with hot water to awaken delicate aromatics."
   },
   "classic_pour_over_1": {
     "filename": "classic_pour_over_phase_1.mp3",
@@ -34,10 +34,10 @@
   "pour_over_0": {
     "filename": "pour_over_phase_0.mp3",
     "url": "/audio/timer/instructions/pour_over_phase_0.mp3",
-    "phrase": "Bloom Phase, 45 seconds. Pour 3x coffee weight in circular motion. Let coffee expand and off-gas CO2.",
+    "phrase": "Bloom Phase, 45 seconds. Pour temperature-controlled water in circular motion. Allow leaves to expand and unfurl.",
     "name": "Bloom Phase",
     "durationSec": 45,
-    "instruction": "Pour 3x coffee weight in circular motion. Let coffee expand and off-gas CO2."
+    "instruction": "Pour temperature-controlled water in circular motion. Allow leaves to expand and unfurl."
   },
   "pour_over_1": {
     "filename": "pour_over_phase_1.mp3",
@@ -58,10 +58,10 @@
   "chemex_0": {
     "filename": "chemex_phase_0.mp3",
     "url": "/audio/timer/instructions/chemex_phase_0.mp3",
-    "phrase": "Bloom Phase, 45 seconds. Saturate grounds with 3x coffee weight. Allow heavy bloom for 45 seconds.",
+    "phrase": "Bloom Phase, 45 seconds. Saturate whole leaves with hot water. Allow gentle awakening infusion for 45 seconds.",
     "name": "Bloom Phase",
     "durationSec": 45,
-    "instruction": "Saturate grounds with 3x coffee weight. Allow heavy bloom for 45 seconds."
+    "instruction": "Saturate whole leaves with hot water. Allow gentle awakening infusion for 45 seconds."
   },
   "chemex_1": {
     "filename": "chemex_phase_1.mp3",

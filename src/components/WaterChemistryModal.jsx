@@ -8,7 +8,6 @@ import {
   Sliders, 
   Info, 
   ChevronRight, 
-  Coffee, 
   Scale, 
   ShieldCheck, 
   HelpCircle,
@@ -35,7 +34,7 @@ const WATER_PRESETS = [
     recommendedFor: 'Cup of Excellence cupping, all-round medium & light roasts',
     lotusFormula: { calcium: 3, magnesium: 3, buffer: 2 },
     diyFormula: { epsomMl: 12.5, bakingSodaMl: 8.5 },
-    description: 'The Specialty Coffee Association baseline for balanced flavor clarity and acid-body equilibrium.'
+    description: 'The Specialty Tea baseline for balanced floral clarity and sweet L-theanine equilibrium.'
   },
   {
     id: 'light_roast_clarity',
@@ -100,11 +99,11 @@ export default function WaterChemistryModal({ isOpen, onClose }) {
         const cal = Math.round(selectedPreset.lotusFormula.calcium * scale);
         const mag = Math.round(selectedPreset.lotusFormula.magnesium * scale);
         const buf = Math.round(selectedPreset.lotusFormula.buffer * scale);
-        text = `Coffee Water Spec: ${selectedPreset.name} (${waterBatchVolumeLiters}L Batch)\nLotus Drops: ${cal} Calcium, ${mag} Magnesium, ${buf} Buffer\nTarget TDS: ${selectedPreset.tdsTarget} PPM | GH: ${selectedPreset.ghTarget} | KH: ${selectedPreset.khTarget}`;
+        text = `Tea Water Spec: ${selectedPreset.name} (${waterBatchVolumeLiters}L Batch)\nLotus Drops: ${cal} Calcium, ${mag} Magnesium, ${buf} Buffer\nTarget TDS: ${selectedPreset.tdsTarget} PPM | GH: ${selectedPreset.ghTarget} | KH: ${selectedPreset.khTarget}`;
       } else {
         const epsom = (selectedPreset.diyFormula.epsomMl * (waterBatchVolumeLiters / 3.8)).toFixed(1);
         const soda = (selectedPreset.diyFormula.bakingSodaMl * (waterBatchVolumeLiters / 3.8)).toFixed(1);
-        text = `Coffee Water Spec: ${selectedPreset.name} (${waterBatchVolumeLiters}L Batch)\nDIY Concentrates: ${epsom} mL Epsom Salt (MgSO₄), ${soda} mL Baking Soda (NaHCO₃)\nTarget TDS: ${selectedPreset.tdsTarget} PPM | GH: ${selectedPreset.ghTarget} | KH: ${selectedPreset.khTarget}`;
+        text = `Tea Water Spec: ${selectedPreset.name} (${waterBatchVolumeLiters}L Batch)\nDIY Concentrates: ${epsom} mL Epsom Salt (MgSO₄), ${soda} mL Baking Soda (NaHCO₃)\nTarget TDS: ${selectedPreset.tdsTarget} PPM | GH: ${selectedPreset.ghTarget} | KH: ${selectedPreset.khTarget}`;
       }
     } else {
       text = `SCA Bottled Water Target: 150 PPM TDS (Range: 75–250 PPM). Recommended brands: Crystal Geyser (Weed, CA / Mt. Shasta), Volvic, Iceland Pure Spring.`;
@@ -162,7 +161,7 @@ export default function WaterChemistryModal({ isOpen, onClose }) {
                 </span>
               </div>
               <h2 id="water-modal-title" className="font-serif text-xl sm:text-2xl font-bold text-cream-light">
-                Coffee Water Chemistry Lab
+                Tea Water Chemistry Lab
               </h2>
             </div>
           </div>
@@ -460,8 +459,8 @@ export default function WaterChemistryModal({ isOpen, onClose }) {
               <div className="p-4 rounded-2xl bg-cyan-950/30 border border-cyan-500/30 flex items-start gap-3">
                 <Info className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
                 <div className="text-xs text-cream-soft/90 leading-relaxed">
-                  <p className="font-bold text-cream-light mb-1">Water makes up 98.5% of your filter coffee.</p>
-                  Tap water with high bicarbonate (KH) neutralizes delicate fruit acids, making high-end coffee taste flat and chalky. Pure distilled water lacks minerals to bind flavor compounds. Use these targeted mineral ratios with zero-TDS distilled or reverse-osmosis (RO) water.
+                  <p className="font-bold text-cream-light mb-1">Water makes up 99% of your tea infusion.</p>
+                  Tap water with high bicarbonate (KH) neutralizes delicate tea aromatics and causes cloudy liquor. Ultra-hard water mutes umami and floral esters. Use these targeted mineral ratios with soft spring or remineralized reverse-osmosis (RO) water.
                 </div>
               </div>
 
@@ -626,7 +625,7 @@ export default function WaterChemistryModal({ isOpen, onClose }) {
                 {formulaMode === 'lotus' ? (
                   <div className="p-5 rounded-2xl bg-black/40 border border-cyan-500/30 space-y-3">
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="font-bold text-cream-light">Lotus Coffee Water Drops ({waterBatchVolumeLiters}L batch)</span>
+                      <span className="font-bold text-cream-light">Lotus Mineral Drops ({waterBatchVolumeLiters}L batch)</span>
                       <button
                         type="button"
                         onClick={handleCopyFormula}

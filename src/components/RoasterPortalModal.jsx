@@ -11,7 +11,6 @@ import {
   ExternalLink,
   Trash2,
   Edit3,
-  Coffee,
   Sparkles,
   ArrowRight,
   ShieldCheck,
@@ -29,13 +28,13 @@ import {
 import { useNavigate } from 'react-router-dom';
 import QRCode from 'qrcode';
 import {
-  getCustomRoasterCoffees,
-  saveRoasterCoffee,
-  deleteRoasterCoffee,
-  generateSmartBagUrl,
-  exportRoasterCatalogJson,
-  saveCustomRoasterProfile,
-  getCustomRoasters
+  getCustomPurveyorTeas,
+  savePurveyorTea,
+  deletePurveyorTea,
+  generateSmartTinUrl,
+  exportPurveyorCatalogJson,
+  saveCustomPurveyorProfile,
+  getCustomPurveyors
 } from '../data/roasterRegistry';
 import { BREW_METHODS } from '../data/brewData';
 import RoasterVideoPlayer from './RoasterVideoPlayer';
@@ -57,7 +56,7 @@ export default function RoasterPortalModal({
   const [qrLayout, setQrLayout] = useState('thermal'); // 'thermal' | 'badge' | 'minimal'
   const [qrColor, setQrColor] = useState('black'); // 'black' | 'espresso' | 'gold'
   const [qrEcc, setQrEcc] = useState('H'); // 'H' (30%) | 'Q' (25%) | 'M' (15%) | 'L' (7%)
-  const [registeredCoffees, setRegisteredCoffees] = useState([]);
+  const [registeredTeas, setRegisteredTeas] = useState([]);
   const [copySuccess, setCopySuccess] = useState(false);
 
   let orchestrator = null;
@@ -150,7 +149,7 @@ export default function RoasterPortalModal({
   // QR Destination / SKU
   const [upc, setUpc] = useState(prefilledBarcode || '');
   const [customUrl, setCustomUrl] = useState('');
-  const [selectedCoffeeForSticker, setSelectedCoffeeForSticker] = useState(null);
+  const [selectedTeaForSticker, setSelectedTeaForSticker] = useState(null);
 
   // Real QR Code State
   const [qrDataUrl, setQrDataUrl] = useState('');
@@ -160,11 +159,11 @@ export default function RoasterPortalModal({
 
   const stickerRef = useRef(null);
 
-  // Load custom registered coffees from registry on open
+  // Load custom registered teas from registry on open
   useEffect(() => {
     if (isOpen) {
-      const list = getCustomRoasterCoffees();
-      setRegisteredCoffees(list);
+      const list = getCustomPurveyorTeas();
+      setRegisteredTeas(list);
       if (prefilledBean) {
         if (prefilledBean.roaster) setRoasterName(prefilledBean.roaster);
         if (prefilledBean.location) setLocation(prefilledBean.location);
@@ -177,13 +176,13 @@ export default function RoasterPortalModal({
         if (prefilledBean.recommendedGrind) setRecommendedGrind(prefilledBean.recommendedGrind);
         if (prefilledBean.upc) setUpc(prefilledBean.upc);
         if (prefilledBean.customUrl) setCustomUrl(prefilledBean.customUrl);
-        setSelectedCoffeeForSticker(prefilledBean);
+        setSelectedTeaForSticker(prefilledBean);
         setActiveTab('sticker');
       } else if (prefilledBarcode) {
         setUpc(prefilledBarcode);
         setActiveTab('onboard');
-      } else if (list.length > 0 && !selectedCoffeeForSticker) {
-        setSelectedCoffeeForSticker(list[0]);
+      } else if (list.length > 0 && !selectedTeaForSticker) {
+        setSelectedTeaForSticker(list[0]);
       }
     }
   }, [isOpen, prefilledBarcode, prefilledBean]);
@@ -191,8 +190,8 @@ export default function RoasterPortalModal({
   // Live mini QR preview in Onboarding form (Card 4)
   useEffect(() => {
     let isMounted = true;
-    const formCoffee = {
-      roaster: roasterName || 'Specialty Roaster',
+    const formTea = {
+      roaster: roasterName || 'Specialty Tea Purveyor',
       beanName: beanName || 'Single Origin Lot',
       brewMethod,
       recommendedRatio,
@@ -200,7 +199,7 @@ export default function RoasterPortalModal({
       recommendedGrind,
       upc
     };
-    const targetUrl = customUrl.trim() || generateSmartBagUrl(formCoffee);
+    const targetUrl = customUrl.trim() || generateSmartTinUrl(formTea);
 
     QRCode.toDataURL(targetUrl, {
       width: 240,
@@ -219,8 +218,8 @@ export default function RoasterPortalModal({
   // Main QR Code Generation in Studio (Tab 2)
   useEffect(() => {
     let isMounted = true;
-    const coffee = selectedCoffeeForSticker || {
-      roaster: roasterName || 'Specialty Roaster',
+    const tea = selectedTeaForSticker || {
+      roaster: roasterName || 'Specialty Tea Purveyor',
       beanName: beanName || 'Single Origin Lot',
       brewMethod,
       recommendedRatio,
@@ -228,7 +227,7 @@ export default function RoasterPortalModal({
       recommendedGrind,
       upc
     };
-    const targetUrl = customUrl.trim() || generateSmartBagUrl(coffee);
+    const targetUrl = customUrl.trim() || generateSmartTinUrl(tea);
     setActiveTargetUrl(targetUrl);
 
     let darkColor = '#000000';
@@ -264,7 +263,7 @@ export default function RoasterPortalModal({
     });
 
     return () => { isMounted = false; };
-  }, [selectedCoffeeForSticker, roasterName, beanName, brewMethod, recommendedRatio, tempF, recommendedGrind, upc, customUrl, qrColor, qrEcc]);
+  }, [selectedTeaForSticker, roasterName, beanName, brewMethod, recommendedRatio, tempF, recommendedGrind, upc, customUrl, qrColor, qrEcc]);
 
   if (!isOpen) return null;
 
@@ -273,7 +272,7 @@ export default function RoasterPortalModal({
     setUpc(`LOT-${new Date().getFullYear()}-${randomSuffix}`);
   };
 
-  const handleSaveCoffee = (e) => {
+  const handleSaveTea = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setFormError(null);
 
@@ -287,7 +286,7 @@ export default function RoasterPortalModal({
     }
 
     if (!trimmedBean) {
-      setFormError('Please enter the Coffee / Lot name.');
+      setFormError('Please enter the Tea / Lot name.');
       if (modalBodyRef.current) modalBodyRef.current.scrollTo({ top: 250, behavior: 'smooth' });
       return;
     }
@@ -308,7 +307,7 @@ export default function RoasterPortalModal({
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const newCoffee = {
+    const newTea = {
       id: `roaster_${Date.now()}`,
       roaster: trimmedRoaster,
       location: location.trim(),
@@ -332,10 +331,10 @@ export default function RoasterPortalModal({
       notes: roasterNotes.trim() || `Dialed-in recipe from ${trimmedRoaster}. Optimized for ${brewMethod.replace(/_/g, ' ')}.`
     };
 
-    saveRoasterCoffee(newCoffee);
+    savePurveyorTea(newTea);
 
     // Save custom roaster profile with uploaded logoImage for RoasterProfilePage background
-    saveCustomRoasterProfile({
+    saveCustomPurveyorProfile({
       name: trimmedRoaster,
       location: location.trim(),
       website: normalizedWebsite,
@@ -343,9 +342,9 @@ export default function RoasterPortalModal({
       backgroundImage: logoImage || ''
     });
 
-    const updated = getCustomRoasterCoffees();
-    setRegisteredCoffees(updated);
-    setSelectedCoffeeForSticker(newCoffee);
+    const updated = getCustomPurveyorTeas();
+    setRegisteredTeas(updated);
+    setSelectedTeaForSticker(newTea);
     setActiveTab('sticker');
 
     if (modalBodyRef.current) {
@@ -357,19 +356,19 @@ export default function RoasterPortalModal({
   };
 
   const handleDelete = (id) => {
-    if (confirm('Remove this coffee from your local Roaster Registry?')) {
-      const remaining = deleteRoasterCoffee(id);
-      setRegisteredCoffees(remaining);
-      if (selectedCoffeeForSticker?.id === id) {
-        setSelectedCoffeeForSticker(remaining[0] || null);
+    if (confirm('Remove this tea lot from your local Purveyor Registry?')) {
+      const remaining = deletePurveyorTea(id);
+      setRegisteredTeas(remaining);
+      if (selectedTeaForSticker?.id === id) {
+        setSelectedTeaForSticker(remaining[0] || null);
       }
     }
   };
 
   const getResolvedTargetUrl = () => {
     if (activeTargetUrl && activeTargetUrl.trim()) return activeTargetUrl;
-    const coffee = selectedCoffeeForSticker || {
-      roaster: roasterName || 'Specialty Roaster',
+    const tea = selectedTeaForSticker || {
+      roaster: roasterName || 'Specialty Tea Purveyor',
       beanName: beanName || 'Single Origin Lot',
       brewMethod,
       recommendedRatio,
@@ -377,7 +376,7 @@ export default function RoasterPortalModal({
       recommendedGrind,
       upc
     };
-    return customUrl.trim() || generateSmartBagUrl(coffee);
+    return customUrl.trim() || generateSmartTinUrl(tea);
   };
 
   const handleCopyLink = async () => {
@@ -418,8 +417,8 @@ export default function RoasterPortalModal({
   };
 
   const handleDownloadFullStickerPng = async () => {
-    const coffee = selectedCoffeeForSticker || {
-      roaster: roasterName || 'Specialty Roaster',
+    const tea = selectedTeaForSticker || {
+      roaster: roasterName || 'Specialty Tea Purveyor',
       location: location || 'Artisan Small Batch',
       beanName: beanName || 'Single Origin Lot',
       origin: origin || 'Single Origin',
@@ -436,37 +435,37 @@ export default function RoasterPortalModal({
     };
 
     if (orchestrator) {
-      await orchestrator.downloadSticker(coffee);
+      await orchestrator.downloadSticker(tea);
     } else {
-      await downloadCompleteStickerPng(coffee);
+      await downloadCompleteStickerPng(tea);
     }
   };
 
   const handleDownloadQrPng = async () => {
-    const coffee = selectedCoffeeForSticker || {
-      roaster: roasterName || 'Specialty Roaster',
+    const tea = selectedTeaForSticker || {
+      roaster: roasterName || 'Specialty Tea Purveyor',
       beanName: beanName || 'Single Origin Lot',
       customUrl: customUrl.trim()
     };
 
     if (orchestrator) {
-      await orchestrator.downloadQr(coffee, 1200);
+      await orchestrator.downloadQr(tea, 1200);
     } else {
-      await downloadHighResQrPng(coffee, 1200);
+      await downloadHighResQrPng(tea, 1200);
     }
   };
 
   const handleDownloadQrSvg = async () => {
-    const coffee = selectedCoffeeForSticker || {
-      roaster: roasterName || 'Specialty Roaster',
+    const tea = selectedTeaForSticker || {
+      roaster: roasterName || 'Specialty Tea Purveyor',
       beanName: beanName || 'Single Origin Lot',
       customUrl: customUrl.trim()
     };
 
     if (orchestrator) {
-      await orchestrator.downloadVector(coffee);
+      await orchestrator.downloadVector(tea);
     } else {
-      await downloadVectorQrSvg(coffee);
+      await downloadVectorQrSvg(tea);
     }
   };
 
@@ -478,7 +477,7 @@ export default function RoasterPortalModal({
   };
 
   const handleNavigateToPortfolio = () => {
-    const rName = selectedCoffeeForSticker?.roaster || roasterName || 'methodical';
+    const rName = selectedTeaForSticker?.roaster || roasterName || 'methodical';
     const slug = rName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     onClose();
     navigate(`/roasters/${slug}`);
@@ -501,7 +500,7 @@ export default function RoasterPortalModal({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-gold">
-                  B2B Specialty Roaster Portal
+                  B2B Specialty Tea Purveyor Portal
                 </span>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-[9px] font-bold border border-emerald-500/30">
                   Real QR Code Generator
@@ -536,7 +535,7 @@ export default function RoasterPortalModal({
             }`}
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>1. Onboard Coffee & Recipe</span>
+            <span>1. Onboard Tea Lot & Steeping Recipe</span>
           </button>
 
           <button
@@ -560,7 +559,7 @@ export default function RoasterPortalModal({
             }`}
           >
             <Store className="w-3.5 h-3.5 shrink-0" />
-            <span>3. Registered Coffees ({registeredCoffees.length})</span>
+            <span>3. Registered Teas ({registeredTeas.length})</span>
           </button>
 
           <button
@@ -589,7 +588,7 @@ export default function RoasterPortalModal({
 
           {/* TAB 1: ONBOARD FORM */}
           {activeTab === 'onboard' && (
-            <form onSubmit={handleSaveCoffee} noValidate className="space-y-6">
+            <form onSubmit={handleSaveTea} noValidate className="space-y-6">
               
               {/* Form Validation Warning */}
               {formError && (
@@ -614,7 +613,7 @@ export default function RoasterPortalModal({
                       required
                       value={roasterName}
                       onChange={(e) => setRoasterName(e.target.value)}
-                      placeholder="e.g. Methodical Coffee"
+                      placeholder="e.g. Ippodo Tea Co., Yunnan Sourcing"
                       className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-cream-light placeholder-cream-soft/40 focus:outline-none focus:border-amber-gold"
                     />
                   </div>
@@ -636,7 +635,7 @@ export default function RoasterPortalModal({
                       type="url"
                       value={website}
                       onChange={(e) => setWebsite(e.target.value)}
-                      placeholder="https://methodicalcoffee.com"
+                      placeholder="https://ippodotea.com"
                       className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-cream-light placeholder-cream-soft/40 focus:outline-none focus:border-amber-gold"
                     />
                   </div>
@@ -700,13 +699,13 @@ export default function RoasterPortalModal({
               {/* Bean Identity Card */}
               <div className="p-4 sm:p-5 rounded-2xl bg-black/30 border border-white/10 space-y-4">
                 <div className="flex items-center gap-2 text-amber-gold font-mono text-xs uppercase font-bold tracking-wider">
-                  <Coffee className="w-4 h-4" />
-                  <span>2. Coffee Origin & Processing Profile</span>
+                  <Sparkles className="w-4 h-4" />
+                  <span>2. Tea Terroir & Botanical Profile</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div>
-                    <label className="block text-cream-soft/70 font-mono mb-1">Coffee / Lot Name *</label>
+                    <label className="block text-cream-soft/70 font-mono mb-1">Tea / Cultivar Lot Name *</label>
                     <input
                       type="text"
                       required
@@ -917,7 +916,7 @@ export default function RoasterPortalModal({
                 </button>
                 <button
                   type="submit"
-                  onClick={handleSaveCoffee}
+                  onClick={handleSaveTea}
                   className="px-6 py-2.5 rounded-xl btn-tactile-amber text-espresso-950 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-amber-gold/20 hover:scale-105 active:scale-95 transition"
                 >
                   <span>Save to Registry & Open QR Studio</span>
@@ -940,23 +939,23 @@ export default function RoasterPortalModal({
                       Smart Bag QR Packaging Studio
                     </span>
                     <p className="text-cream-soft/80 text-xs mt-0.5">
-                      Generate authentic high-resolution QR stickers, packaging badges, or vector SVGs for your coffee bags.
+                      Generate authentic high-resolution QR stickers, packaging badges, or vector SVGs for your tea tins and pouches.
                     </p>
                   </div>
 
-                  {/* Coffee Selector */}
-                  {registeredCoffees.length > 0 && (
+                  {/* Tea Selector */}
+                  {registeredTeas.length > 0 && (
                     <div className="flex items-center gap-2">
-                      <span className="text-cream-soft/60 text-[11px] font-mono">Coffee:</span>
+                      <span className="text-cream-soft/60 text-[11px] font-mono">Tea Lot:</span>
                       <select
-                        value={selectedCoffeeForSticker?.id || ''}
+                        value={selectedTeaForSticker?.id || ''}
                         onChange={(e) => {
-                          const found = registeredCoffees.find((c) => c.id === e.target.value);
-                          if (found) setSelectedCoffeeForSticker(found);
+                          const found = registeredTeas.find((c) => c.id === e.target.value);
+                          if (found) setSelectedTeaForSticker(found);
                         }}
                         className="px-3 py-1.5 rounded-xl bg-black/50 border border-white/15 text-cream-light font-mono text-xs focus:outline-none focus:border-amber-gold"
                       >
-                        {registeredCoffees.map((c) => (
+                        {registeredTeas.map((c) => (
                           <option key={c.id} value={c.id}>
                             {c.roaster} — {c.beanName}
                           </option>
@@ -1057,33 +1056,33 @@ export default function RoasterPortalModal({
                     <div className="border-b border-stone-800 pb-2 text-left flex justify-between items-baseline">
                       <div>
                         <span className="text-[10px] font-mono tracking-wider uppercase font-bold text-stone-500 block">
-                          SPECIALTY COFFEE ROASTERY
+                          SPECIALTY TEA PURVEYOR
                         </span>
                         <h3 className="font-serif text-xl font-bold tracking-tight text-stone-900 leading-tight">
-                          {selectedCoffeeForSticker?.roaster || roasterName || 'Specialty Roaster'}
+                          {selectedTeaForSticker?.roaster || roasterName || 'Specialty Tea Purveyor'}
                         </h3>
                         <span className="text-[11px] text-stone-600 font-medium">
-                          {selectedCoffeeForSticker?.location || location || 'Artisan Small Batch'}
+                          {selectedTeaForSticker?.location || location || 'Artisan Small Batch'}
                         </span>
                       </div>
                       <div className="text-right">
                         <span className="px-2 py-0.5 rounded bg-stone-900 text-white font-mono text-[9px] font-bold uppercase tracking-wider">
-                          {selectedCoffeeForSticker?.roastLevel || roastLevel}
+                          {selectedTeaForSticker?.roastLevel || roastLevel}
                         </span>
                       </div>
                     </div>
 
-                    {/* Coffee Profile */}
+                    {/* Tea Profile */}
                     <div className="text-left space-y-0.5 pt-0.5">
                       <h4 className="font-serif text-lg font-bold text-stone-950 leading-tight">
-                        {selectedCoffeeForSticker?.beanName || beanName || 'Single Origin Lot'}
+                        {selectedTeaForSticker?.beanName || beanName || 'Single Origin Lot'}
                       </h4>
                       <p className="text-xs text-stone-600 font-medium">
-                        {selectedCoffeeForSticker?.origin || origin || 'Single Origin'} • {selectedCoffeeForSticker?.process || process} • {selectedCoffeeForSticker?.elevation || elevation}
+                        {selectedTeaForSticker?.origin || origin || 'Single Origin'} • {selectedTeaForSticker?.process || process} • {selectedTeaForSticker?.elevation || elevation}
                       </p>
-                      {(selectedCoffeeForSticker?.tastingNotes?.length > 0 || tastingNotesInput) && (
+                      {(selectedTeaForSticker?.tastingNotes?.length > 0 || tastingNotesInput) && (
                         <p className="text-[11px] text-amber-900/90 font-serif italic pt-0.5">
-                          Notes: {(selectedCoffeeForSticker?.tastingNotes || tastingNotesInput.split(',').map(s => s.trim())).slice(0, 4).join(', ')}
+                          Notes: {(selectedTeaForSticker?.tastingNotes || tastingNotesInput.split(',').map(s => s.trim())).slice(0, 4).join(', ')}
                         </p>
                       )}
                     </div>
@@ -1117,19 +1116,19 @@ export default function RoasterPortalModal({
                       <div>
                         <span className="text-stone-500 block text-[8px] uppercase">Ratio</span>
                         <span className="font-bold text-amber-800">
-                          1:{selectedCoffeeForSticker?.recommendedRatio || recommendedRatio}
+                          1:{selectedTeaForSticker?.recommendedRatio || recommendedRatio}
                         </span>
                       </div>
                       <div>
                         <span className="text-stone-500 block text-[8px] uppercase">Water Temp</span>
                         <span className="font-bold text-stone-800">
-                          {selectedCoffeeForSticker?.tempF || tempF}°F
+                          {selectedTeaForSticker?.tempF || tempF}°F
                         </span>
                       </div>
                       <div>
                         <span className="text-stone-500 block text-[8px] uppercase">Method</span>
                         <span className="font-bold text-stone-800 capitalize">
-                          {(selectedCoffeeForSticker?.brewMethod || brewMethod).replace(/_/g, ' ')}
+                          {(selectedTeaForSticker?.brewMethod || brewMethod).replace(/_/g, ' ')}
                         </span>
                       </div>
                     </div>
@@ -1138,7 +1137,7 @@ export default function RoasterPortalModal({
                     <div className="text-[9px] font-mono text-stone-500 pt-2 border-t border-stone-200 flex justify-between items-center">
                       <span>thebrew.app dial-in</span>
                       <span className="uppercase font-bold tracking-wider text-[8px] text-stone-700">
-                        {selectedCoffeeForSticker?.upc || upc || 'Smart Bag Certified'}
+                        {selectedTeaForSticker?.upc || upc || 'Smart Tin Certified'}
                       </span>
                     </div>
                   </div>
@@ -1160,10 +1159,10 @@ export default function RoasterPortalModal({
                         DIALED-IN EXTRACTION RECIPE
                       </span>
                       <h3 className="font-serif text-xl font-bold text-cream-light mt-0.5 tracking-wide">
-                        {selectedCoffeeForSticker?.roaster || roasterName || 'Specialty Roaster'}
+                        {selectedTeaForSticker?.roaster || roasterName || 'Specialty Tea Purveyor'}
                       </h3>
                       <p className="text-xs text-amber-200/80 font-serif italic">
-                        {selectedCoffeeForSticker?.beanName || beanName || 'Single Origin Lot'}
+                        {selectedTeaForSticker?.beanName || beanName || 'Single Origin Lot'}
                       </p>
                     </div>
 
@@ -1191,19 +1190,19 @@ export default function RoasterPortalModal({
                       <div>
                         <span className="text-cream-soft/60 block text-[8px] uppercase">Ratio</span>
                         <span className="font-bold text-amber-gold">
-                          1:{selectedCoffeeForSticker?.recommendedRatio || recommendedRatio}
+                          1:{selectedTeaForSticker?.recommendedRatio || recommendedRatio}
                         </span>
                       </div>
                       <div>
                         <span className="text-cream-soft/60 block text-[8px] uppercase">Temp</span>
                         <span className="font-bold text-cream-light">
-                          {selectedCoffeeForSticker?.tempF || tempF}°F
+                          {selectedTeaForSticker?.tempF || tempF}°F
                         </span>
                       </div>
                       <div>
                         <span className="text-cream-soft/60 block text-[8px] uppercase">Method</span>
                         <span className="font-bold text-cream-light capitalize">
-                          {(selectedCoffeeForSticker?.brewMethod || brewMethod).replace(/_/g, ' ')}
+                          {(selectedTeaForSticker?.brewMethod || brewMethod).replace(/_/g, ' ')}
                         </span>
                       </div>
                     </div>
@@ -1213,7 +1212,7 @@ export default function RoasterPortalModal({
                         Scan with camera to open The Brew App timer & water calculator
                       </p>
                       <span className="text-[8px] font-mono text-amber-gold/70 block uppercase tracking-wider">
-                        thebrew.app • Smart Bag Certified
+                        thebrew.app • Smart Tin Certified
                       </span>
                     </div>
                   </div>
@@ -1227,10 +1226,10 @@ export default function RoasterPortalModal({
                   >
                     <div>
                       <h4 className="font-serif text-base font-bold text-stone-900 leading-tight">
-                        {selectedCoffeeForSticker?.roaster || roasterName || 'Specialty Roaster'}
+                        {selectedTeaForSticker?.roaster || roasterName || 'Specialty Tea Purveyor'}
                       </h4>
                       <p className="text-[11px] text-stone-600 font-medium truncate">
-                        {selectedCoffeeForSticker?.beanName || beanName || 'Single Origin Lot'}
+                        {selectedTeaForSticker?.beanName || beanName || 'Single Origin Lot'}
                       </p>
                     </div>
 
@@ -1255,8 +1254,8 @@ export default function RoasterPortalModal({
                     </div>
 
                     <div className="text-[10px] font-mono text-stone-600 flex justify-between items-center border-t border-stone-200 pt-1.5">
-                      <span>1:{selectedCoffeeForSticker?.recommendedRatio || recommendedRatio}</span>
-                      <span>{selectedCoffeeForSticker?.tempF || tempF}°F</span>
+                      <span>1:{selectedTeaForSticker?.recommendedRatio || recommendedRatio}</span>
+                      <span>{selectedTeaForSticker?.tempF || tempF}°F</span>
                       <span className="font-bold text-stone-800">thebrew.app</span>
                     </div>
                   </div>
@@ -1409,22 +1408,22 @@ export default function RoasterPortalModal({
             </div>
           )}
 
-          {/* TAB 3: REGISTERED COFFEES CATALOG */}
+          {/* TAB 3: REGISTERED TEAS CATALOG */}
           {activeTab === 'catalog' && (
             <div className="space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-black/30 border border-white/10 text-xs">
                 <div>
                   <span className="font-mono text-amber-gold font-bold uppercase text-[10px]">
-                    Roastery Coffee Registry
+                    Purveyor Tea Registry
                   </span>
                   <p className="text-cream-soft/80 text-xs mt-0.5">
-                    {registeredCoffees.length} custom coffees registered in your local environment.
+                    {registeredTeas.length} custom teas registered in your local environment.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={exportRoasterCatalogJson}
+                    onClick={exportPurveyorCatalogJson}
                     className="px-3 py-1.5 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-cream-light font-mono text-xs flex items-center gap-1.5 border border-white/15"
                   >
                     <Download className="w-3.5 h-3.5 text-amber-gold" />
@@ -1433,25 +1432,25 @@ export default function RoasterPortalModal({
                 </div>
               </div>
 
-              {registeredCoffees.length === 0 ? (
+              {registeredTeas.length === 0 ? (
                 <div className="text-center py-12 border border-dashed border-white/15 rounded-2xl space-y-3 bg-black/20">
-                  <Coffee className="w-10 h-10 text-cream-soft/40 mx-auto" />
+                  <Sparkles className="w-10 h-10 text-cream-soft/40 mx-auto" />
                   <p className="text-cream-light font-serif font-bold text-lg">
-                    No Custom Coffees Registered Yet
+                    No Custom Teas Registered Yet
                   </p>
                   <p className="text-cream-soft/70 text-xs max-w-md mx-auto">
-                    Click "Onboard Coffee & Recipe" to register your first lot, set your barista dial-in recipe, and generate your Smart Bag QR sticker.
+                    Click "Onboard Tea Lot & Steeping Recipe" to register your first lot, set your tea steeping parameters, and generate your Smart Tin QR sticker.
                   </p>
                   <button
                     onClick={() => setActiveTab('onboard')}
                     className="px-4 py-2 rounded-xl bg-amber-gold text-espresso-950 font-mono text-xs font-bold uppercase"
                   >
-                    Onboard First Coffee
+                    Onboard First Tea Lot
                   </button>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {registeredCoffees.map((c) => (
+                  {registeredTeas.map((c) => (
                     <div
                       key={c.id}
                       className="p-4 rounded-2xl bg-black/40 border border-white/10 hover:border-amber-gold/40 transition space-y-3 flex flex-col justify-between"
@@ -1485,7 +1484,7 @@ export default function RoasterPortalModal({
                       <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
                         <button
                           onClick={() => {
-                            setSelectedCoffeeForSticker(c);
+                            setSelectedTeaForSticker(c);
                             setActiveTab('sticker');
                           }}
                           className="px-2.5 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-[11px] font-mono text-cream-light flex items-center gap-1 border border-white/10"
@@ -1514,7 +1513,7 @@ export default function RoasterPortalModal({
                           <button
                             onClick={() => handleDelete(c.id)}
                             className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20"
-                            title="Delete coffee"
+                            title="Delete tea lot"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>

@@ -13,7 +13,6 @@ import {
   Printer,
   QrCode,
   Camera,
-  Coffee,
   ExternalLink,
   ChevronLeft,
   ChevronRight,
@@ -26,8 +25,8 @@ const SCENES = [
     id: 'print',
     title: 'Thermal Print Smart QR Sticker',
     subtitle: 'Generate crisp, high-contrast 300 DPI vector QR labels with your exact dialed-in recipe embedded.',
-    detail: 'Printed on direct-thermal roll stock (Dymo / Zebra). Error Correction Level H ensures reliable scanning even with creased paper.',
-    badge: '1. ROASTERY WORKBENCH',
+    detail: 'Printed on direct-thermal roll stock (Dymo / Zebra). Error Correction Level H ensures reliable scanning even with curved tins.',
+    badge: '1. TEA PACKAGING WORKBENCH',
     duration: 6, // seconds
     image: '/images/demo/step1_print.jpg',
     icon: Printer,
@@ -36,38 +35,38 @@ const SCENES = [
   {
     step: 2,
     id: 'affix',
-    title: 'Affix Sticker to Retail Bag',
-    subtitle: 'Artisan roaster smoothes the moisture-resistant label onto the front of the specialty craft coffee bag.',
-    detail: 'Affixed right below the one-way degassing valve. Sleek, tactile craft sticker complements premium artisan packaging.',
-    badge: '2. ARTISAN PACKAGING',
+    title: 'Affix Sticker to Retail Tin or Pouch',
+    subtitle: 'Artisan tea purveyor smoothes the moisture-resistant label onto the front of the specialty craft tea tin or pouch.',
+    detail: 'Affixed cleanly onto airtight tin. Sleek, tactile craft sticker complements premium artisan tea packaging.',
+    badge: '2. ARTISAN TEA PACKAGING',
     duration: 6,
     image: '/images/demo/step2_affix.jpg',
     icon: QrCode,
-    tags: ['Degassing Valve Adjacent', 'Moisture Resistant', 'Retail Shelf Ready']
+    tags: ['Airtight Seal Compatible', 'Moisture Resistant', 'Retail Shelf Ready']
   },
   {
     step: 3,
     id: 'scan',
-    title: 'Customer Scans with Smartphone',
-    subtitle: 'Zero app installation friction. Customer points any iPhone or Android camera at the QR sticker.',
-    detail: 'Native camera viewfinder locks on instantly and prompts "Open in The Brew App" to unlock the roaster recipe.',
-    badge: '3. POINT & SHOOT',
+    title: 'Customer Scans With Phone Camera',
+    subtitle: 'No special app required. Standard iOS / Android camera app instantly recognizes the QR code.',
+    detail: 'Redirects instantly to LooseLeaf with your custom branding, lot origin story, and dialed-in steeping parameters.',
+    badge: '3. NATIVE HARDWARE SCAN',
     duration: 6,
     image: '/images/demo/step3_scan.jpg',
     icon: Camera,
-    tags: ['Native iOS / Android Camera', 'Zero App Store Barrier', 'Instant Optical Recognition']
+    tags: ['Native Camera App', 'Zero App Download', 'Deep-Link Routing']
   },
   {
     step: 4,
     id: 'brew',
-    title: 'Instant Dial-In Recipe & Live Timer',
-    subtitle: 'The Brew App webpage opens directly with golden ratio 1:16.5, water temp 202°F, and synchronized multi-phase timer.',
-    detail: 'Eliminates bitter or sour guesswork. Customer taps Start Timer for step-by-step bloom and pour audio coaching.',
+    title: 'Instant Dial-In Recipe & Live Steeping Timer',
+    subtitle: 'LooseLeaf opens directly with golden steeping ratio 1:50, water temp 190°F, and synchronized multi-steep timer.',
+    detail: 'Eliminates bitter, scalded guesswork. Customer taps Start Timer for step-by-step leaf awakening and infusion audio coaching.',
     badge: '4. GOLDEN RATIO DIALED-IN',
     duration: 6,
     image: '/images/demo/step4_brew.jpg',
-    icon: Coffee,
-    tags: ['Golden Ratio 1:16.5', 'Water Temp 202°F / 94.4°C', 'Synchronized Pour Timer']
+    icon: Sparkles,
+    tags: ['Golden Ratio 1:50', 'Water Temp 190°F / 88°C', 'Synchronized Steeping Timer']
   }
 ];
 
@@ -139,7 +138,7 @@ export default function RoasterVideoPlayer({ onOpenLiveDemo = null, className = 
         osc.start(now);
         osc.stop(now + 0.29);
       } else if (type === 'brew') {
-        // Barista bell / warm golden ratio chime (C5 + G5 harmonic)
+        // Tea bell / warm golden ratio chime (C5 + G5 harmonic)
         osc.type = 'sine';
         osc.frequency.setValueAtTime(523.25, now);
         osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.12);
@@ -411,7 +410,7 @@ export default function RoasterVideoPlayer({ onOpenLiveDemo = null, className = 
                 ? 'bg-white/[0.04] border-white/10 text-cream-soft hover:text-white'
                 : 'bg-amber-gold/20 border-amber-gold/40 text-amber-gold'
             }`}
-            title={isMuted ? 'Unmute Barista Audio SFX' : 'Mute Audio'}
+            title={isMuted ? 'Unmute Audio SFX' : 'Mute Audio'}
           >
             {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             <span className="hidden md:inline">{isMuted ? 'Muted' : 'Audio On'}</span>
@@ -638,8 +637,8 @@ export default function RoasterVideoPlayer({ onOpenLiveDemo = null, className = 
                 onClick={onOpenLiveDemo}
                 className="px-3 py-1 rounded-xl bg-amber-gold hover:bg-amber-gold/90 text-espresso-950 font-bold text-xs flex items-center gap-1.5 shadow transition animate-pulse pointer-events-auto"
               >
-                <Coffee className="w-3.5 h-3.5" />
-                <span>Test Dial-In Recipe</span>
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Test Steeping Recipe</span>
               </button>
             )}
             <span className="hidden sm:inline text-[11px] text-cream-soft/60">

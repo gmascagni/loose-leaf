@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { BREW_METHODS } from '../src/data/brewData.js';
+import { BREW_METHODS, TEA_METHODS } from '../src/data/brewData.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,13 +15,13 @@ if (!fs.existsSync(distDir)) {
 
 const templateHtml = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
 
-// Copy 404.html for GitHub Pages SPA routing fallback
+// Copy 404.html for SPA routing fallback
 fs.writeFileSync(path.join(distDir, '404.html'), templateHtml);
 fs.writeFileSync(path.join(rootDir, '404.html'), templateHtml);
 
-const allMethods = [...(BREW_METHODS.coffee || []), ...(BREW_METHODS.tea || [])];
+const allMethods = BREW_METHODS.tea || TEA_METHODS || BREW_METHODS;
 
-console.log(`Prerendering ${allMethods.length} method pages for search crawlers & social link previews...`);
+console.log(`Prerendering ${allMethods.length} tea steeping pages for search crawlers & social link previews...`);
 
 allMethods.forEach((method) => {
   const methodDir = path.join(distDir, 'methods', method.id);
@@ -30,8 +30,8 @@ allMethods.forEach((method) => {
   const rootMethodDir = path.join(rootDir, 'methods', method.id);
   fs.mkdirSync(rootMethodDir, { recursive: true });
 
-  const pageTitle = `How to Brew ${method.name} - The Art of Extraction | The Brew App`;
-  const pageDescription = method.description || `Step-by-step extraction guide, precision water ratio, temperature, and phases for ${method.name}.`;
+  const pageTitle = `How to Steep ${method.name} - loose-leaf | Specialty Tea Guide`;
+  const pageDescription = method.description || `Step-by-step loose leaf steeping guide, leaf-to-water ratio, temperature, and infusion phases for ${method.name}.`;
   const canonicalUrl = `https://thebrew.app/methods/${method.id}`;
   const totalSec = (method.phases || []).reduce((acc, p) => acc + (p.durationSec || 0), 0);
   const totalMinutes = Math.ceil(totalSec / 60) || 3;
@@ -40,17 +40,17 @@ allMethods.forEach((method) => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    "name": `How to Brew ${method.name}`,
+    "name": `How to Steep ${method.name}`,
     "description": pageDescription,
     "totalTime": `PT${totalMinutes}M`,
     "supply": [
       {
         "@type": "HowToSupply",
-        "name": method.category === 'tea' ? "Specialty Loose Leaf Tea" : "Specialty Single-Origin Coffee"
+        "name": "Specialty Loose Leaf Tea"
       },
       {
         "@type": "HowToSupply",
-        "name": `Hot Water (${method.tempF || 200}°F / ${method.tempC || 93}°C)`
+        "name": `Filtered Hot Water (${method.tempF || 190}°F / ${method.tempC || 88}°C)`
       }
     ],
     "tool": [
@@ -60,558 +60,102 @@ allMethods.forEach((method) => {
       },
       {
         "@type": "HowToTool",
-        "name": "Precision Gram Scale & Multi-Phase Timer"
+        "name": "Digital Gram Scale"
+      },
+      {
+        "@type": "HowToTool",
+        "name": "Temperature-Controlled Kettle"
       }
     ],
     "step": (method.phases || []).map((phase, idx) => ({
       "@type": "HowToStep",
       "position": idx + 1,
       "name": phase.name,
-      "text": phase.instruction
+      "text": phase.instruction,
+      "timeRequired": `PT${phase.durationSec || 30}S`
     }))
   };
 
-  // Generate initial crawler-readable static HTML content
-  const phasesListHtml = (method.phases || []).map((p, i) => `
-    <li style="margin-bottom: 12px;">
-      <strong>Phase ${i + 1}: ${p.name}</strong> (${p.durationSec}s) — ${p.instruction}
-    </li>
-  `).join('');
+  // Build high-performance static HTML shell
+  let staticHtml = templateHtml;
+  staticHtml = staticHtml.replace(/<title>.*?<\/title>/i, `<title>${pageTitle}</title>`);
+  staticHtml = staticHtml.replace(/<meta name="description" content=".*?" \/>/i, `<meta name="description" content="${pageDescription}" />`);
+  staticHtml = staticHtml.replace(/<link rel="canonical" href=".*?" \/>/i, `<link rel="canonical" href="${canonicalUrl}" />`);
+  
+  staticHtml = staticHtml.replace(/<meta property="og:title" content=".*?" \/>/i, `<meta property="og:title" content="${pageTitle}" />`);
+  staticHtml = staticHtml.replace(/<meta property="og:description" content=".*?" \/>/i, `<meta property="og:description" content="${pageDescription}" />`);
+  staticHtml = staticHtml.replace(/<meta property="og:url" content=".*?" \/>/i, `<meta property="og:url" content="${canonicalUrl}" />`);
+  
+  staticHtml = staticHtml.replace(/<meta name="twitter:title" content=".*?" \/>/i, `<meta name="twitter:title" content="${pageTitle}" />`);
+  staticHtml = staticHtml.replace(/<meta name="twitter:description" content=".*?" \/>/i, `<meta name="twitter:description" content="${pageDescription}" />`);
+  staticHtml = staticHtml.replace(/<meta name="twitter:url" content=".*?" \/>/i, `<meta name="twitter:url" content="${canonicalUrl}" />`);
 
-  const initialServerContent = `
-    <div style="max-width: 800px; margin: 40px auto; padding: 24px; font-family: sans-serif; color: #F8F5F1; background-color: #14110E; border-radius: 24px; border: 1px solid rgba(212, 140, 70, 0.4);">
-      <header style="margin-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px;">
-        <span style="font-size: 11px; font-family: monospace; text-transform: uppercase; color: #D48C46; font-weight: bold; letter-spacing: 0.15em;">
-          The Brew App • ${method.category === 'tea' ? 'Specialty Tea Guide' : 'Specialty Coffee Guide'}
+  // Inject prerendered rich SEO body
+  const prerenderBody = `
+    <div id="prerender-seo" style="max-width: 800px; margin: 0 auto; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #EBF7EE; background: #08110B; min-height: 100vh;">
+      <header style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 30px;">
+        <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #7EA98E; font-weight: bold;">
+          LooseLeaf • Specialty Loose Leaf Tea Guide
         </span>
-        <h1 style="font-family: serif; font-size: 32px; font-weight: bold; margin: 8px 0; color: #F8F5F1;">
-          ${method.name}
-        </h1>
-        <p style="font-size: 14px; color: #D4D4D8; line-height: 1.6;">
-          ${method.description}
-        </p>
+        <h1 style="font-size: 32px; font-family: Georgia, serif; margin: 10px 0; color: #FFFFFF;">${method.name}</h1>
+        <p style="font-size: 16px; line-height: 1.6; color: #A2B9AB;">${method.description}</p>
+        <div style="display: flex; gap: 15px; margin-top: 15px; font-family: monospace; font-size: 13px;">
+          <span style="background: rgba(94,150,106,0.15); border: 1px solid rgba(94,150,106,0.3); padding: 4px 10px; border-radius: 8px; color: #7EA98E;">Ratio 1:${method.ratio}</span>
+          <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px;">Temp: ${method.tempF}°F (${method.tempC}°C)</span>
+          <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px;">Leaf Style: ${method.leafGrade || 'Whole Leaf'}</span>
+        </div>
       </header>
-
-      <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px;">
-        <div style="background: rgba(255,255,255,0.05); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <div style="font-size: 10px; text-transform: uppercase; color: #A1A1AA; font-family: monospace;">Extraction Ratio</div>
-          <div style="font-size: 18px; font-weight: bold; color: #D48C46; font-family: monospace;">1 : ${method.ratio}</div>
-        </div>
-        <div style="background: rgba(255,255,255,0.05); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <div style="font-size: 10px; text-transform: uppercase; color: #A1A1AA; font-family: monospace;">Target Water Temp</div>
-          <div style="font-size: 18px; font-weight: bold; color: #67E8F9; font-family: monospace;">${method.tempF}°F (${method.tempC}°C)</div>
-        </div>
-        ${method.grind ? `
-        <div style="background: rgba(255,255,255,0.05); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <div style="font-size: 10px; text-transform: uppercase; color: #A1A1AA; font-family: monospace;">Grind Texture</div>
-          <div style="font-size: 18px; font-weight: bold; color: #D48C46; font-family: monospace;">${method.grind}</div>
-        </div>
-        ` : ''}
-      </section>
-
-      <section style="margin-bottom: 24px;">
-        <h2 style="font-family: serif; font-size: 20px; font-weight: bold; margin-bottom: 12px; color: #F8F5F1;">
-          Step-by-Step Extraction Phases
+      
+      <section style="margin-bottom: 35px;">
+        <h2 style="font-size: 20px; color: #FFFFFF; border-left: 3px solid #7EA98E; padding-left: 10px; margin-bottom: 15px;">
+          Steeping Parameters & Phases
         </h2>
-        <ol style="padding-left: 20px; font-size: 13px; line-height: 1.6; color: #E4E4E7;">
-          ${phasesListHtml}
-        </ol>
+        <div style="display: grid; gap: 12px;">
+          ${(method.phases || []).map((phase, idx) => `
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 16px; border-radius: 12px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                <strong style="color: #7EA98E; font-family: monospace;">Phase ${idx + 1}: ${phase.name}</strong>
+                <span style="color: #71717A; font-family: monospace; font-size: 12px;">${phase.durationSec}s</span>
+              </div>
+              <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #D4D4D8;">${phase.instruction}</p>
+            </div>
+          `).join('')}
+        </div>
       </section>
 
-      <footer style="font-size: 11px; color: #A1A1AA; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
-        Interactive precision ratio scaling, live multi-phase timer, and masterclass videos available in The Brew App.
+      <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: #71717A; text-align: center;">
+        © ${new Date().getFullYear()} loose-leaf • Single-Origin Botanical Terroirs & Ceremonial Steeping
       </footer>
     </div>
   `;
 
-  // Inject meta tags and initial content into template HTML
-  let customHtml = templateHtml;
+  staticHtml = staticHtml.replace(
+    '<div id="root"></div>',
+    `<div id="root">${prerenderBody}</div><script id="json-ld-structured-data" type="application/ld+json">${JSON.stringify(jsonLd)}</script>`
+  );
 
-  // Title replacement
-  customHtml = customHtml.replace(/<title>.*?<\/title>/i, `<title>${pageTitle}</title>`);
-
-  // Description replacement
-  customHtml = customHtml.replace(/<meta name="description" content=".*?" \/>/i, `<meta name="description" content="${pageDescription}" />`);
-
-  // Canonical replacement
-  customHtml = customHtml.replace(/<link rel="canonical" href=".*?" \/>/i, `<link rel="canonical" href="${canonicalUrl}" />`);
-
-  // OG Title & Desc replacement
-  customHtml = customHtml.replace(/<meta property="og:title" content=".*?" \/>/i, `<meta property="og:title" content="${pageTitle}" />`);
-  customHtml = customHtml.replace(/<meta property="og:description" content=".*?" \/>/i, `<meta property="og:description" content="${pageDescription}" />`);
-  customHtml = customHtml.replace(/<meta property="og:url" content=".*?" \/>/i, `<meta property="og:url" content="${canonicalUrl}" />`);
-
-  // Twitter replacement
-  customHtml = customHtml.replace(/<meta name="twitter:title" content=".*?" \/>/i, `<meta name="twitter:title" content="${pageTitle}" />`);
-  customHtml = customHtml.replace(/<meta name="twitter:description" content=".*?" \/>/i, `<meta name="twitter:description" content="${pageDescription}" />`);
-  customHtml = customHtml.replace(/<meta name="twitter:url" content=".*?" \/>/i, `<meta name="twitter:url" content="${canonicalUrl}" />`);
-
-  // Inject JSON-LD
-  const jsonLdScriptTag = `<script id="json-ld-structured-data" type="application/ld+json">${JSON.stringify(jsonLd)}</script>`;
-  customHtml = customHtml.replace('</head>', `  ${jsonLdScriptTag}\n  </head>`);
-
-  // Inject readable initial HTML into #root
-  customHtml = customHtml.replace('<div id="root"></div>', `<div id="root">${initialServerContent}</div>`);
-
-  fs.writeFileSync(path.join(methodDir, 'index.html'), customHtml);
-  fs.writeFileSync(path.join(rootMethodDir, 'index.html'), customHtml);
+  fs.writeFileSync(path.join(methodDir, 'index.html'), staticHtml);
+  fs.writeFileSync(path.join(rootMethodDir, 'index.html'), staticHtml);
 });
 
-console.log('✓ Successfully prerendered all method pages with complete JSON-LD and crawler-readable markup!');
+console.log(`✓ Successfully prerendered ${allMethods.length} tea methods with valid Schema.org HowTo JSON-LD!`);
 
-// ----------------------------------------------------
-// Prerender Guides: /guides/coffee-water-chemistry
-// ----------------------------------------------------
-console.log('Prerendering /guides/coffee-water-chemistry guide page...');
-
-const guideDistDir = path.join(distDir, 'guides', 'coffee-water-chemistry');
+// Prerender Guides: /guides/tea-water-chemistry
+console.log('Prerendering /guides/tea-water-chemistry guide page...');
+const guideDistDir = path.join(distDir, 'guides', 'tea-water-chemistry');
 fs.mkdirSync(guideDistDir, { recursive: true });
-const guideRootDir = path.join(rootDir, 'guides', 'coffee-water-chemistry');
+const guideRootDir = path.join(rootDir, 'guides', 'tea-water-chemistry');
 fs.mkdirSync(guideRootDir, { recursive: true });
 
-const waterGuideTitle = 'Coffee Water Chemistry & Extraction Yield Guide | The Brew App';
-const waterGuideDesc = 'Master coffee water chemistry: SCA water specs, Lotus drop recipes, DIY mineral recipes (GH & KH), and extraction yield optimization for specialty coffee.';
-const waterGuideUrl = 'https://thebrew.app/guides/coffee-water-chemistry';
-
-const waterGuideJsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Article",
-      "headline": "Coffee Water Chemistry & Extraction Yield Guide",
-      "description": waterGuideDesc,
-      "url": waterGuideUrl,
-      "inLanguage": "en-US",
-      "publisher": {
-        "@type": "Organization",
-        "name": "The Brew App",
-        "url": "https://thebrew.app"
-      }
-    },
-    {
-      "@type": "HowTo",
-      "name": "How to Formulate Specialty Coffee Brewing Water",
-      "description": "Step-by-step guide to remineralizing zero-TDS (distilled or reverse osmosis) water for optimal extraction using Lotus drops or DIY mineral salts.",
-      "totalTime": "PT5M",
-      "supply": [
-        { "@type": "HowToSupply", "name": "Distilled or Reverse Osmosis Water (1 Gallon or 1 Liter)" },
-        { "@type": "HowToSupply", "name": "Lotus Water Drops (Mg, Ca, Buffer) or Food-Grade Epsom Salt & Baking Soda" }
-      ],
-      "tool": [
-        { "@type": "HowToTool", "name": "Digital TDS Pen (0-999 PPM)" },
-        { "@type": "HowToTool", "name": "Precision 0.01g Scale or Dropper" }
-      ],
-      "step": [
-        {
-          "@type": "HowToStep",
-          "position": 1,
-          "name": "Start with Zero-Baseline Water",
-          "text": "Procure steam-distilled water or deionized reverse osmosis (RO) water with a measured TDS between 0 and 5 ppm."
-        },
-        {
-          "@type": "HowToStep",
-          "position": 2,
-          "name": "Dose General Hardness (GH) Cations",
-          "text": "Add Magnesium (Epsom salt or Lotus Magnesium) to extract volatile fruit and floral flavor acids, followed by Calcium to coat the palate and round out chocolate sweetness."
-        },
-        {
-          "@type": "HowToStep",
-          "position": 3,
-          "name": "Dose Carbonate Hardness (KH) Buffer",
-          "text": "Add Potassium Bicarbonate or Sodium Bicarbonate (baking soda) at 35-45 ppm CaCO3 equivalent to prevent harsh, sour vinegary extraction while keeping lively acidity intact."
-        },
-        {
-          "@type": "HowToStep",
-          "position": 4,
-          "name": "Verify TDS & Shake Thoroughly",
-          "text": "Shake the jug vigorously for 30 seconds and test with your calibrated TDS meter to ensure 120-150 ppm total dissolved solids before brewing."
-        }
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is the ideal TDS for specialty coffee?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The Specialty Coffee Association (SCA) recommends a target Total Dissolved Solids (TDS) of 150 ppm (acceptable range: 75 to 250 ppm) with zero chlorine and a neutral pH of 7.0."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What is the difference between GH and KH in coffee water?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "General Hardness (GH) measures dissolved calcium and magnesium ions which bind to flavor compounds and pull them from coffee grounds. Carbonate Hardness (KH or Alkalinity) measures bicarbonate ions which act as a chemical buffer to neutralize acids."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Why shouldn't I brew with pure distilled or RO water?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Water with 0 TDS lacks the mineral ions (calcium and magnesium) needed to bond with the aromatic coffee compounds, resulting in flat, sour, hollow, and drastically underextracted coffee."
-          }
-        }
-      ]
-    }
-  ]
-};
-
-const waterGuideContent = `
-  <div style="max-width: 860px; margin: 40px auto; padding: 32px 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #F8F5F1; background-color: #14110E; border-radius: 24px; border: 1px solid rgba(212, 140, 70, 0.4); line-height: 1.6;">
-    <header style="margin-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;">
-      <span style="font-size: 11px; font-family: monospace; text-transform: uppercase; color: #D48C46; font-weight: bold; letter-spacing: 0.15em;">
-        The Brew App • Advanced Water Science
-      </span>
-      <h1 style="font-family: serif; font-size: 36px; font-weight: bold; margin: 12px 0; color: #F8F5F1;">
-        Coffee Water Chemistry & Extraction Yield Guide
-      </h1>
-      <p style="font-size: 16px; color: #D4D4D8;">
-        Your brewed cup is 98.5% water. Discover how magnesium, calcium, and bicarbonate alkalinity dictate your extraction yield, cup clarity, and brightness.
-      </p>
-    </header>
-
-    <section style="margin-bottom: 32px;">
-      <h2 style="font-family: serif; font-size: 22px; font-weight: bold; color: #F8F5F1; margin-bottom: 12px;">
-        1. The SCA Water Standard Target Specification
-      </h2>
-      <p style="font-size: 14px; color: #D4D4D8; margin-bottom: 16px;">
-        The Specialty Coffee Association defines exact physical and chemical metrics required to extract balanced solubles from roast coffee beans without corrosion or scale buildup.
-      </p>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
-        <div style="background: rgba(255,255,255,0.05); padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <div style="font-size: 11px; text-transform: uppercase; color: #A1A1AA; font-family: monospace;">Target TDS</div>
-          <div style="font-size: 20px; font-weight: bold; color: #D48C46; font-family: monospace;">150 PPM</div>
-          <div style="font-size: 11px; color: #71717A;">Range: 75 – 250 PPM</div>
-        </div>
-        <div style="background: rgba(255,255,255,0.05); padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <div style="font-size: 11px; text-transform: uppercase; color: #A1A1AA; font-family: monospace;">General Hardness (GH)</div>
-          <div style="font-size: 20px; font-weight: bold; color: #67E8F9; font-family: monospace;">68 PPM</div>
-          <div style="font-size: 11px; color: #71717A;">CaCO3 equivalent (50-175)</div>
-        </div>
-        <div style="background: rgba(255,255,255,0.05); padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <div style="font-size: 11px; text-transform: uppercase; color: #A1A1AA; font-family: monospace;">Alkalinity (KH)</div>
-          <div style="font-size: 20px; font-weight: bold; color: #34D399; font-family: monospace;">40 PPM</div>
-          <div style="font-size: 11px; color: #71717A;">Buffer CaCO3 (target 40)</div>
-        </div>
-        <div style="background: rgba(255,255,255,0.05); padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <div style="font-size: 11px; text-transform: uppercase; color: #A1A1AA; font-family: monospace;">Target pH</div>
-          <div style="font-size: 20px; font-weight: bold; color: #F8F5F1; font-family: monospace;">7.0</div>
-          <div style="font-size: 11px; color: #71717A;">Range: 6.5 – 7.5</div>
-        </div>
-      </div>
-    </section>
-
-    <section style="margin-bottom: 32px;">
-      <h2 style="font-family: serif; font-size: 22px; font-weight: bold; color: #F8F5F1; margin-bottom: 12px;">
-        2. Mineral Breakdown: What Each Ion Does
-      </h2>
-      <ul style="padding-left: 20px; font-size: 14px; color: #E4E4E7; line-height: 1.8;">
-        <li><strong style="color: #67E8F9;">Magnesium (Mg²⁺):</strong> Has high charge density that bonds aggressively with oxygen-rich organic acids and aroma volatiles. Crucial for pulling crisp floral and citrus notes in washed African lots.</li>
-        <li><strong style="color: #D48C46;">Calcium (Ca²⁺):</strong> Bonds moderately with heavier aromatic compounds, emphasizing body, creamy mouthfeel, and chocolate/caramel sweetness.</li>
-        <li><strong style="color: #34D399;">Bicarbonate Buffer (HCO₃⁻):</strong> Neutralizes excess hydrogen ions. Too little buffer makes the cup sour and harsh; too much buffer flattens acidity and makes coffee taste dull and chalky.</li>
-      </ul>
-    </section>
-
-    <section style="margin-bottom: 32px;">
-      <h2 style="font-family: serif; font-size: 22px; font-weight: bold; color: #F8F5F1; margin-bottom: 12px;">
-        3. Formulated Water Recipes
-      </h2>
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 12px; border-left: 4px solid #67E8F9;">
-          <h3 style="font-size: 16px; font-weight: bold; color: #F8F5F1; margin: 0 0 6px 0;">Light Roast Brightness (Filter / V60)</h3>
-          <p style="font-size: 13px; color: #D4D4D8; margin: 0 0 8px 0;">Optimized for delicate washed Ethiopians, Kenyans, and Geishas with high fruit clarity.</p>
-          <div style="font-family: monospace; font-size: 12px; color: #67E8F9;">Lotus Drops (per 1L): 4 drops Magnesium • 1 drop Calcium • 1 drop Bicarbonate • 0 drops Potassium</div>
-        </div>
-        <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 12px; border-left: 4px solid #D48C46;">
-          <h3 style="font-size: 16px; font-weight: bold; color: #F8F5F1; margin: 0 0 6px 0;">Balanced Daily Cup (SCA Benchmark)</h3>
-          <p style="font-size: 13px; color: #D4D4D8; margin: 0 0 8px 0;">All-rounder profile suited for medium roasts, South American washed coffees, and blends.</p>
-          <div style="font-family: monospace; font-size: 12px; color: #D48C46;">Lotus Drops (per 1L): 3 drops Magnesium • 2 drops Calcium • 2 drops Bicarbonate • 1 drop Potassium</div>
-        </div>
-        <div style="background: rgba(255,255,255,0.03); padding: 16px; border-radius: 12px; border-left: 4px solid #F59E0B;">
-          <h3 style="font-size: 16px; font-weight: bold; color: #F8F5F1; margin: 0 0 6px 0;">Sweet & Heavy Espresso (High Extraction)</h3>
-          <p style="font-size: 13px; color: #D4D4D8; margin: 0 0 8px 0;">High buffer and high calcium for thick crema, muted sharp bitterness, and prolonged finish.</p>
-          <div style="font-family: monospace; font-size: 12px; color: #F59E0B;">Lotus Drops (per 1L): 2 drops Magnesium • 4 drops Calcium • 3 drops Bicarbonate • 1 drop Potassium</div>
-        </div>
-      </div>
-    </section>
-
-    <section style="margin-bottom: 32px;">
-      <h2 style="font-family: serif; font-size: 22px; font-weight: bold; color: #F8F5F1; margin-bottom: 12px;">
-        4. Off-The-Shelf Bottled Waters Evaluated Against SCA Standards
-      </h2>
-      <p style="font-size: 14px; color: #D4D4D8; margin-bottom: 16px;">
-        If you prefer buying ready-to-brew water from the grocery store without mixing mineral drops, these commercial bottled waters have been laboratory-tested and evaluated against the SCA target window:
-      </p>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <strong style="color: #6EE7B7; font-size: 15px;">Crystal Geyser Alpine Spring Water (Mt. Shasta, CA)</strong>
-            <span style="font-family: monospace; font-size: 11px; background: rgba(16, 185, 129, 0.2); color: #6EE7B7; padding: 2px 8px; border-radius: 6px;">Specialty Gold Standard</span>
-          </div>
-          <p style="font-size: 12px; color: #D4D4D8; margin: 0 0 6px 0;">115 PPM TDS • 50 GH • 52 KH • pH 7.2. The #1 recommended grocery store water in US specialty coffee. Ready to pour straight into your kettle with zero remineralization.</p>
-        </div>
-
-        <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <strong style="color: #6EE7B7; font-size: 15px;">Volvic Natural Spring Water (Puy de Dôme, France)</strong>
-            <span style="font-family: monospace; font-size: 11px; background: rgba(16, 185, 129, 0.2); color: #6EE7B7; padding: 2px 8px; border-radius: 6px;">European Barista Benchmark</span>
-          </div>
-          <p style="font-size: 12px; color: #D4D4D8; margin: 0 0 6px 0;">130 PPM TDS • 62 GH • 58 KH • pH 7.0. Filtered through volcanic rock with 31.7 mg/L natural silica for velvety mouthfeel and sparkling cup clarity.</p>
-        </div>
-
-        <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.3);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <strong style="color: #FCD34D; font-size: 15px;">Evian Natural Spring Water (Évian-les-Bains, France)</strong>
-            <span style="font-family: monospace; font-size: 11px; background: rgba(245, 158, 11, 0.2); color: #FCD34D; padding: 2px 8px; border-radius: 6px;">Requires 50/50 Dilution</span>
-          </div>
-          <p style="font-size: 12px; color: #D4D4D8; margin: 0 0 6px 0;">357 PPM TDS undiluted (too hard). Mix 50/50 with steam-distilled water to yield an exceptional 178 PPM brew water at low cost.</p>
-        </div>
-
-        <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 12px; border: 1px solid rgba(96, 165, 250, 0.3);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-            <strong style="color: #93C5FD; font-size: 15px;">Poland Spring 100% Natural Spring Water (Maine, USA)</strong>
-            <span style="font-family: monospace; font-size: 11px; background: rgba(96, 165, 250, 0.2); color: #93C5FD; padding: 2px 8px; border-radius: 6px;">Soft / Nordic Light</span>
-          </div>
-          <p style="font-size: 12px; color: #D4D4D8; margin: 0 0 6px 0;">50 PPM TDS • 26 GH • 20 KH • pH 6.8. Naturally very soft water that allows intense floral and berry acidity to shine through without bicarbonate neutralization.</p>
-        </div>
-      </div>
-    </section>
-
-    <footer style="font-size: 12px; color: #A1A1AA; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; text-align: center;">
-      Use the interactive <strong>Water Lab</strong> inside <a href="https://thebrew.app" style="color: #D48C46; text-decoration: underline;">The Brew App</a> to view full laboratory ion breakdowns, search bottled water brands, or calculate exact mineral drop formulas.
-    </footer>
-  </div>
-`;
+const waterGuideTitle = 'Tea Water Chemistry & Mineral Formulation Guide | loose-leaf';
+const waterGuideDesc = 'Master specialty tea water chemistry: optimal mineral balance (GH & KH), Lotus drop formulations, and flavor extraction balance for fine teas.';
+const waterGuideUrl = 'https://thebrew.app/guides/tea-water-chemistry';
 
 let waterHtml = templateHtml;
 waterHtml = waterHtml.replace(/<title>.*?<\/title>/i, `<title>${waterGuideTitle}</title>`);
 waterHtml = waterHtml.replace(/<meta name="description" content=".*?" \/>/i, `<meta name="description" content="${waterGuideDesc}" />`);
 waterHtml = waterHtml.replace(/<link rel="canonical" href=".*?" \/>/i, `<link rel="canonical" href="${waterGuideUrl}" />`);
-waterHtml = waterHtml.replace(/<meta property="og:title" content=".*?" \/>/i, `<meta property="og:title" content="${waterGuideTitle}" />`);
-waterHtml = waterHtml.replace(/<meta property="og:description" content=".*?" \/>/i, `<meta property="og:description" content="${waterGuideDesc}" />`);
-waterHtml = waterHtml.replace(/<meta property="og:url" content=".*?" \/>/i, `<meta property="og:url" content="${waterGuideUrl}" />`);
-waterHtml = waterHtml.replace(/<meta property="og:image" content=".*?" \/>/i, `<meta property="og:image" content="https://thebrew.app/images/social/water_chemistry_guide.jpg" />`);
-waterHtml = waterHtml.replace(/<meta name="twitter:title" content=".*?" \/>/i, `<meta name="twitter:title" content="${waterGuideTitle}" />`);
-waterHtml = waterHtml.replace(/<meta name="twitter:description" content=".*?" \/>/i, `<meta name="twitter:description" content="${waterGuideDesc}" />`);
-waterHtml = waterHtml.replace(/<meta name="twitter:url" content=".*?" \/>/i, `<meta name="twitter:url" content="${waterGuideUrl}" />`);
-waterHtml = waterHtml.replace(/<meta name="twitter:image" content=".*?" \/>/i, `<meta name="twitter:image" content="https://thebrew.app/images/social/water_chemistry_guide.jpg" />`);
-
-const waterJsonLdTag = `<script id="json-ld-structured-data" type="application/ld+json">${JSON.stringify(waterGuideJsonLd)}</script>`;
-waterHtml = waterHtml.replace('</head>', `  ${waterJsonLdTag}\n  </head>`);
-waterHtml = waterHtml.replace('<div id="root"></div>', `<div id="root">${waterGuideContent}</div>`);
 
 fs.writeFileSync(path.join(guideDistDir, 'index.html'), waterHtml);
 fs.writeFileSync(path.join(guideRootDir, 'index.html'), waterHtml);
-// Clean URL file (avoids GitHub Pages 301 trailing slash redirect)
-fs.writeFileSync(path.join(distDir, 'guides', 'coffee-water-chemistry.html'), waterHtml);
-fs.writeFileSync(path.join(rootDir, 'guides', 'coffee-water-chemistry.html'), waterHtml);
-
-console.log('✓ Successfully prerendered /guides/coffee-water-chemistry with Article, HowTo, and FAQPage schemas!');
-
-// ----------------------------------------------------
-// Prerender Guides: /guides/water-chemistry-gh-kh
-// ----------------------------------------------------
-console.log('Prerendering /guides/water-chemistry-gh-kh guide page...');
-
-const ghKhDistDir = path.join(distDir, 'guides', 'water-chemistry-gh-kh');
-fs.mkdirSync(ghKhDistDir, { recursive: true });
-const ghKhRootDir = path.join(rootDir, 'guides', 'water-chemistry-gh-kh');
-fs.mkdirSync(ghKhRootDir, { recursive: true });
-
-const ghKhTitle = 'Coffee Water Chemistry: GH vs. KH Cheat Sheet | The Brew App';
-const ghKhUrl = 'https://thebrew.app/guides/water-chemistry-gh-kh';
-const ghKhImage = 'https://thebrew.app/images/social/water_chemistry_guide.jpg';
-
-let ghKhHtml = templateHtml;
-ghKhHtml = ghKhHtml.replace(/<title>.*?<\/title>/i, `<title>${ghKhTitle}</title>`);
-ghKhHtml = ghKhHtml.replace(/<meta name="description" content=".*?" \/>/i, `<meta name="description" content="${waterGuideDesc}" />`);
-ghKhHtml = ghKhHtml.replace(/<link rel="canonical" href=".*?" \/>/i, `<link rel="canonical" href="${ghKhUrl}" />`);
-ghKhHtml = ghKhHtml.replace(/<meta property="og:title" content=".*?" \/>/i, `<meta property="og:title" content="${ghKhTitle}" />`);
-ghKhHtml = ghKhHtml.replace(/<meta property="og:description" content=".*?" \/>/i, `<meta property="og:description" content="${waterGuideDesc}" />`);
-ghKhHtml = ghKhHtml.replace(/<meta property="og:url" content=".*?" \/>/i, `<meta property="og:url" content="${ghKhUrl}" />`);
-ghKhHtml = ghKhHtml.replace(/<meta property="og:image" content=".*?" \/>/i, `<meta property="og:image" content="${ghKhImage}" />`);
-ghKhHtml = ghKhHtml.replace(/<meta name="twitter:title" content=".*?" \/>/i, `<meta name="twitter:title" content="${ghKhTitle}" />`);
-ghKhHtml = ghKhHtml.replace(/<meta name="twitter:description" content=".*?" \/>/i, `<meta name="twitter:description" content="${waterGuideDesc}" />`);
-ghKhHtml = ghKhHtml.replace(/<meta name="twitter:url" content=".*?" \/>/i, `<meta name="twitter:url" content="${ghKhUrl}" />`);
-ghKhHtml = ghKhHtml.replace(/<meta name="twitter:image" content=".*?" \/>/i, `<meta name="twitter:image" content="${ghKhImage}" />`);
-
-const ghKhJsonLd = JSON.parse(JSON.stringify(waterGuideJsonLd));
-if (ghKhJsonLd['@graph'] && ghKhJsonLd['@graph'][0]) {
-  ghKhJsonLd['@graph'][0].headline = 'Coffee Water Chemistry: GH vs. KH Cheat Sheet';
-  ghKhJsonLd['@graph'][0].url = ghKhUrl;
-}
-
-const ghKhJsonLdTag = `<script id="json-ld-structured-data" type="application/ld+json">${JSON.stringify(ghKhJsonLd)}</script>`;
-ghKhHtml = ghKhHtml.replace('</head>', `  ${ghKhJsonLdTag}\n  </head>`);
-ghKhHtml = ghKhHtml.replace('<div id="root"></div>', `<div id="root">${waterGuideContent}</div>`);
-
-fs.writeFileSync(path.join(ghKhDistDir, 'index.html'), ghKhHtml);
-fs.writeFileSync(path.join(ghKhRootDir, 'index.html'), ghKhHtml);
-// Clean URL direct files (so Pinterest/Buffer receives immediate HTTP 200 without redirect)
-fs.writeFileSync(path.join(distDir, 'guides', 'water-chemistry-gh-kh.html'), ghKhHtml);
-fs.writeFileSync(path.join(rootDir, 'guides', 'water-chemistry-gh-kh.html'), ghKhHtml);
-
-console.log('✓ Successfully prerendered /guides/water-chemistry-gh-kh with Article, HowTo, and direct HTML!');
-
-// ==========================================
-// PRERENDER: /roasters (Roaster Partner Program & Label Ingestion)
-// ==========================================
-console.log('Prerendering /roasters partner information page...');
-
-const roasterDistDir = path.join(distDir, 'roasters');
-fs.mkdirSync(roasterDistDir, { recursive: true });
-
-const roasterRootDir = path.join(rootDir, 'roasters');
-fs.mkdirSync(roasterRootDir, { recursive: true });
-
-const roasterTitle = "Specialty Coffee Roaster Partner Program | The Brew App";
-const roasterDesc = "Learn how specialty coffee roasters can add their roastery, retail coffee labels, and bag barcodes to The Brew App global verified database. Free Smart Bag technology for artisan roasters.";
-const roasterUrl = "https://thebrew.app/roasters";
-
-const roasterJsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Article",
-      "headline": "Specialty Coffee Roaster Partner Program: Add Your Labels & Barcodes",
-      "description": roasterDesc,
-      "url": roasterUrl,
-      "author": {
-        "@type": "Organization",
-        "name": "The Brew App HQ"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "The Brew App",
-        "url": "https://thebrew.app",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://thebrew.app/favicon.svg"
-        }
-      }
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "How do I add my roastery and coffee labels to The Brew App?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Specialty roasters can contact HQ at clay@thebrew.app with their roastery details, coffee varieties, and retail UPC/EAN barcodes, or use the interactive Roaster Portal inside the app."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is there any cost for roasters to join?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. The Brew App Smart Bag Partner Program is 100% free for independent specialty coffee roasters."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How does barcode scanning work for customers?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "When a customer scans your retail coffee bag barcode with their phone camera, The Brew App instantly loads your exact recommended brew method, golden ratio, water temperature, grind setting, and multi-phase timer."
-          }
-        }
-      ]
-    }
-  ]
-};
-
-const roasterContent = `
-  <div style="max-width: 960px; margin: 0 auto; padding: 40px 20px; font-family: system-ui, -apple-system, sans-serif; color: #F4E8DC; line-height: 1.6; background-color: #0E0906;">
-    <header style="margin-bottom: 32px; border-bottom: 1px solid rgba(166, 110, 56, 0.3); padding-bottom: 24px;">
-      <span style="font-family: monospace; font-size: 12px; color: #D48C46; text-transform: uppercase; letter-spacing: 2px;">B2B Specialty Roaster Program</span>
-      <h1 style="font-family: Georgia, serif; font-size: 32px; color: #FFF; margin: 8px 0 12px 0;">Add Your Roastery & Coffee Labels to The Brew App</h1>
-      <p style="font-size: 16px; color: #C5A894; max-width: 780px;">Turn every retail coffee bag into an interactive dial-in masterclass. Free barcode and Smart Bag QR technology for specialty roasters.</p>
-    </header>
-
-    <div style="background: rgba(212, 140, 70, 0.12); border: 1px solid rgba(212, 140, 70, 0.4); border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; font-size: 13px; color: #D4A373;">
-      <strong>Showcase Demonstration Notice:</strong> Featured roaster profiles illustrate The Brew App Smart Bag & verified catalog integration. Independent roasters can onboard their official retail labels at zero cost.
-    </div>
-
-    <!-- 60-Second Video Walkthrough Embedded Player -->
-    <div style="background: #000; border-radius: 20px; overflow: hidden; max-width: 360px; margin: 28px auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); border: 1px solid rgba(212, 140, 70, 0.4); text-align: center;">
-      <video controls playsinline autoplay loop muted style="width: 100%; display: block; aspect-ratio: 9/16; object-fit: cover;">
-        <source src="/videos/v60_timer_recipe_short.mp4" type="video/mp4">
-      </video>
-      <div style="padding: 12px; font-size: 12px; color: #D4A373; font-family: monospace; background: #120A06;">
-        ▶ 60s Smart Bag & Live V60 Dial-In Walkthrough
-      </div>
-    </div>
-
-    <section style="margin-bottom: 32px;">
-      <h2 style="font-family: Georgia, serif; font-size: 22px; color: #D48C46; margin-bottom: 12px;">Why Partner With The Brew App?</h2>
-      <p style="font-size: 14px; color: #E4D5C7;">Specialty coffee roasters spend weeks sourcing and roasting exceptional lots, but home baristas often underextract or overextract the beans using generic ratios. When your labels are registered in our global verified database, scanning your retail bag barcode instantly configures your dialed-in recipe, water temperature, and voice-guided timer.</p>
-    </section>
-
-    <section style="margin-bottom: 32px;">
-      <h2 style="font-family: Georgia, serif; font-size: 22px; color: #D48C46; margin-bottom: 16px;">How It Works: 3 Simple Steps</h2>
-      <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
-        <div style="background: rgba(255,255,255,0.03); padding: 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <strong style="color: #D48C46;">1. Submit Roastery & Bag Labels:</strong>
-          <p style="font-size: 13px; color: #C5A894; margin: 6px 0 0 0;">Provide your roastery name, bean origins, harvest processing, and existing retail bag UPC/EAN barcodes.</p>
-        </div>
-        <div style="background: rgba(255,255,255,0.03); padding: 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <strong style="color: #D48C46;">2. Set Dial-In Extraction Parameters:</strong>
-          <p style="font-size: 13px; color: #C5A894; margin: 6px 0 0 0;">Specify your recommended brew method (V60, Kalita, Chemex, AeroPress, Espresso), golden ratio, water temperature, and grind size.</p>
-        </div>
-        <div style="background: rgba(255,255,255,0.03); padding: 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <strong style="color: #D48C46;">3. Instant Barcode Recognition:</strong>
-          <p style="font-size: 13px; color: #C5A894; margin: 6px 0 0 0;">Once approved by HQ, your coffee is live in the verified catalog. Customers scanning your bag instantly brew with your certified recipe.</p>
-        </div>
-      </div>
-    </section>
-
-    <section style="background: rgba(212, 140, 70, 0.08); border: 1px solid rgba(212, 140, 70, 0.3); border-radius: 16px; padding: 24px; margin-bottom: 32px;">
-      <h2 style="font-family: Georgia, serif; font-size: 20px; color: #D48C46; margin-top: 0;">Contact HQ to Add Your Labels</h2>
-      <p style="font-size: 14px; color: #E4D5C7;">To request inclusion in our verified specialty coffee database, please contact our roaster partnerships team directly:</p>
-      <p style="font-family: monospace; font-size: 15px; color: #FFF;">Email: <a href="mailto:clay@thebrew.app?subject=Roastery%20Label%20Ingestion" style="color: #D48C46; text-decoration: underline;">clay@thebrew.app</a></p>
-      <p style="font-size: 12px; color: #C5A894;">Or open <a href="https://thebrew.app" style="color: #D48C46; text-decoration: underline;">The Brew App</a> and click <strong>For Roasters</strong> in the header navigation.</p>
-    </section>
-
-    <footer style="font-size: 12px; color: #A1A1AA; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; text-align: center;">
-      © The Brew App HQ • Precision Extraction & Smart Bag Technology
-    </footer>
-  </div>
-`;
-
-let roasterHtml = templateHtml;
-roasterHtml = roasterHtml.replace(/<title>.*?<\/title>/i, `<title>${roasterTitle}</title>`);
-roasterHtml = roasterHtml.replace(/<meta name="description" content=".*?" \/>/i, `<meta name="description" content="${roasterDesc}" />`);
-roasterHtml = roasterHtml.replace(/<link rel="canonical" href=".*?" \/>/i, `<link rel="canonical" href="${roasterUrl}" />`);
-roasterHtml = roasterHtml.replace(/<meta property="og:title" content=".*?" \/>/i, `<meta property="og:title" content="${roasterTitle}" />`);
-roasterHtml = roasterHtml.replace(/<meta property="og:description" content=".*?" \/>/i, `<meta property="og:description" content="${roasterDesc}" />`);
-roasterHtml = roasterHtml.replace(/<meta property="og:url" content=".*?" \/>/i, `<meta property="og:url" content="${roasterUrl}" />`);
-roasterHtml = roasterHtml.replace(/<meta name="twitter:title" content=".*?" \/>/i, `<meta name="twitter:title" content="${roasterTitle}" />`);
-roasterHtml = roasterHtml.replace(/<meta name="twitter:description" content=".*?" \/>/i, `<meta name="twitter:description" content="${roasterDesc}" />`);
-roasterHtml = roasterHtml.replace(/<meta name="twitter:url" content=".*?" \/>/i, `<meta name="twitter:url" content="${roasterUrl}" />`);
-
-const roasterJsonLdTag = `<script id="json-ld-structured-data" type="application/ld+json">${JSON.stringify(roasterJsonLd)}</script>`;
-roasterHtml = roasterHtml.replace('</head>', `  ${roasterJsonLdTag}\n  </head>`);
-roasterHtml = roasterHtml.replace('<div id="root"></div>', `<div id="root">${roasterContent}</div>`);
-
-fs.writeFileSync(path.join(roasterDistDir, 'index.html'), roasterHtml);
-fs.writeFileSync(path.join(roasterRootDir, 'index.html'), roasterHtml);
-
-console.log('✓ Successfully prerendered /roasters with Article and FAQPage schemas!');
-
-// Prerender /demo/smart-bag-scanner, /scanner, and /academy
-['demo/smart-bag-scanner', 'scanner', 'scan', 'academy'].forEach((subPath) => {
-  const targetDistDir = path.join(distDir, ...subPath.split('/'));
-  const targetRootDir = path.join(rootDir, ...subPath.split('/'));
-  fs.mkdirSync(targetDistDir, { recursive: true });
-  fs.mkdirSync(targetRootDir, { recursive: true });
-  fs.writeFileSync(path.join(targetDistDir, 'index.html'), templateHtml);
-  fs.writeFileSync(path.join(targetRootDir, 'index.html'), templateHtml);
-});
-console.log('✓ Successfully prerendered /demo/smart-bag-scanner, /scanner, and /academy static routes!');
-
+console.log('✓ Successfully prerendered /guides/tea-water-chemistry!');

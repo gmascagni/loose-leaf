@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Sparkles, Plus, Bookmark, Coffee, Leaf, Trash2, Award, Clock, Flame } from 'lucide-react';
+import { BookOpen, Sparkles, Plus, Bookmark, Leaf, Trash2, Award, Clock, Flame } from 'lucide-react';
 import { CURATED_MASTER_RECIPES } from '../data/communityRecipesData';
 import { trackEvent } from '../utils/analytics';
 
 export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelectRecipe }) {
-  const isCoffee = trackMode === 'coffee';
-  const [activeTab, setActiveTab] = useState('curated'); // 'curated' | 'custom'
+const [activeTab, setActiveTab] = useState('curated'); // 'curated' | 'custom'
   const [selectedMethodFilter, setSelectedMethodFilter] = useState('all');
   const [savedRecipeIds, setSavedRecipeIds] = useState(() => {
     try {
@@ -79,12 +78,12 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
         <div>
-          <div className="inline-flex items-center space-x-2 text-xs font-extrabold uppercase tracking-widest text-amber-gold mb-1.5">
+          <div className="inline-flex items-center space-x-2 text-xs font-extrabold uppercase tracking-widest text-sage-300 mb-1.5">
             <Sparkles className="w-4 h-4 animate-pulse" />
             <span>Curated Master Guides & Personal Recipe Studio</span>
           </div>
           <h3 className="font-serif text-2xl md:text-3xl font-extrabold text-cream-light drop-shadow-md">
-            {isCoffee ? 'Specialty Coffee Master Recipe Vault' : 'Fine Tea Master Steeping Vault'}
+            Fine Tea Master Steeping Vault
           </h3>
           <p className="text-xs md:text-sm text-cream-soft/70 mt-1">
             Explore verified benchmark extraction guides from world champions and craft your own custom recipes saved locally on your device.
@@ -93,7 +92,7 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
 
         <button
           onClick={onOpenRecipeBuilder}
-          className="px-5 py-3 rounded-2xl btn-tactile-amber text-espresso-950 font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
+          className="px-5 py-3 rounded-2xl btn-tactile-tea text-espresso-950 font-extrabold text-xs uppercase tracking-wider flex items-center gap-2 shadow-xl hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
           <span>Create Custom Recipe</span>
@@ -107,7 +106,7 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
             onClick={() => setActiveTab('curated')}
             className={`px-4 py-2 rounded-xl transition-all flex items-center gap-1.5 ${
               activeTab === 'curated'
-                ? 'bg-amber-gold text-espresso-950 shadow-md font-extrabold'
+                ? 'bg-sage-500 text-espresso-950 shadow-md font-extrabold'
                 : 'text-stone-400 hover:text-cream-light'
             }`}
           >
@@ -119,7 +118,7 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
             onClick={() => setActiveTab('custom')}
             className={`px-4 py-2 rounded-xl transition-all flex items-center gap-1.5 ${
               activeTab === 'custom'
-                ? 'bg-amber-gold text-espresso-950 shadow-md font-extrabold'
+                ? 'bg-sage-500 text-espresso-950 shadow-md font-extrabold'
                 : 'text-stone-400 hover:text-cream-light'
             }`}
           >
@@ -141,13 +140,13 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
             return (
               <div
                 key={recipe.id}
-                className="p-6 rounded-3xl bg-[#14110E]/90 border border-white/10 hover:border-amber-gold/50 shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
+                className="p-6 rounded-3xl bg-[#14110E]/90 border border-white/10 hover:border-sage-500/50 shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
               >
                 <div>
                   {/* Header Badges */}
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-2">
-                      <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-gold border border-amber-400/30 text-[10px] font-mono font-bold">
+                      <span className="px-2.5 py-0.5 rounded-full bg-sage-500/20 text-sage-300 border border-sage-400/30 text-[10px] font-mono font-bold">
                         {recipe.badge}
                       </span>
                       <span className="text-[11px] text-stone-400 font-mono">{recipe.methodName}</span>
@@ -157,7 +156,7 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
                       onClick={() => toggleSaveRecipe(recipe.id)}
                       className={`p-2 rounded-xl border transition-all ${
                         isSaved
-                          ? 'bg-amber-gold text-espresso-950 border-amber-gold'
+                          ? 'bg-sage-500 text-espresso-950 border-sage-500'
                           : 'bg-white/5 border-white/10 text-stone-400 hover:text-cream-light'
                       }`}
                       title={isSaved ? "Saved to Recipe Box" : "Save Recipe"}
@@ -167,11 +166,11 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
                   </div>
 
                   {/* Title & Technique */}
-                  <h4 className="font-serif text-lg font-bold text-cream-light mb-1.5 leading-snug group-hover:text-amber-gold transition-colors">
+                  <h4 className="font-serif text-lg font-bold text-cream-light mb-1.5 leading-snug group-hover:text-sage-300 transition-colors">
                     {recipe.title}
                   </h4>
 
-                  <div className="text-[11px] text-amber-gold/90 font-mono mb-2">
+                  <div className="text-[11px] text-sage-300/90 font-mono mb-2">
                     {recipe.technique}
                   </div>
 
@@ -181,7 +180,7 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
 
                   {/* Ratio & Parameters */}
                   <div className="flex flex-wrap gap-2 mb-4 font-mono text-[11px]">
-                    <span className="px-2.5 py-1 rounded-lg bg-amber-gold/15 text-amber-gold border border-amber-gold/30 font-bold">
+                    <span className="px-2.5 py-1 rounded-lg bg-sage-500/15 text-sage-300 border border-sage-500/30 font-bold">
                       Ratio 1:{recipe.ratio}
                     </span>
                     <span className="px-2.5 py-1 rounded-lg bg-white/5 text-stone-300 border border-white/10">
@@ -196,7 +195,7 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
                 {/* Steps Accordion / Details */}
                 <div className="pt-3 border-t border-white/10 text-[11px] font-mono text-stone-400 flex items-center justify-between">
                   <span className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-amber-gold" />
+                    <Clock className="w-3.5 h-3.5 text-sage-300" />
                     <span>Total Time: ~{Math.ceil(recipe.totalTimeSec / 60)} min</span>
                   </span>
                   <span className="text-stone-500">{recipe.steps?.length || 0} Phases</span>
@@ -205,9 +204,9 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
                 {onSelectRecipe && (
                   <button
                     onClick={() => onSelectRecipe(recipe)}
-                    className="mt-3 w-full py-2.5 rounded-xl bg-amber-gold/10 hover:bg-amber-gold hover:text-espresso-950 text-amber-gold font-mono font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 border border-amber-gold/30"
+                    className="mt-3 w-full py-2.5 rounded-xl bg-sage-500/10 hover:bg-sage-500 hover:text-espresso-950 text-sage-300 font-mono font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 border border-sage-500/30"
                   >
-                    <span>Brew with this Guide →</span>
+                    <span>Steep with this Guide →</span>
                   </button>
                 )}
 
@@ -231,7 +230,7 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
               </p>
               <button
                 onClick={onOpenRecipeBuilder}
-                className="py-2.5 px-6 rounded-xl btn-tactile-amber text-espresso-950 font-extrabold text-xs uppercase"
+                className="py-2.5 px-6 rounded-xl btn-tactile-tea text-espresso-950 font-extrabold text-xs uppercase"
               >
                 Create Your First Recipe
               </button>
@@ -241,7 +240,7 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
               {displayedCustom.map((recipe) => (
                 <div
                   key={recipe.id}
-                  className="p-6 rounded-3xl bg-[#14110E]/90 border border-amber-gold/30 shadow-xl transition-all duration-300 flex flex-col justify-between group"
+                  className="p-6 rounded-3xl bg-[#14110E]/90 border border-sage-500/30 shadow-xl transition-all duration-300 flex flex-col justify-between group"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
@@ -263,7 +262,7 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
                     </h4>
 
                     <div className="text-[11px] text-stone-400 font-mono mb-2">
-                      Method: {recipe.methodName} • {recipe.beanName}
+                      Method: {recipe.methodName} • {recipe.teaName || recipe.beanName}
                     </div>
 
                     <p className="text-xs text-stone-300 leading-relaxed mb-4">
@@ -271,7 +270,7 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
                     </p>
 
                     <div className="flex flex-wrap gap-2 mb-4 font-mono text-[11px]">
-                      <span className="px-2.5 py-1 rounded-lg bg-amber-gold/15 text-amber-gold border border-amber-gold/30 font-bold">
+                      <span className="px-2.5 py-1 rounded-lg bg-sage-500/15 text-sage-300 border border-sage-500/30 font-bold">
                         Ratio 1:{recipe.ratio}
                       </span>
                       <span className="px-2.5 py-1 rounded-lg bg-white/5 text-stone-300 border border-white/10">
@@ -291,9 +290,9 @@ export default function RecipeExplorer({ trackMode, onOpenRecipeBuilder, onSelec
                   {onSelectRecipe && (
                     <button
                       onClick={() => onSelectRecipe(recipe)}
-                      className="mt-3 w-full py-2.5 rounded-xl bg-amber-gold/10 hover:bg-amber-gold hover:text-espresso-950 text-amber-gold font-mono font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 border border-amber-gold/30"
+                      className="mt-3 w-full py-2.5 rounded-xl bg-sage-500/10 hover:bg-sage-500 hover:text-espresso-950 text-sage-300 font-mono font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 border border-sage-500/30"
                     >
-                      <span>Brew with this Recipe →</span>
+                      <span>Steep with this Recipe →</span>
                     </button>
                   )}
 

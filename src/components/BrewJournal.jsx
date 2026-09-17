@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BookOpen, Star, Sparkles, Plus, Trash2, X, Filter, Heart, Coffee, Leaf, Scale, Gauge, Thermometer, Calendar, Award, Download, Upload, ScanLine } from 'lucide-react';
+import { BookOpen, Star, Sparkles, Plus, Trash2, X, Filter, Heart, Leaf, Scale, Gauge, Thermometer, Calendar, Award, Download, Upload, ScanLine } from 'lucide-react';
 
 const LOCAL_STORAGE_KEY = 'the_brew_app_journal_v1';
 
@@ -14,7 +14,6 @@ export default function BrewJournal({
   unitSystem,
   onOpenScanner
 }) {
-  const isCoffee = trackMode === 'coffee';
   const isMetric = unitSystem === 'metric';
 
   // Calculations for auto-filling current parameters
@@ -30,7 +29,7 @@ export default function BrewJournal({
 
   // Journal State
   const [logs, setLogs] = useState([]);
-  const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'favorites' | 'coffee' | 'tea'
+  const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'favorites'
   const [showAddForm, setShowAddForm] = useState(false);
 
   // New Log Form State
@@ -76,8 +75,8 @@ export default function BrewJournal({
         minute: '2-digit'
       }),
       trackMode,
-      methodName: activeMethod?.name || (isCoffee ? 'Pour Over' : 'Green Tea'),
-      beanName: beanName.trim() || (isCoffee ? 'Single-Origin Ethiopian Yirgacheffe' : 'Full-Leaf Dragonwell Green Tea'),
+      methodName: activeMethod?.name || 'Gongfu Infusion',
+      beanName: beanName.trim() || 'Darjeeling First Flush Muscatel',
       roaster: roaster.trim() || 'Artisan Roaster',
       doseStr: defaultDoseStr,
       waterStr: defaultWaterStr,
@@ -154,8 +153,7 @@ export default function BrewJournal({
   // Filtered Logs
   const filteredLogs = logs.filter(log => {
     if (activeFilter === 'favorites') return log.isFavorite;
-    if (activeFilter === 'coffee') return log.trackMode === 'coffee';
-    if (activeFilter === 'tea') return log.trackMode === 'tea';
+        if (activeFilter === 'tea') return log.trackMode === 'tea';
     return true;
   });
 
@@ -282,18 +280,6 @@ export default function BrewJournal({
             </button>
 
             <button
-              onClick={() => setActiveFilter('coffee')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-                activeFilter === 'coffee'
-                  ? 'btn-tactile-coffee text-[#140C08] font-extrabold shadow-md'
-                  : 'text-stone-400 hover:text-cream-light'
-              }`}
-            >
-              <Coffee className="w-3.5 h-3.5" />
-              <span>Coffee ({logs.filter(l => l.trackMode === 'coffee').length})</span>
-            </button>
-
-            <button
               onClick={() => setActiveFilter('tea')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
                 activeFilter === 'tea'
@@ -350,7 +336,7 @@ export default function BrewJournal({
                 </label>
                 <input
                   type="text"
-                  placeholder={isCoffee ? "e.g. Ethiopia Yirgacheffe Worka Sakaro" : "e.g. Darjeeling First Flush Muscatel"}
+                  placeholder="e.g. Darjeeling First Flush Muscatel, Gyokuro, Shou Pu-erh"
                   value={beanName}
                   onChange={(e) => setBeanName(e.target.value)}
                   className="w-full p-3 rounded-xl bg-black/60 border border-white/[0.12] text-xs text-cream-light focus:border-amber-gold outline-none"
@@ -363,7 +349,7 @@ export default function BrewJournal({
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Onyx Coffee Lab / Stumptown"
+                  placeholder="e.g. Ippodo Tea Co. / Yunnan Sourcing / Vahdam"
                   value={roaster}
                   onChange={(e) => setRoaster(e.target.value)}
                   className="w-full p-3 rounded-xl bg-black/60 border border-white/[0.12] text-xs text-cream-light focus:border-amber-gold outline-none"
@@ -447,7 +433,7 @@ export default function BrewJournal({
               <BookOpen className="w-10 h-10 text-stone-600 mx-auto mb-3" />
               <h4 className="font-serif text-lg font-bold text-cream-light mb-1">No Brew Logs Saved Yet</h4>
               <p className="text-xs text-stone-400 max-w-sm mx-auto mb-4">
-                Click "Log Current Brew" above to record your favorite coffee and tea recipes, tasting notes, and golden cup ratings!
+                Click "Log Current Steep" above to record your favorite tea cultivars, steeping parameters, tasting notes, and golden infusions!
               </p>
               <button
                 onClick={() => setShowAddForm(true)}

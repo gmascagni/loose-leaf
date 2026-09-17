@@ -1,4 +1,4 @@
-// Seed initial verified roasters and coffees to Cloud Firestore
+// Seed initial verified tea purveyors and tea lots to Cloud Firestore
 import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import { SHOWCASE_ROASTERS } from '../src/data/roasterShowcaseData.js';
@@ -16,60 +16,59 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function seed() {
-  console.log('🚀 Starting Cloud Firestore seed for thebrewapp-live...');
-  let roasterCount = 0;
-  let coffeeCount = 0;
+  console.log('🚀 Starting Cloud Firestore seed for LooseLeaf...');
+  let purveyorCount = 0;
+  let teaCount = 0;
 
-  for (const roaster of SHOWCASE_ROASTERS) {
-    const roasterSlug = roaster.slug || roaster.id;
-    const roasterDoc = {
-      id: roaster.id,
-      slug: roasterSlug,
-      name: roaster.name,
-      tagline: roaster.tagline || '',
-      founded: roaster.founded || '',
-      city: roaster.city || '',
-      state: roaster.state || '',
-      country: roaster.country || 'USA',
-      founders: roaster.founders || [],
-      website: roaster.website || '',
-      shopUrl: roaster.shopUrl || '',
-      recommendedWater: roaster.recommendedWater || null,
+  for (const purveyor of SHOWCASE_ROASTERS) {
+    const purveyorSlug = purveyor.slug || purveyor.id;
+    const purveyorDoc = {
+      id: purveyor.id,
+      slug: purveyorSlug,
+      name: purveyor.name,
+      tagline: purveyor.tagline || '',
+      founded: purveyor.founded || '',
+      city: purveyor.city || '',
+      state: purveyor.state || '',
+      country: purveyor.country || 'Japan',
+      founders: purveyor.founders || [],
+      website: purveyor.website || '',
+      shopUrl: purveyor.shopUrl || '',
+      recommendedWater: purveyor.recommendedWater || null,
       updatedAt: new Date().toISOString()
     };
 
-    console.log(`Uploading roaster: ${roaster.name} (${roasterSlug})`);
-    await setDoc(doc(db, 'roasters', roasterSlug), roasterDoc, { merge: true });
-    roasterCount++;
+    console.log(`Uploading purveyor: ${purveyor.name} (${purveyorSlug})`);
+    await setDoc(doc(db, 'purveyors', purveyorSlug), purveyorDoc, { merge: true });
+    purveyorCount++;
 
-    if (Array.isArray(roaster.coffees)) {
-      for (const coffee of roaster.coffees) {
-        const coffeeId = coffee.id || `coffee_${Date.now()}`;
-        const coffeeDoc = {
-          ...coffee,
-          id: coffeeId,
-          roaster: roaster.name,
-          roasterSlug: roasterSlug,
+    const teas = purveyor.teas || [];
+    if (Array.isArray(teas)) {
+      for (const tea of teas) {
+        const teaId = tea.id || `tea_${Date.now()}`;
+        const teaDoc = {
+          ...tea,
+          id: teaId,
+          purveyor: purveyor.name,
+          purveyorSlug: purveyorSlug,
           updatedAt: new Date().toISOString()
         };
 
-        console.log(`  -> Uploading coffee: ${coffee.beanName} (UPC: ${coffee.upc || 'N/A'})`);
-        // Save by primary coffee ID
-        await setDoc(doc(db, 'coffees', coffeeId), coffeeDoc, { merge: true });
-        // If UPC exists, also save or alias so lookup by UPC is a direct O(1) document get
-        if (coffee.upc) {
-          await setDoc(doc(db, 'coffees', `upc_${coffee.upc}`), coffeeDoc, { merge: true });
+        console.log(`  -> Uploading tea: ${tea.teaName || tea.beanName} (UPC: ${tea.upc || 'N/A'})`);
+        await setDoc(doc(db, 'teas', teaId), teaDoc, { merge: true });
+        if (tea.upc) {
+          await setDoc(doc(db, 'teas', `upc_${tea.upc}`), teaDoc, { merge: true });
         }
-        coffeeCount++;
+        teaCount++;
       }
     }
   }
 
-  console.log(`\n🎉 Seed Complete! Uploaded ${roasterCount} roasters and ${coffeeCount} coffees to Cloud Firestore.`);
+  console.log(`\n🎉 Seed Complete! Uploaded ${purveyorCount} tea purveyors and ${teaCount} teas to Cloud Firestore.`);
   process.exit(0);
 }
 
 seed().catch((err) => {
-  console.error('❌ Seed error:', err);
+  console.error('❌ Error during Firestore seed:', err);
   process.exit(1);
 });

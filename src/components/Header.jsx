@@ -1,20 +1,16 @@
 import React from 'react';
-import { Coffee, Leaf, BookOpen, Search, User, Users, MapPin, Newspaper, ScanLine, FlaskConical, Volume2, VolumeX, Store, Tv } from 'lucide-react';
+import { Leaf, BookOpen, Search, User, MapPin, Newspaper, ScanLine, FlaskConical, Volume2, VolumeX, Store, Tv } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 
 export default function Header({ 
-  trackMode, 
-  setTrackMode, 
   onOpenJournal, 
   onOpenSearch, 
   onOpenProfile, 
   onOpenCommunity, 
-  onOpenLocalCoffee, 
+  onOpenLocalTea, 
   onOpenAuth, 
   onOpenScanner, 
-  onOpenWaterLab,
-  onOpenRoasterPortal,
-  onOpenRoasterInfo,
+  onOpenWaterLab, 
   onOpenRoasterShowcase,
   isRoasterShowcaseView = false,
   onOpenVideoAcademy,
@@ -23,83 +19,44 @@ export default function Header({
   onToggleMute,
   currentUser 
 }) {
-  const isCoffee = trackMode === 'coffee';
-
   return (
-    <div className="px-4 lg:px-8 py-2.5 transition-colors duration-500">
+    <div className="px-4 lg:px-8 py-2.5 transition-colors duration-500 bg-[#07130B]/90 border-b border-sage-500/25">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         
         {/* Logo & Brand Title */}
         <div className="flex items-center space-x-3">
-          <div className={`p-1.5 rounded-2xl transition-all duration-500 flex items-center justify-center ${
-            isCoffee 
-              ? 'bg-[#A66E38]/20 border border-[#A66E38]/40 shadow-[0_0_20px_rgba(166,110,56,0.35)]' 
-              : 'bg-sage-500/20 border border-sage-500/40 shadow-[0_0_20px_rgba(94,150,106,0.35)]'
-          }`}>
-            <BrandLogo size={36} />
+          <div className="p-1 rounded-2xl transition-all duration-500 flex items-center justify-center bg-emerald-500/15 border border-emerald-400/35 shadow-[0_0_25px_rgba(52,211,153,0.3)] hover:border-emerald-400/60">
+            <BrandLogo size={38} />
           </div>
           <div>
-            <h1 className="font-serif text-xl font-bold tracking-wider text-cream-light flex items-center gap-2">
-              <span>TheBrew.App</span>
-              <span className={`whitespace-nowrap text-[9px] uppercase font-mono px-2 py-0.5 rounded-full border transition-colors ${
-                isCoffee
-                  ? 'bg-[#A66E38]/20 text-[#D2A06E] border-[#A66E38]/40'
-                  : 'bg-sage-500/20 text-sage-300 border-sage-500/40'
-              }`}>
+            <h1 className="font-serif text-xl sm:text-2xl font-bold tracking-wider flex items-center gap-2">
+              <span className="text-emerald-300 drop-shadow-[0_2px_12px_rgba(52,211,153,0.35)] font-extrabold tracking-wide">loose-leaf</span>
+              <span className="whitespace-nowrap text-[9px] uppercase font-mono px-2 py-0.5 rounded-full border bg-emerald-500/20 text-emerald-200 border-emerald-400/40 font-bold shadow-sm">
                 Master
               </span>
             </h1>
-            <p className="text-[10px] text-stone-400 font-mono">Precision Coffee & Tea Guide</p>
+            <p className="text-[10px] text-emerald-300/80 font-mono tracking-wide">The Fine Loose-Leaf & Steeping Guide</p>
           </div>
         </div>
 
-        {/* Center 2-Track Switcher: Coffee (Brown) vs Tea (Green) */}
-        <div className="flex items-center p-1.5 rounded-2xl bg-[#14110E] border border-white/[0.12] text-xs font-bold shadow-inner gap-1">
-          <button
-            onClick={() => setTrackMode('coffee')}
-            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl transition-all duration-300 ${
-              isCoffee 
-                ? 'btn-tactile-coffee text-[#140C08] font-extrabold scale-102 shadow-lg' 
-                : 'text-stone-400 hover:text-cream-light hover:bg-white/[0.05]'
-            }`}
-            title="Switch to The Coffee Lab"
-          >
-            <Coffee className="w-3.5 h-3.5" />
-            <span>Coffee</span>
-          </button>
-
-          <button
-            onClick={() => setTrackMode('tea')}
-            className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl transition-all duration-300 ${
-              !isCoffee 
-                ? 'btn-tactile-tea text-white font-extrabold scale-102 shadow-lg' 
-                : 'text-stone-400 hover:text-cream-light hover:bg-white/[0.05]'
-            }`}
-            title="Switch to The Tea Room"
-          >
-            <Leaf className="w-3.5 h-3.5" />
-            <span>Tea</span>
-          </button>
+        {/* Center Tagline Badge */}
+        <div className="hidden lg:flex items-center px-4 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-xs font-medium text-emerald-200 gap-2 shadow-inner">
+          <Leaf className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+          <span className="tracking-wide">Specialty Loose-Leaf Teas • Single-Origin Terroirs • Gongfu Steeping</span>
         </div>
 
         {/* Right Action Controls */}
         <div className="flex items-center space-x-2 text-xs">
 
-          {/* Shop Local Button Dynamic for Coffee vs Tea */}
-          {onOpenLocalCoffee && (
+          {/* Find Local Tearooms Button */}
+          {onOpenLocalTea && (
             <button
-              onClick={onOpenLocalCoffee}
-              className={`flex items-center space-x-1.5 px-3.5 py-2 rounded-xl font-extrabold shadow-lg hover:scale-105 active:scale-95 transition-all ${
-                isCoffee
-                  ? 'btn-tactile-coffee text-[#140C08]'
-                  : 'btn-tactile-tea text-white'
-              }`}
-              title={isCoffee ? 'Shop Local Coffee & Roasters' : 'Shop Local Tea & Specialty Tea Houses'}
+              onClick={onOpenLocalTea}
+              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl font-extrabold shadow-lg hover:scale-105 active:scale-95 transition-all btn-tactile-tea text-white"
+              title="Find Local Tearooms & Specialty Tea Houses"
             >
-              {isCoffee ? <Coffee className="w-3.5 h-3.5" /> : <Leaf className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline">
-                {isCoffee ? 'Shop Local Coffee' : 'Shop Local Tea'}
-              </span>
+              <Leaf className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Local Tearooms</span>
               <span className="text-[10px] bg-black/40 text-current px-1.5 py-0.5 rounded-full font-mono font-bold">📍</span>
             </button>
           )}
@@ -135,30 +92,22 @@ export default function Header({
           {onOpenSearch && (
             <button
               onClick={onOpenSearch}
-              className={`p-2.5 rounded-xl bg-white/[0.08] border transition-all active:scale-95 shadow-md ${
-                isCoffee
-                  ? 'text-stone-200 hover:text-[#D2A06E] hover:border-[#A66E38]/50 border-white/[0.12]'
-                  : 'text-stone-200 hover:text-sage-300 hover:border-sage-500/50 border-white/[0.12]'
-              }`}
+              className="p-2.5 rounded-xl bg-white/[0.08] border transition-all active:scale-95 shadow-md text-stone-200 hover:text-sage-300 hover:border-sage-500/50 border-white/[0.12]"
               title="Open Global Search (Ctrl + K)"
             >
               <Search className="w-4 h-4" />
             </button>
           )}
 
-          {/* Master Recipe Vault Trigger */}
+          {/* Master Tea Recipe Vault Trigger */}
           {onOpenCommunity && (
             <button
               onClick={onOpenCommunity}
-              className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md ${
-                isCoffee
-                  ? 'bg-[#2A1C12]/50 border-[#A66E38]/40 text-[#D2A06E] hover:bg-[#38261A]/60'
-                  : 'bg-emerald-950/50 border-sage-500/40 text-sage-300 hover:bg-emerald-900/60'
-              }`}
-              title="Open Master Recipe Vault & Custom Studio"
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md bg-emerald-950/50 border-sage-500/40 text-sage-300 hover:bg-emerald-900/60"
+              title="Open Master Steeping Vault & Custom Studio"
             >
               <BookOpen className="w-4 h-4" />
-              <span className="hidden md:inline">Recipe Vault</span>
+              <span className="hidden md:inline">Steeping Vault</span>
             </button>
           )}
 
@@ -166,72 +115,58 @@ export default function Header({
           {onOpenScanner && (
             <button
               onClick={onOpenScanner}
-              className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md ${
-                isCoffee
-                  ? 'bg-[#2A1C12]/50 border-amber-gold/40 text-amber-gold hover:bg-[#38261A]/60'
-                  : 'bg-emerald-950/50 border-sage-500/40 text-sage-300 hover:bg-emerald-900/60'
-              }`}
-              title="Scan Bean Bag Barcode or QR Code with Device Camera"
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md bg-emerald-950/50 border-sage-500/40 text-sage-300 hover:bg-emerald-900/60"
+              title="Scan Tea Tin Barcode or QR Code with Device Camera"
             >
               <ScanLine className="w-4 h-4 text-amber-gold" />
-              <span className="hidden lg:inline">Scan Bag</span>
+              <span className="hidden lg:inline">Scan Tin</span>
             </button>
           )}
 
-          {/* Water Chemistry Lab Trigger */}
+          {/* Tea Water Chemistry Lab Trigger */}
           {onOpenWaterLab && (
             <button
               onClick={onOpenWaterLab}
-              className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md ${
-                isCoffee
-                  ? 'bg-[#2A1C12]/50 border-cyan-500/40 text-cyan-300 hover:bg-[#38261A]/60'
-                  : 'bg-emerald-950/50 border-cyan-500/40 text-cyan-300 hover:bg-emerald-900/60'
-              }`}
-              title="Open Coffee Water Chemistry Lab & Mineral Recipes"
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md bg-emerald-950/50 border-cyan-500/40 text-cyan-300 hover:bg-emerald-900/60"
+              title="Open Tea Water Chemistry Lab & Mineral Recipes"
             >
               <FlaskConical className="w-4 h-4 text-cyan-400" />
               <span className="hidden lg:inline">Water Lab</span>
             </button>
           )}
 
-          {/* Coffee Academy & Video Hub Trigger */}
+          {/* Tea Academy & Video Hub Trigger */}
           {onOpenVideoAcademy && (
             <button
               onClick={onOpenVideoAcademy}
-              className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md ${
-                isCoffee
-                  ? 'bg-[#2A1C12]/50 border-red-500/40 text-red-300 hover:bg-[#38261A]/60'
-                  : 'bg-emerald-950/50 border-red-500/40 text-red-300 hover:bg-emerald-900/60'
-              }`}
-              title="Open Coffee Academy & Video Masterclasses"
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md bg-emerald-950/50 border-red-500/40 text-red-300 hover:bg-emerald-900/60"
+              title="Open Tea Academy & Video Masterclasses"
             >
               <Tv className="w-4 h-4 text-red-400" />
               <span className="hidden sm:inline">Academy</span>
             </button>
           )}
 
-          {/* Specialty Roaster Showcase Trigger */}
+          {/* Specialty Tea Purveyors Showcase Trigger */}
           {onOpenRoasterShowcase && (
             <button
               onClick={onOpenRoasterShowcase}
               className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md ${
                 isRoasterShowcaseView
                   ? 'bg-amber-gold text-espresso-950 border-amber-gold shadow-amber-500/30 ring-2 ring-amber-gold/50'
-                  : isCoffee
-                    ? 'bg-[#2A1C12]/50 border-amber-gold/40 text-amber-gold hover:bg-[#38261A]/60'
-                    : 'bg-emerald-950/50 border-sage-500/40 text-sage-300 hover:bg-emerald-900/60'
+                  : 'bg-emerald-950/50 border-sage-500/40 text-sage-300 hover:bg-emerald-900/60'
               }`}
-              title={isRoasterShowcaseView ? "You are viewing the Roaster Showcase (Click to scroll to top)" : "View Roaster Showcase & Dial-In Profiles (Methodical, Onyx, Black & White)"}
+              title={isRoasterShowcaseView ? "Viewing Tea Purveyors Showcase" : "View Specialty Tea Purveyors & Historic Tea Houses"}
             >
               <Store className={`w-4 h-4 ${isRoasterShowcaseView ? 'text-espresso-950' : 'text-amber-gold'}`} />
-              <span className="hidden sm:inline">Roasters</span>
+              <span className="hidden sm:inline">Tea Houses</span>
               {isRoasterShowcaseView && (
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-0.5" />
               )}
             </button>
           )}
 
-          {/* Brew News Dispatch Trigger */}
+          {/* Tea News Dispatch Trigger */}
           <button
             onClick={onOpenNews || (() => {
               window.dispatchEvent(new CustomEvent('open-world-news'));
@@ -242,27 +177,19 @@ export default function Header({
                 }
               }, 60);
             })}
-            className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md ${
-              isCoffee
-                ? 'bg-[#2A1C12]/50 border-[#A66E38]/40 text-[#D2A06E] hover:bg-[#38261A]/60'
-                : 'bg-emerald-950/50 border-sage-500/40 text-sage-300 hover:bg-emerald-900/60'
-            }`}
-            title="Jump to Brew News"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl border font-mono font-bold transition-all active:scale-95 shadow-md bg-emerald-950/50 border-sage-500/40 text-sage-300 hover:bg-emerald-900/60"
+            title="Jump to Tea News"
           >
             <Newspaper className="w-4 h-4 text-amber-500" />
-            <span className="hidden sm:inline">Brew News</span>
+            <span className="hidden sm:inline">Tea News</span>
           </button>
 
-          {/* Brew Journal Trigger */}
+          {/* Tasting Journal Trigger */}
           {onOpenJournal && (
             <button
               onClick={onOpenJournal}
-              className={`p-2.5 rounded-xl bg-white/[0.08] border transition-all active:scale-95 shadow-md ${
-                isCoffee
-                  ? 'text-stone-200 hover:text-[#D2A06E] hover:border-[#A66E38]/50 border-white/[0.12]'
-                  : 'text-stone-200 hover:text-sage-300 hover:border-sage-500/50 border-white/[0.12]'
-              }`}
-              title="Open Tasting Journal"
+              className="p-2.5 rounded-xl bg-white/[0.08] border transition-all active:scale-95 shadow-md text-stone-200 hover:text-sage-300 hover:border-sage-500/50 border-white/[0.12]"
+              title="Open Steep Cellar & Tasting Journal"
             >
               <BookOpen className="w-4 h-4" />
             </button>
@@ -272,33 +199,29 @@ export default function Header({
           {currentUser ? (
             <button
               onClick={onOpenProfile}
-              className="flex items-center space-x-2 p-1 pl-1.5 pr-2.5 rounded-xl bg-white/[0.08] border border-white/[0.12] hover:border-amber-gold/50 transition-all shadow-md group"
-              title="Open Barista Profile Dashboard"
+              className="flex items-center space-x-2 p-1 pl-1.5 pr-2.5 rounded-xl bg-white/[0.08] border border-white/[0.12] hover:border-sage-400/50 transition-all shadow-md group"
+              title="Open Tea Master Profile Dashboard"
             >
               {currentUser.avatar && currentUser.avatar !== '/' ? (
                 <img
                   src={currentUser.avatar}
                   alt={currentUser.displayName}
-                  className="w-6 h-6 rounded-full object-cover border border-amber-gold"
+                  className="w-6 h-6 rounded-full object-cover border border-sage-400"
                 />
               ) : (
-                <div className="w-6 h-6 rounded-full bg-amber-500/20 border border-amber-gold flex items-center justify-center">
-                  <User className="w-3.5 h-3.5 text-amber-gold" />
+                <div className="w-6 h-6 rounded-full bg-sage-500/20 border border-sage-400 flex items-center justify-center">
+                  <User className="w-3.5 h-3.5 text-sage-300" />
                 </div>
               )}
-              <span className="font-mono text-[11px] font-bold text-cream-light group-hover:text-amber-gold transition-colors hidden lg:inline max-w-[90px] truncate">
+              <span className="font-mono text-[11px] font-bold text-cream-light group-hover:text-sage-300 transition-colors hidden lg:inline max-w-[90px] truncate">
                 {currentUser.displayName}
               </span>
             </button>
           ) : (
             <button
               onClick={onOpenAuth}
-              className={`px-3 py-2 rounded-xl font-bold font-mono text-[11px] uppercase tracking-wider flex items-center space-x-1.5 transition-all shadow-md active:scale-95 ${
-                isCoffee
-                  ? 'btn-tactile-coffee text-[#140C08]'
-                  : 'btn-tactile-tea text-white'
-              }`}
-              title="Barista Profile & Backup"
+              className="px-3 py-2 rounded-xl font-bold font-mono text-[11px] uppercase tracking-wider flex items-center space-x-1.5 transition-all shadow-md active:scale-95 btn-tactile-tea text-white"
+              title="Tea Master Profile & Backup"
             >
               <User className="w-3.5 h-3.5" />
               <span>Profile</span>

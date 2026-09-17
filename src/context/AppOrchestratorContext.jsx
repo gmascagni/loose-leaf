@@ -1,12 +1,12 @@
 /**
- * The Brew App — Centralized Application Workflow Orchestrator
+ * LooseLeaf — Centralized Application Workflow Orchestrator
  * 
  * Provides a unified action bus and state coordinator to eliminate feature silos.
  * Enables seamless cross-feature orchestration (e.g. Scanner -> Studio -> Timer -> Cellar).
  */
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { createCoffeeProfile } from '../models/coffeeProfile';
+import { createTeaProfile } from '../models/teaProfile';
 import { 
   downloadCompleteStickerPng, 
   downloadVectorQrSvg, 
@@ -38,7 +38,7 @@ export function AppOrchestratorProvider({
   const [isVideoAcademyOpen, setIsVideoAcademyOpen] = useState(false);
 
   // Active cross-feature entities
-  const [activeCoffee, setActiveCoffee] = useState(null);
+  const [activeTea, setActiveTea] = useState(null);
   const [roasterPrefillBarcode, setRoasterPrefillBarcode] = useState('');
   const [roasterPrefillBean, setRoasterPrefillBean] = useState(null);
 
@@ -51,16 +51,16 @@ export function AppOrchestratorProvider({
   }, []);
 
   /**
-   * Universal Action 1: Brew & Dial In
-   * Loads extraction parameters (ratio, water temp, grind) into the active timer
+   * Universal Action 1: Steep & Dial In
+   * Loads extraction parameters (ratio, water temp, leaf grade) into the active timer
    */
-  const brew = useCallback((rawCoffee) => {
-    if (!rawCoffee) return;
-    const coffee = createCoffeeProfile(rawCoffee);
-    setActiveCoffee(coffee);
+  const steep = useCallback((rawTea) => {
+    if (!rawTea) return;
+    const tea = createTeaProfile(rawTea);
+    setActiveTea(tea);
 
     if (onApplyRecipeToTimer) {
-      onApplyRecipeToTimer(coffee);
+      onApplyRecipeToTimer(tea);
     }
 
     // Close any open inspection modals
@@ -68,19 +68,19 @@ export function AppOrchestratorProvider({
     setIsRoasterPortalOpen(false);
     setIsRoasterInfoOpen(false);
 
-    showToast(`Dialed in: ${coffee.roaster} ${coffee.beanName} (1:${coffee.extraction.ratio}, ${coffee.extraction.tempF}°F)`);
+    showToast(`Dialed in: ${tea.roaster || tea.purveyor} ${tea.teaName || tea.beanName} (1:${tea.extraction.ratio}, ${tea.extraction.tempF}°F)`);
   }, [onApplyRecipeToTimer, showToast]);
 
   /**
-   * Universal Action 2: Package & Generate Sticker
-   * Opens the Roaster Studio with full parameters prefilled, ready to download/print
+   * Universal Action 2: Package & Generate Smart Tin Sticker
+   * Opens the Packaging Studio with full parameters prefilled, ready to download/print
    */
-  const packageCoffee = useCallback((rawCoffee) => {
-    if (!rawCoffee) return;
-    const coffee = createCoffeeProfile(rawCoffee);
-    setActiveCoffee(coffee);
-    setRoasterPrefillBean(coffee);
-    setRoasterPrefillBarcode(coffee.packaging.upc);
+  const packageTea = useCallback((rawTea) => {
+    if (!rawTea) return;
+    const tea = createTeaProfile(rawTea);
+    setActiveTea(tea);
+    setRoasterPrefillBean(tea);
+    setRoasterPrefillBarcode(tea.packaging.upc);
 
     // Close other modals and open Studio
     setIsScannerOpen(false);
@@ -88,19 +88,19 @@ export function AppOrchestratorProvider({
     setIsRoasterPortalOpen(true);
 
     if (onOpenPackagingStudio) {
-      onOpenPackagingStudio(coffee);
+      onOpenPackagingStudio(tea);
     }
   }, [onOpenPackagingStudio]);
 
   /**
-   * Universal Action 3: Log to Brew Cellar
+   * Universal Action 3: Log to Tea Cellar
    */
-  const cellar = useCallback((rawCoffee) => {
-    if (!rawCoffee) return;
-    const coffee = createCoffeeProfile(rawCoffee);
+  const cellar = useCallback((rawTea) => {
+    if (!rawTea) return;
+    const tea = createTeaProfile(rawTea);
 
     if (onSaveRecipeToJournal) {
-      onSaveRecipeToJournal(coffee);
+      onSaveRecipeToJournal(tea);
     }
 
     if (onOpenJournal) {
@@ -109,20 +109,20 @@ export function AppOrchestratorProvider({
       setIsJournalOpen(true);
     }
 
-    showToast(`Logged ${coffee.beanName} to your Brew Cellar`);
+    showToast(`Logged ${tea.teaName || tea.beanName} to your Tea Cellar`);
   }, [onSaveRecipeToJournal, onOpenJournal, showToast]);
 
   /**
    * Universal Action 4: Water Lab Terroir Pairing
    */
-  const water = useCallback((rawCoffee) => {
-    if (rawCoffee) {
-      const coffee = createCoffeeProfile(rawCoffee);
-      setActiveCoffee(coffee);
+  const water = useCallback((rawTea) => {
+    if (rawTea) {
+      const tea = createTeaProfile(rawTea);
+      setActiveTea(tea);
     }
     setIsWaterLabOpen(true);
     if (onOpenWaterLab) {
-      onOpenWaterLab(rawCoffee);
+      onOpenWaterLab(rawTea);
     }
   }, [onOpenWaterLab]);
 
@@ -137,7 +137,7 @@ export function AppOrchestratorProvider({
   }, [onOpenScanner]);
 
   /**
-   * Universal Action 6: Open Roaster Info / Contact HQ
+   * Universal Action 6: Open Purveyor Info / Register Garden
    */
   const openRoasterInfo = useCallback(() => {
     setIsRoasterInfoOpen(true);
@@ -149,10 +149,10 @@ export function AppOrchestratorProvider({
   /**
    * Direct Asset Download Helpers
    */
-  const downloadSticker = useCallback(async (rawCoffee) => {
+  const downloadSticker = useCallback(async (rawTea) => {
     try {
       showToast('Rendering 300-DPI packaging sticker...');
-      await downloadCompleteStickerPng(rawCoffee);
+      await downloadCompleteStickerPng(rawTea);
       showToast('Downloaded packaging sticker to Downloads!');
     } catch (err) {
       console.warn('Error downloading sticker:', err);
@@ -160,18 +160,18 @@ export function AppOrchestratorProvider({
     }
   }, [showToast]);
 
-  const downloadVector = useCallback(async (rawCoffee) => {
+  const downloadVector = useCallback(async (rawTea) => {
     try {
-      await downloadVectorQrSvg(rawCoffee);
+      await downloadVectorQrSvg(rawTea);
       showToast('Downloaded vector QR (SVG) to Downloads!');
     } catch (err) {
       console.warn('Error downloading vector:', err);
     }
   }, [showToast]);
 
-  const downloadQr = useCallback(async (rawCoffee, width = 1200) => {
+  const downloadQr = useCallback(async (rawTea, width = 1200) => {
     try {
-      await downloadHighResQrPng(rawCoffee, width);
+      await downloadHighResQrPng(rawTea, width);
       showToast(`Downloaded standalone QR (${width}px) to Downloads!`);
     } catch (err) {
       console.warn('Error downloading QR:', err);
@@ -200,8 +200,8 @@ export function AppOrchestratorProvider({
     setIsVideoAcademyOpen,
 
     // Active entities
-    activeCoffee,
-    setActiveCoffee,
+    activeTea,
+    setActiveTea,
     roasterPrefillBarcode,
     setRoasterPrefillBarcode,
     roasterPrefillBean,
@@ -212,8 +212,9 @@ export function AppOrchestratorProvider({
     showToast,
 
     // Universal Action Matrix
-    brew,
-    package: packageCoffee,
+    brew: steep,
+    steep,
+    package: packageTea,
     cellar,
     water,
     scan,
@@ -231,8 +232,8 @@ export function AppOrchestratorProvider({
 
       {/* Global Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-5 py-2.5 rounded-2xl bg-black/90 text-cream-light font-mono text-xs border border-amber-gold/40 shadow-2xl backdrop-blur-md animate-fade-in flex items-center gap-2.5">
-          <span className="w-2 h-2 rounded-full bg-amber-gold animate-pulse"></span>
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] px-5 py-2.5 rounded-2xl bg-black/90 text-cream-light font-mono text-xs border border-sage-500/40 shadow-2xl backdrop-blur-md animate-fade-in flex items-center gap-2.5">
+          <span className="w-2 h-2 rounded-full bg-sage-400 animate-pulse"></span>
           <span>{toastMessage}</span>
         </div>
       )}

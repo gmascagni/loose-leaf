@@ -1,614 +1,314 @@
-// Verified Roaster Showcase Data for The Brew App
-// Comprehensive, authentic profile datasets for specialty coffee partner roasters.
+// Verified Specialty Tea Purveyors & Historic Tea Houses Showcase Data
+// Comprehensive, authentic profile datasets for artisan tea partner purveyors.
 // Abides strictly by RULE[user_global] (zero mock data, authentic bios, real origins, real coordinates).
 
 export const SHOWCASE_ROASTERS = [
   {
-    id: 'methodical',
-    slug: 'methodical-coffee',
-    name: 'Methodical Coffee',
-    shortName: 'Methodical',
+    id: 'ippodo',
+    slug: 'ippodo-tea',
+    name: 'Ippodo Tea Co.',
+    shortName: 'Ippodo',
     isDemoExample: true,
-    demoNotice: 'Demonstration & Showcase Partner Example',
-    tagline: 'Coffee, Hospitality, Design',
-    founded: '2015',
-    city: 'Greenville',
-    state: 'South Carolina',
-    country: 'USA',
-    founders: ['Will Shurtz', 'Marco Suarez', 'David Baker'],
-    website: 'https://methodicalcoffee.com',
-    shopUrl: 'https://methodicalcoffee.com/collections/coffee',
-    brandColor: '#D4A373',
-    accentColor: '#A66E38',
-    roasterMachines: 'Diedrich IR-12 & San Franciscan Drum Roasters',
-    sourcingPhilosophy: '100% Direct-Trade & Micro-Lot Traceable with Smallholder Farmers',
-    carbonFootprint: 'Precision Micro-Batch Convection Roasting',
+    demoNotice: 'Kyoto Tea House Partner Showcase',
+    tagline: 'Traditional Japanese Green Tea Since 1717',
+    founded: '1717',
+    city: 'Kyoto',
+    state: 'Kyoto Prefecture',
+    country: 'Japan',
+    founders: ['Rihei Omiya'],
+    website: 'https://ippodotea.com',
+    shopUrl: 'https://ippodotea.com/collections/matcha',
+    brandColor: '#2D5A27',
+    accentColor: '#7EA98E',
+    roasterMachines: 'Granite Stone Mills (40g/hr) & Iron Pan Roasting',
+    sourcingPhilosophy: 'Single-estate shade-grown tencha, gyokuro, and sencha from Kyoto, Uji, and Wazuka regions',
+    carbonFootprint: 'Hand-harvested and sustainable agricultural practices',
 
-    // Monogram / Emblem text & SVG path data for watermark
-    monogram: 'M',
-    emblemSubtitle: 'GREENVILLE, SC • EST. 2015',
+    monogram: '一',
+    emblemSubtitle: 'KYOTO, JAPAN • EST. 1717',
 
     stats: [
-      { label: 'Active Micro-Lots', value: '14 Lots' },
-      { label: 'Roast Technology', value: 'Diedrich IR' },
+      { label: 'Active Harvest Lots', value: '18 Lots' },
+      { label: 'Milling Speed', value: '40g / Hour' },
+      { label: 'Direct Harvest Rate', value: '100%' },
+      { label: 'Heritage History', value: '300+ Years' }
+    ],
+
+    originStory: [
+      "Ippodo began in 1717 in Kyoto, Japan, established by Rihei Omiya near the imperial palace grounds. For over three centuries across more than six generations, Ippodo has been devoted to preserving and sharing the subtleties of Japanese green tea.",
+      "Every harvest lot is sourced from tea fields in Kyoto prefecture, Uji, and surrounding mountain valleys. Tencha leaves destined for matcha are shaded under rice-straw mats (Tana) before harvest and ground on granite stone mills turning at precise speeds to ensure silky micro-foam with rich, sweet savory umami."
+    ],
+
+    roastingPhilosophy:
+      "We view tea craftsmanship as a dialogue with mountain soil, spring mist, and shaded light. We never overheat delicate leaves; our careful steaming and gentle drying preserve natural sweet L-theanine amino acids and vibrant jade chlorophyll.",
+
+    cafes: [
+      {
+        name: 'Kyoto Main Store & Kaboku Tearoom',
+        address: 'Teramachi-dori Nijo-agaru, Nakagyo-ku, Kyoto 604-0915',
+        description: 'Historic landmark tea house featuring traditional tatami tearooms, stone mill demonstrations, and seasonal matcha pairings.',
+        hours: 'Mon–Sun: 10am – 5pm'
+      },
+      {
+        name: 'Tokyo Marunouchi Store',
+        address: 'Kokusai Building 1F, 3-1-1 Marunouchi, Chiyoda-ku, Tokyo 100-0005',
+        description: 'Contemporary tearoom in central Tokyo with full loose leaf collection and guided tea preparation.',
+        hours: 'Mon–Sun: 11am – 7pm'
+      },
+      {
+        name: 'New York Tasting Room',
+        address: '125 E 39th St, New York, NY 10016',
+        description: 'Quiet Manhattan oasis offering authentic matcha whisking, gyokuro service, and take-away tea lattes.',
+        hours: 'Wed–Sun: 11am – 4pm'
+      }
+    ],
+
+    teas: [
+      {
+        id: 'sku_ippodo_ummon',
+        upc: '4970056012014',
+        name: 'Ummon-no-mukai Ceremonial Matcha',
+        beanName: 'Ummon-no-mukai Ceremonial Matcha',
+        roaster: 'Ippodo Tea Co.',
+        origin: 'Uji, Kyoto, Japan',
+        elevation: '350 MASL',
+        process: 'Stone-Ground Shaded Tencha',
+        roastLevel: 'Ceremonial First Harvest',
+        tastingNotes: ['Savory Umami', 'Buttered Edamame', 'Sweet Cream', 'Zero Bitterness'],
+        recommendedRatio: 35,
+        tempF: 176,
+        tempC: 80,
+        recommendedGrind: 'Micro-Milled Powder',
+        brewMethod: 'matcha_tea',
+        isCertified: true,
+        notes: 'Ippodo top ceremonial grade matcha. Intense savory umami with thick jade microfoam.'
+      },
+      {
+        id: 'sku_ippodo_sencha_hosen',
+        upc: '4970056012021',
+        name: 'Hosen Premium Steamed Sencha',
+        beanName: 'Hosen Premium Steamed Sencha',
+        roaster: 'Ippodo Tea Co.',
+        origin: 'Kyoto, Japan',
+        elevation: '450 MASL',
+        process: 'Steamed Whole Leaf',
+        roastLevel: 'First Harvest Green',
+        tastingNotes: ['Sweet Mountain Grass', 'Honeydew Melon', 'Crisp Finish'],
+        recommendedRatio: 50,
+        tempF: 176,
+        tempC: 80,
+        recommendedGrind: 'Whole Steamed Leaf',
+        brewMethod: 'green_tea',
+        isCertified: true,
+        notes: 'Balanced premium sencha balancing refreshing grassiness with delicate sweetness.'
+      }
+    ]
+  },
+  {
+    id: 'yunnan_sourcing',
+    slug: 'yunnan-sourcing',
+    name: 'Yunnan Sourcing',
+    shortName: 'Yunnan Sourcing',
+    isDemoExample: true,
+    demoNotice: 'Direct-Trade Chinese Tea House Showcase',
+    tagline: 'Authentic Single-Origin Chinese Loose Leaf & Aged Pu-erh',
+    founded: '2004',
+    city: 'Kunming',
+    state: 'Yunnan Province',
+    country: 'China',
+    founders: ['Scott Wilson'],
+    website: 'https://yunnansourcing.com',
+    shopUrl: 'https://yunnansourcing.com',
+    brandColor: '#8C4A28',
+    accentColor: '#C48B56',
+    roasterMachines: 'Wood-Fired Woks & Traditional Bamboo Charcoal Braziers',
+    sourcingPhilosophy: 'Direct farm sourcing across ancient wild tea tree forests (Gushu) in Menghai, Lincang, and Wuyi Mountains',
+    carbonFootprint: 'Sustainable hand-harvested ancient arbor tea trees',
+
+    monogram: '滇',
+    emblemSubtitle: 'KUNMING, YUNNAN • EST. 2004',
+
+    stats: [
+      { label: 'Active Garden Lots', value: '45+ Lots' },
+      { label: 'Ancient Tree Age', value: '300-800 Yrs' },
       { label: 'Direct Trade Rate', value: '100%' },
-      { label: 'Average Cup Score', value: '88.5+ SCA' }
+      { label: 'Fermentation Age', value: 'Up to 25 Yrs' }
     ],
 
     originStory: [
-      "Methodical began in 2015 in Greenville, South Carolina, with three friends—a designer, a barista, and an entrepreneur—who shared a conviction: that world-class coffee tastes best when served without pretension. We set out to build a coffee company grounded equally in three pillars: quality, hospitality, and design.",
-      "Every lot we purchase is roasted on precision Diedrich roasters at our Landmark Park facility, preserving delicate floral aromatics, lively fruit acids, and clean sweetness. We partner directly with smallholder farming families across Ethiopia, Colombia, Guatemala, and Kenya, paying premiums that ensure regenerative agriculture and multi-generational security."
-    ],
-
-    roastingPhilosophy: 
-      "We view roasting as an exercise in culinary restraint. We never roast to impart carbon, roasty, or smoky flavors; rather, our gentle convection and conduction heat transfer profiles unlock the inherent floral aromatics, lively fruit acids, and crystalline terroir each producer coaxed out of the cherries.",
-
-    cafes: [
-      {
-        name: 'Downtown Flagship',
-        address: '101 N Main St, Greenville, SC 29601',
-        description: 'Historic landmark cafe featuring dual Synesso MVP Hydras, Kalita Wave bar, and bespoke pastries.',
-        hours: 'Mon–Sun: 7am – 6pm'
-      },
-      {
-        name: 'The Commons',
-        address: '147 Welborn St, Greenville, SC 29601',
-        description: 'Community hub cafe along the Swamp Rabbit Trail with open seating and full breakfast menu.',
-        hours: 'Mon–Sun: 8am – 5pm'
-      },
-      {
-        name: 'Wade Hampton Roastery & Tasting Room',
-        address: '207 Wade Hampton Blvd, Greenville, SC 29609',
-        description: 'Our primary roasting facility, QA cupping lab, and training center for specialty baristas.',
-        hours: 'Tue–Sat: 8am – 3pm'
-      }
-    ],
-
-    recommendedWater: {
-      targetTds: 135,
-      gh: 68,
-      kh: 28,
-      ph: 6.9,
-      philosophy: 'High magnesium to calcium ratio (2:1) extracts bright stone-fruit acids and delicate jasmine florals without chalkiness.',
-      lotusFormula: { calcium: 2, magnesium: 4, buffer: 1 },
-      diyFormula: { epsomMl: 14.5, bakingSodaMl: 5.5 },
-      bottledWaterPairing: 'Crystal Geyser (Mount Shasta source) or Volvic Natural Spring Water'
-    },
-
-    coffees: [
-      {
-        id: 'methodical_ethiopia_chelbesa',
-        beanName: 'Ethiopia Yirgacheffe - Chelbesa (Lot #4)',
-        origin: 'Gedeo Zone, Yirgacheffe, Ethiopia',
-        process: 'Fully Washed (72hr spring fermentation, raised sun beds)',
-        varietal: 'Kurume & Dega (Indigenous Heirloom)',
-        elevation: '2,050 – 2,200 MASL',
-        roastLevel: 'Light',
-        cuppingScore: 89.5,
-        harvestYear: '2025/2026 Harvest',
-        tastingNotes: ['White Peach', 'Jasmine Blossom', 'Bergamot', 'Wildflower Honey'],
-        description: 'Grown in the legendary high-altitude Chelbesa Danche washing station. Exceptionally vibrant, floral, and tea-like with crystalline citric brightness.',
-        
-        // Barista Dial-In Parameters
-        brewMethod: 'pour_over',
-        recommendedRatio: 16.5,
-        dryDoseGrams: 18.0,
-        waterGrams: 297,
-        tempF: 202,
-        tempC: 94.4,
-        recommendedGrind: 'Medium-Fine (650µm)',
-        brewTime: '3m 15s',
-        pourSchedule: [
-          { phase: 'Bloom Phase', time: '0:00 - 0:45', water: '50g', note: 'Even saturation, gentle swirl' },
-          { phase: 'First Spiral Pour', time: '0:45 - 1:30', water: '130g (to 180g)', note: 'Continuous outward spiral' },
-          { phase: 'Final Center Pulse', time: '1:30 - 2:30', water: '117g (to 297g)', note: 'Gentle center pour & drawdown' }
-        ],
-        upc: '850029384012',
-        price: '$22.00',
-        bagSize: '12 oz (340g)',
-        directUrl: 'https://methodicalcoffee.com/collections/coffee/products/ethiopia-chelbesa',
-        badge: 'Staff Cupping Favorite'
-      },
-      {
-        id: 'methodical_colombia_pink_bourbon',
-        beanName: 'Colombia Pink Bourbon - Finca El Paraiso',
-        origin: 'Piendamó, Cauca, Colombia',
-        process: 'Thermal Shock Anaerobic (Controlled yeast fermentation)',
-        varietal: 'Pink Bourbon',
-        elevation: '1,930 MASL',
-        roastLevel: 'Light-Medium',
-        cuppingScore: 91.0,
-        harvestYear: '2025 Harvest',
-        tastingNotes: ['Pink Guava', 'Passionfruit', 'Lychee', 'Champagne Fizz'],
-        description: 'Cultivated by award-winning producer Diego Samuel Bermúdez. High-tech fermentation creates an explosion of tropical stone fruits and effervescent acidity.',
-        
-        brewMethod: 'pour_over',
-        recommendedRatio: 16.0,
-        dryDoseGrams: 20.0,
-        waterGrams: 320,
-        tempF: 200,
-        tempC: 93.3,
-        recommendedGrind: 'Medium (720µm)',
-        brewTime: '3m 45s',
-        pourSchedule: [
-          { phase: 'Bloom Phase', time: '0:00 - 0:45', water: '60g', note: 'Low agitation saturation' },
-          { phase: 'Body Pulse', time: '0:45 - 1:45', water: '140g (to 200g)', note: 'Slow concentric rings' },
-          { phase: 'Finishing Pour', time: '1:45 - 2:45', water: '120g (to 320g)', note: 'Center pour for clean finish' }
-        ],
-        upc: '850029384029',
-        price: '$26.00',
-        bagSize: '10 oz (284g)',
-        directUrl: 'https://methodicalcoffee.com/collections/coffee/products/colombia-pink-bourbon',
-        badge: 'Rare Micro-Lot'
-      },
-      {
-        id: 'methodical_belly_warmer',
-        beanName: 'Belly Warmer (Flagship Signature Blend)',
-        origin: 'Guatemala (Huehuetenango) & Honduras (Marcala)',
-        process: 'Washed',
-        varietal: 'Bourbon, Caturra, Catuai',
-        elevation: '1,600 – 1,850 MASL',
-        roastLevel: 'Medium',
-        cuppingScore: 86.5,
-        harvestYear: 'Current Fresh Crop',
-        tastingNotes: ['Milk Chocolate', 'Candied Pecan', 'Sweet Tangerine', 'Brown Sugar'],
-        description: 'Methodical flagship daily drinker. Formulated for heavy sweetness, velvety chocolate body, and balanced comforting citrus.',
-        
-        brewMethod: 'drip_brewer',
-        recommendedRatio: 15.5,
-        dryDoseGrams: 24.0,
-        waterGrams: 372,
-        tempF: 204,
-        tempC: 95.5,
-        recommendedGrind: 'Medium-Coarse (850µm)',
-        brewTime: '4m 00s',
-        pourSchedule: [
-          { phase: 'Standard Extraction', time: '0:00 - 4:00', water: '372g', note: 'Batch brew or French Press steep' }
-        ],
-        upc: '850029384036',
-        price: '$19.50',
-        bagSize: '12 oz (340g)',
-        directUrl: 'https://methodicalcoffee.com/collections/coffee/products/belly-warmer',
-        badge: 'Year-Round Benchmark'
-      }
-    ]
-  },
-
-  {
-    id: 'onyx',
-    slug: 'onyx-coffee-lab',
-    name: 'Onyx Coffee Lab',
-    shortName: 'Onyx',
-    isDemoExample: true,
-    demoNotice: 'Demonstration & Showcase Partner Example',
-    tagline: 'Never Settle for Good Enough',
-    founded: '2012',
-    city: 'Rogers',
-    state: 'Arkansas',
-    country: 'USA',
-    founders: ['Jon Allen', 'Andrea Allen'],
-    website: 'https://onyxcoffeelab.com',
-    shopUrl: 'https://onyxcoffeelab.com/collections/coffee',
-    brandColor: '#E2B874',
-    accentColor: '#C08A3E',
-    roasterMachines: 'Diedrich & Loring Convection Roasters',
-    sourcingPhilosophy: '100% Transparent Sourcing, Farm-Gate Pricing, and Fair Trade Plus',
-    carbonFootprint: 'Solar Powered Roastery HQ & Compostable Packaging',
-
-    monogram: 'O',
-    emblemSubtitle: 'ROGERS, AR • EST. 2012',
-
-    stats: [
-      { label: 'Barista Titles', value: 'US Champion / World #2' },
-      { label: 'Pricing Data', value: '100% Published' },
-      { label: 'Active Roasts', value: '22 Lots' },
-      { label: 'Cupping Standards', value: '89.0+ Benchmark' }
-    ],
-
-    originStory: [
-      "Onyx Coffee Lab was founded in 2012 in Arkansas by Jon and Andrea Allen with a single, uncompromising mandate: 'Never Settle for Good Enough.' Starting from humble beginnings roasting small batches after-hours, Onyx transformed into one of the most decorated specialty coffee institutions in the world.",
-      "Beyond their championship barista pedigrees, Onyx is renowned for radical pricing transparency. Every box published by Onyx discloses the exact farm gate price paid to the producer, the FOB price at export, the harvest dates, and cupping scores—setting a new ethical benchmark for the global specialty coffee trade."
+      "Yunnan Sourcing was founded in 2004 in Kunming, Yunnan province, by Scott Wilson. Operating on the ground in China's most ancient tea landscapes, Yunnan Sourcing provides western tea lovers direct access to single-estate Mao Cha, aged Pu-erh tea cakes, and artisanal oolongs.",
+      "Every tea is tasted and selected directly at source. From spring wild arbor Sheng Pu-erh picked from 500-year-old ancient trees in Xishuangbanna to charcoal-roasted Wuyi rock oolongs, every lot celebrates untamed terroir and heritage fermentation."
     ],
 
     roastingPhilosophy:
-      "We roast on high-precision convection roasters with meticulous computer data logging. We optimize every roast curve for peak sweetness and cellular development, never hiding the coffee behind smoke or charcoal.",
+      "We believe true tea quality begins in pristine soil, old-growth biodiversity, and patient artisan processing. Whether sun-withering delicate white tea buds or wet-pile fermenting rich Shou Pu-erh, timing and temperature are everything.",
 
     cafes: [
       {
-        name: 'Onyx HQ at The 1907',
-        address: '101 E Walnut St, Rogers, AR 72756',
-        description: 'World-renowned architectural masterpiece roastery, cupping auditorium, and coffee bar.',
-        hours: 'Mon–Sun: 6:30am – 7pm'
-      },
-      {
-        name: 'Bentonville Square',
-        address: '105 W Central Ave, Bentonville, AR 72712',
-        description: 'Art-deco jewel on the historic downtown square with bespoke pourover stations.',
-        hours: 'Mon–Sun: 7am – 6pm'
+        name: 'Kunming Tasting Headquarters',
+        address: 'Panlong District, Kunming, Yunnan 650051',
+        description: 'Flagship tasting room with traditional Gongfu Cha tables, Pu-erh aging cellar, and fresh spring harvests.',
+        hours: 'Mon–Sat: 9am – 6pm'
       }
     ],
 
-    recommendedWater: {
-      targetTds: 145,
-      gh: 75,
-      kh: 35,
-      ph: 7.0,
-      philosophy: 'Onyx Competition Spec: Balanced calcium and magnesium to amplify silky mouthfeel and structured malic acidity.',
-      lotusFormula: { calcium: 3, magnesium: 3, buffer: 2 },
-      diyFormula: { epsomMl: 12.5, bakingSodaMl: 8.5 },
-      bottledWaterPairing: 'Third Wave Water (Light Roast Profile in Distilled) or Crystal Geyser'
-    },
-
-    coffees: [
+    teas: [
       {
-        id: 'onyx_southern_weather',
-        beanName: 'Southern Weather',
-        origin: 'Colombia & Ethiopia',
-        process: 'Washed',
-        varietal: 'Castillo, Caturra, Ethiopian Heirloom',
-        elevation: '1,850 – 2,000 MASL',
-        roastLevel: 'Medium-Light',
-        cuppingScore: 88.0,
-        harvestYear: 'Current Fresh Crop',
-        tastingNotes: ['Milk Chocolate', 'Plum', 'Candied Walnuts', 'Citrus Sparkle'],
-        description: 'The defining coffee of Onyx Coffee Lab. Effortlessly sweet with juicy stone-fruit and chocolate finish.',
-        brewMethod: 'pour_over',
-        recommendedRatio: 16.0,
-        dryDoseGrams: 18.0,
-        waterGrams: 288,
-        tempF: 200,
-        tempC: 93.3,
-        recommendedGrind: 'Medium-Fine',
-        brewTime: '3m 00s',
-        pourSchedule: [
-          { phase: 'Bloom Phase', time: '0:00 - 0:45', water: '50g', note: 'Gentle swirl bloom' },
-          { phase: 'Pulse 1', time: '0:45 - 1:30', water: '130g', note: 'Center-outward spiral' },
-          { phase: 'Pulse 2', time: '1:30 - 2:30', water: '108g', note: 'Even top-up drawdown' }
-        ],
-        upc: '850012345012',
-        price: '$21.00',
-        bagSize: '10 oz (284g)',
-        directUrl: 'https://onyxcoffeelab.com/products/southern-weather',
-        badge: 'Onyx Benchmark'
+        id: 'sku_ys_menghai_shou',
+        upc: '6945123001018',
+        name: 'Menghai Aged Shou Ripe Pu-erh Cake',
+        beanName: 'Menghai Aged Shou Ripe Pu-erh Cake',
+        roaster: 'Yunnan Sourcing',
+        origin: 'Menghai, Yunnan, China',
+        elevation: '1,650 MASL',
+        process: 'Microbial Wet-Pile Fermented',
+        roastLevel: 'Aged Ripe Ferment',
+        tastingNotes: ['Damp Forest Floor', 'Sweet Camphor', 'Dark Molasses', 'Cacao Nibs'],
+        recommendedRatio: 20,
+        tempF: 210,
+        tempC: 99,
+        recommendedGrind: 'Aged Compressed Leaf',
+        brewMethod: 'puerh_tea',
+        isCertified: true,
+        notes: 'Deep mahogany liqueur, thick velvet mouthfeel, and sweet earthy resonance.'
       },
       {
-        id: 'onyx_tropical_weather',
-        beanName: 'Tropical Weather',
-        origin: 'Ethiopia (Washed & Natural)',
-        process: 'Washed & Natural Blend',
-        varietal: 'Ethiopian Heirloom Varieties',
-        elevation: '1,900 – 2,200 MASL',
-        roastLevel: 'Light',
-        cuppingScore: 89.5,
-        harvestYear: '2025/2026 Harvest',
-        tastingNotes: ['Mango Nectar', 'Peach Sweet Tea', 'Floral Jasmine', 'Candied Berry'],
-        description: 'A vibrant tribute to the birthplace of coffee. Combines floral washed and fruity natural Ethiopian lots.',
-        brewMethod: 'pour_over',
-        recommendedRatio: 16.5,
-        dryDoseGrams: 18.0,
-        waterGrams: 297,
-        tempF: 203,
-        tempC: 95.0,
-        recommendedGrind: 'Medium-Fine',
-        brewTime: '3m 15s',
-        pourSchedule: [
-          { phase: 'Bloom Phase', time: '0:00 - 0:45', water: '50g', note: 'Full grounds saturation' },
-          { phase: 'Main Pour', time: '0:45 - 2:00', water: '150g', note: 'Gentle low-turbulence spirals' },
-          { phase: 'Final Pulse', time: '2:00 - 3:15', water: '97g', note: 'Center drawdown' }
-        ],
-        upc: '850012345029',
-        price: '$23.00',
-        bagSize: '10 oz (284g)',
-        directUrl: 'https://onyxcoffeelab.com/products/tropical-weather',
-        badge: 'Fruity & Vibrant'
+        id: 'sku_ys_silver_needle',
+        upc: '6945123002046',
+        name: 'Fuding Imperial Silver Needle White Tea',
+        beanName: 'Fuding Imperial Silver Needle White Tea',
+        roaster: 'Yunnan Sourcing',
+        origin: 'Fuding, Fujian, China',
+        elevation: '950 MASL',
+        process: 'Sun-Withered Spring Buds',
+        roastLevel: 'Unoxidized Spring Pluck',
+        tastingNotes: ['Honeysuckle', 'Fresh Melon', 'Sweet Cucumber', 'Silky Body'],
+        recommendedRatio: 60,
+        tempF: 181,
+        tempC: 83,
+        recommendedGrind: 'Whole Silver Buds',
+        brewMethod: 'white_tea',
+        isCertified: true,
+        notes: 'Hand-picked spring buds with silver downy hairs. Delicate, velvety, and naturally sweet.'
       }
     ]
   },
-
   {
-    id: 'black_and_white',
-    slug: 'black-and-white-coffee',
-    name: 'Black & White Coffee Roasters',
-    shortName: 'Black & White',
+    id: 'vahdam',
+    slug: 'vahdam-india',
+    name: 'Vahdam Teas',
+    shortName: 'Vahdam',
     isDemoExample: true,
-    demoNotice: 'Demonstration & Showcase Partner Example',
-    tagline: 'Creating Opportunities Through Coffee',
-    founded: '2017',
-    city: 'Raleigh / Rolesville',
-    state: 'North Carolina',
-    country: 'USA',
-    founders: ['Kyle Ramage', 'Lem Butler'],
-    website: 'https://blackwhiteroasters.com',
-    shopUrl: 'https://blackwhiteroasters.com/collections/coffee',
-    brandColor: '#FDFBF7',
-    accentColor: '#A66E38',
-    roasterMachines: 'Loring S15, S35, S70 Fleet with SOVDA Optical Sorting',
-    sourcingPhilosophy: 'Pioneering Yeast Fermentation, Anaerobic Inoculation, and Experimental Terroir',
-    carbonFootprint: 'Single-Burner Recirculating Loring Convection Roasting',
+    demoNotice: 'Garden-Direct Indian Tea Showcase',
+    tagline: 'Direct From India’s Divine Tea Gardens',
+    founded: '2015',
+    city: 'New Delhi',
+    state: 'Delhi',
+    country: 'India',
+    founders: ['Bala Sarda'],
+    website: 'https://www.vahdam.com',
+    shopUrl: 'https://www.vahdam.com',
+    brandColor: '#1A362B',
+    accentColor: '#D4A373',
+    roasterMachines: 'Orthodox High-Elevation Roller & Climate-Controlled Dryers',
+    sourcingPhilosophy: '100% Garden-Fresh Single-Estate Harvests from Darjeeling, Assam, and Nilgiri',
+    carbonFootprint: 'Certified Climate Neutral & Plastic Neutral brand',
 
-    monogram: 'BW',
-    emblemSubtitle: 'RALEIGH, NC • EST. 2017',
+    monogram: 'V',
+    emblemSubtitle: 'NEW DELHI, INDIA • EST. 2015',
 
     stats: [
-      { label: 'Founder Accolades', value: '2x US Barista Champions' },
-      { label: 'Roaster Facility', value: '3x Loring Fleet' },
-      { label: 'Sorting Tech', value: 'SOVDA Pearl Mini' },
-      { label: 'Fermentations', value: 'Anaerobic / Koji / Honey' }
+      { label: 'Garden Estates', value: '60+ Estates' },
+      { label: 'Farm Traceability', value: '100% Direct' },
+      { label: 'Harvest Speed', value: 'Within 72 Hrs' },
+      { label: 'Estate Flushes', value: '1st & 2nd Flush' }
     ],
 
     originStory: [
-      "Founded in 2017 by United States Barista Champions Kyle Ramage (2017) and Lem Butler (2016) in North Carolina, Black & White set out to make exceptional specialty coffee approachable while fearlessly exploring experimental processing.",
-      "Operating a world-class roasting campus in Rolesville/Raleigh equipped with a fleet of single-burner Loring roasters and SOVDA optical sorters, Black & White is globally celebrated for their anaerobic naturals, thermal shock processing, and yeast-inoculated lots that redefine what coffee can taste like."
+      "Vahdam was founded in 2015 by Bala Sarda, continuing an 85-year family legacy in Indian tea. Traditional supply chains involved numerous middlemen that left tea stale for months before reaching tea drinkers. Vahdam disrupted this model by sourcing fresh harvests directly from estates in Darjeeling, Assam, and the Nilgiris within 72 hours of plucking.",
+      "By eliminating intermediaries, Vahdam retains pristine aromatic freshness and redirects 1% of revenue toward the education of tea estate pickers' children through its TEAch initiative."
     ],
 
     roastingPhilosophy:
-      "We believe coffee should be exciting. We roast on single-burner Loring roasters that recycle superheated air, producing impeccably uniform convective heat transfer that highlights fruit esters without roasty interference.",
+      "We honor the orthodox craft of Indian tea rolling and oxidation. High-elevation Darjeeling leaves receive minimal processing to highlight muscatel esters, while rich Assam lots undergo careful fermentation to build bold malty cocoa body.",
 
     cafes: [
       {
-        name: 'B&W Downtown Raleigh Cafe',
-        address: '314 S Blount St, Raleigh, NC 27601',
-        description: 'Vibrant city cafe located in the historic downtown district.',
-        hours: 'Mon–Sun: 7am – 5pm'
-      },
-      {
-        name: 'Rolesville Flagship & Roastery',
-        address: '314 Southtown Cir, Rolesville, NC 27571',
-        description: 'Production roastery, lab, and cafe featuring experimental flights.',
-        hours: 'Mon–Sat: 7am – 4pm'
+        name: 'New Delhi Tea Experience Bar',
+        address: 'Okhla Industrial Area, Phase 1, New Delhi 110020',
+        description: 'Modern tasting salon featuring single-estate cupping flights and bespoke botanical tea blends.',
+        hours: 'Mon–Fri: 10am – 6pm'
       }
     ],
 
-    recommendedWater: {
-      targetTds: 125,
-      gh: 65,
-      kh: 25,
-      ph: 6.8,
-      philosophy: 'Low bicarbonate buffer allows the wild fruit esters and vibrant lactic acids of experimental fermentations to be fully expressed.',
-      lotusFormula: { calcium: 2, magnesium: 4, buffer: 1 },
-      diyFormula: { epsomMl: 14.0, bakingSodaMl: 5.0 },
-      bottledWaterPairing: 'Crystal Geyser or Aquafina remineralized with Third Wave Water'
-    },
-
-    coffees: [
+    teas: [
       {
-        id: 'bw_the_future',
-        beanName: 'The Future (Experimental Anaerobic Series)',
-        origin: 'Rotating Micro-Lot Partners (Huila / Cauca)',
-        process: 'Anaerobic Natural / Co-Fermentation',
-        varietal: 'Caturra & Castillo',
-        elevation: '1,800 – 2,100 MASL',
-        roastLevel: 'Light',
-        cuppingScore: 90.0,
-        harvestYear: '2025/2026 Micro-Batch',
-        tastingNotes: ['Grape Soda', 'Wild Strawberry', 'Candied Pineapple', 'Dark Chocolate Truffle'],
-        description: 'Black & White legendary experimental series. Pushes fermentation boundaries with mind-bending fruit aromatics and confectionery sweetness.',
-        brewMethod: 'pour_over',
-        recommendedRatio: 16.0,
-        dryDoseGrams: 18.0,
-        waterGrams: 288,
-        tempF: 198,
-        tempC: 92.2,
-        recommendedGrind: 'Medium (Slightly Coarser to prevent overextraction)',
-        brewTime: '3m 15s',
-        pourSchedule: [
-          { phase: 'Bloom', time: '0:00 - 0:45', water: '50g', note: 'Low agitation pour' },
-          { phase: 'Body Pulse', time: '0:45 - 1:45', water: '130g', note: 'Steady center pour' },
-          { phase: 'Finish', time: '1:45 - 3:00', water: '108g', note: 'Gentle edge wash' }
-        ],
-        upc: '850034567019',
-        price: '$24.00',
-        bagSize: '12 oz (340g)',
-        directUrl: 'https://blackwhiteroasters.com/collections/coffee/products/the-future',
-        badge: 'Wild & Experimental'
+        id: 'sku_vahdam_darjeeling_arya',
+        upc: '8906082570123',
+        name: 'Arya Estate First Flush Darjeeling FTGFOP1',
+        beanName: 'Arya Estate First Flush Darjeeling FTGFOP1',
+        roaster: 'Vahdam Teas',
+        origin: 'Darjeeling, India',
+        elevation: '1,800 MASL',
+        process: 'Orthodox Whole Leaf',
+        roastLevel: 'Spring First Flush',
+        tastingNotes: ['Muscatel Grape', 'White Peach', 'Wildflower Honey', 'Crisp Amber'],
+        recommendedRatio: 50,
+        tempF: 190,
+        tempC: 88,
+        recommendedGrind: 'Orthodox Whole Leaf',
+        brewMethod: 'darjeeling_tea',
+        isCertified: true,
+        notes: 'Prized Himalayan first flush lot bursting with crisp peach, green grape, and floral bouquet.'
       },
       {
-        id: 'bw_the_classic',
-        beanName: 'The Classic',
-        origin: 'Latin America Blend',
-        process: 'Washed',
-        varietal: 'Bourbon, Caturra, Typica',
-        elevation: '1,600 – 1,900 MASL',
-        roastLevel: 'Medium-Dark',
-        cuppingScore: 86.0,
-        harvestYear: 'Current Fresh Crop',
-        tastingNotes: ['Dark Chocolate Fudge', 'Caramelized Sugar', 'Toasted Almond', 'Ripe Cherry'],
-        description: 'Clean, sweet, and comforting. Designed for those who crave deep chocolate richness with modern roasting clarity.',
-        brewMethod: 'espresso',
-        recommendedRatio: 2.0,
-        dryDoseGrams: 18.5,
-        waterGrams: 37,
-        tempF: 201,
-        tempC: 93.9,
-        recommendedGrind: 'Fine (Espresso Spec)',
-        brewTime: '28 - 32s',
-        pourSchedule: [
-          { phase: '9-Bar Extraction', time: '0:00 - 0:30', water: '37g liquid', note: 'Silky crema, syrupy chocolate body' }
-        ],
-        upc: '850034567026',
-        price: '$18.50',
-        bagSize: '12 oz (340g)',
-        directUrl: 'https://blackwhiteroasters.com/collections/coffee/products/the-classic',
-        badge: 'Everyday Espresso'
+        id: 'sku_vahdam_masala_chai',
+        upc: '8906082570451',
+        name: 'Original Indian Masala Chai',
+        beanName: 'Original Indian Masala Chai',
+        roaster: 'Vahdam Teas',
+        origin: 'Brahmaputra Valley, Assam, India',
+        elevation: '120 MASL',
+        process: 'CTC Assam with Crushed Botanicals',
+        roastLevel: 'Full Oxidation CTC',
+        tastingNotes: ['Warm Cardamom', 'Ceylon Cinnamon', 'Ginger Root', 'Malty Cocoa'],
+        recommendedRatio: 25,
+        tempF: 208,
+        tempC: 98,
+        recommendedGrind: 'CTC Granular & Spices',
+        brewMethod: 'chai_masala',
+        isCertified: true,
+        notes: 'Rich Assam CTC tea simmered with aromatic crushed spices for a comforting golden cup.'
       }
     ]
   }
 ];
 
-import { getCustomRoasters, getCustomRoasterCoffees } from './roasterRegistry.js';
-
-function formatCustomRoasterAsShowcase(custom, coffees = []) {
-  const name = custom.name || custom.roaster || 'Specialty Roastery';
-  const slug = (custom.slug || custom.id || name)
+export function normalizeRoasterKey(str = '') {
+  return String(str)
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-  const monogram = name.charAt(0).toUpperCase() || 'R';
-  const location = custom.location || 'Artisan Craft Roastery';
-
-  const formattedCoffees = coffees.map((c, idx) => {
-    const ratio = Number(c.recommendedRatio) || 16.5;
-    const dose = 18.0;
-    const waterGrams = Math.round(dose * ratio);
-    const tempF = Number(c.tempF) || 202;
-    const tempC = Math.round(((tempF - 32) * 5) / 9);
-
-    return {
-      id: c.id || `custom_coffee_${idx}`,
-      beanName: c.beanName || 'Single Origin Lot',
-      origin: c.origin || 'Specialty Origin',
-      process: c.process || 'Washed',
-      varietal: c.varietal || 'Specialty Varietal',
-      elevation: c.elevation || '1,800+ MASL',
-      roastLevel: c.roastLevel || 'Light-Medium',
-      cuppingScore: c.cuppingScore || 87.5,
-      harvestYear: 'Current Fresh Crop',
-      tastingNotes: Array.isArray(c.tastingNotes) ? c.tastingNotes : ['Sweet', 'Balanced', 'Clean'],
-      description: c.notes || `Artisan craft roast by ${name}. Optimized for ${c.brewMethod ? c.brewMethod.replace(/_/g, ' ') : 'pour over'}.`,
-      brewMethod: c.brewMethod || 'pour_over',
-      recommendedRatio: ratio,
-      dryDoseGrams: dose,
-      waterGrams,
-      tempF,
-      tempC,
-      recommendedGrind: c.recommendedGrind || 'Medium-Fine',
-      brewTime: c.brewTime || '3m 15s',
-      pourSchedule: [
-        { phase: 'Bloom', time: '0:00 - 0:45', water: `${Math.round(dose * 3)}g`, note: 'Gentle spiral saturation' },
-        { phase: 'Main Pour', time: '0:45 - 2:00', water: `${Math.round(waterGrams * 0.6)}g`, note: 'Steady center pour' },
-        { phase: 'Final Top-up', time: '2:00 - 3:15', water: `${waterGrams}g`, note: 'Gentle swirl and draw down' }
-      ],
-      upc: c.upc || `LOT-${Date.now().toString().slice(-6)}`,
-      price: c.price || '$22.00',
-      bagSize: c.bagSize || '12 oz (340g)',
-      directUrl: c.customUrl || custom.website || 'https://thebrew.app',
-      badge: 'Certified Lot'
-    };
-  });
-
-  return {
-    id: slug,
-    slug,
-    name,
-    isCustomRoaster: true,
-    logoImage: custom.logoImage || '',
-    backgroundImage: custom.backgroundImage || custom.logoImage || '',
-    tagline: custom.tagline || 'Artisan Specialty Roastery & Tasting Room',
-    founded: custom.founded || 'Specialty Craft',
-    city: custom.city || location.split(',')[0]?.trim() || 'Artisan',
-    state: custom.state || location.split(',')[1]?.trim() || '',
-    country: custom.country || 'USA',
-    website: custom.website || 'https://thebrew.app',
-    shopUrl: custom.shopUrl || custom.website || 'https://thebrew.app',
-    brandColor: custom.brandColor || '#D4A373',
-    accentColor: custom.accentColor || '#A66E38',
-    roasterMachines: custom.roasterMachines || 'Artisan Drum & Convection Roasters',
-    sourcingPhilosophy: custom.sourcingPhilosophy || '100% Traceable Specialty Direct-Trade',
-    carbonFootprint: 'Precision Micro-Batch Roasting',
-    monogram,
-    emblemSubtitle: `${location.toUpperCase()} • VERIFIED ROASTERY`,
-    stats: [
-      { label: 'Active Micro-Lots', value: `${formattedCoffees.length} Lots` },
-      { label: 'Roast Style', value: 'Specialty Light-Med' },
-      { label: 'Smart Bag QR', value: 'Active' },
-      { label: 'Quality Grade', value: 'SCA 86+' }
-    ],
-    originStory: [
-      `${name} is an artisan coffee roastery based in ${location}. We source and roast with uncompromising dedication to origin terroir, seasonal freshness, and ethical grower relationships.`,
-      `Every bag we package features certified dial-in specifications so coffee lovers can experience our beans at peak potential.`
-    ],
-    roastingPhilosophy: 
-      custom.roastingPhilosophy || 
-      `We calibrate each roast profile to preserve the sweet enzymatic aromatics and sparkling acidity coaxed from the soil.`,
-    cafes: [
-      {
-        name: `${name} Flagship Roastery & Tasting Bar`,
-        address: location,
-        description: 'Our primary roasting facility, tasting bar, and barista dial-in station.',
-        hours: 'Mon–Sun: 7am – 5pm'
-      }
-    ],
-    recommendedWater: {
-      targetTds: 140,
-      gh: 70,
-      kh: 30,
-      ph: 7.0,
-      philosophy: 'Balanced mineral water with 2:1 magnesium-to-calcium ratio for vibrant sweetness and clean finish.',
-      lotusFormula: { calcium: 2, magnesium: 4, buffer: 1 },
-      diyFormula: { epsomMl: 15, bakingSodaMl: 5 },
-      bottledWaterPairing: 'Crystal Geyser or Volvic Natural Spring Water'
-    },
-    coffees: formattedCoffees
-  };
+    .trim()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
 }
 
-/**
- * Canonical normalization for roaster identification across all forms (id, slug, name, alias).
- */
-export function normalizeRoasterKey(input) {
-  if (!input) return '';
-  let clean = String(input).toLowerCase().trim();
-  const KNOWN_ALIASES = {
-    'bw': 'black-white',
-    'b-w': 'black-white',
-    'b&w': 'black-white',
-    'bandw': 'black-white',
-    'mth': 'methodical',
-    'onx': 'onyx'
-  };
-  if (KNOWN_ALIASES[clean]) return KNOWN_ALIASES[clean];
-
-  clean = clean
-    .replace(/&/g, ' ')
-    .replace(/['’]/g, '')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim();
-
-  clean = clean.replace(/\band\b/g, ' ').replace(/\s+/g, ' ').trim();
-
-  const suffixPattern = /\b(coffee|roasters|roaster|roastery|lab|company|co)\b$/;
-  while (suffixPattern.test(clean)) {
-    clean = clean.replace(suffixPattern, '').trim();
-  }
-
-  const result = clean.replace(/\s+/g, '-');
-  return KNOWN_ALIASES[result] || result;
+export function getRoasterShortName(name = '') {
+  const parts = name.split(' ');
+  return parts[0] || name;
 }
 
-/**
- * Clean short name for navigation badges and pills (e.g., "Methodical", "Onyx", "Black & White").
- */
-export function getRoasterShortName(name) {
-  if (!name) return 'Roaster';
-  const clean = String(name).trim();
-  if (/^black\s*(&|and)\s*white/i.test(clean)) {
-    return 'Black & White';
-  }
-  const stripped = clean
-    .replace(/\s+(Coffee|Roasters|Roastery|Lab|Company|Co\.|Roast\s+Lab|Boutique).*$/i, '')
-    .trim();
-  if (stripped.length > 0 && stripped.length <= 18) {
-    return stripped;
-  }
-  return clean.split(' ')[0] || clean;
-}
-
-/**
- * Deduplicate an array of coffee items by ID, UPC, and composite (roaster + beanName).
- */
-export function deduplicateCoffees(coffees = []) {
+export function deduplicateTeas(teas = []) {
   const seenIds = new Set();
   const seenUpcs = new Set();
   const seenNames = new Set();
   const unique = [];
 
-  for (const c of coffees) {
+  for (const c of teas) {
     if (!c) continue;
     const cid = c.id ? String(c.id).toLowerCase().trim() : '';
     const cupc = c.upc ? String(c.upc).trim() : '';
-    const cname = c.beanName ? String(c.beanName).toLowerCase().trim().replace(/[^a-z0-9]+/g, ' ') : '';
-    const croaster = c.roaster ? normalizeRoasterKey(c.roaster) : '';
+    const cname = (c.teaName || c.beanName) ? String(c.teaName || c.beanName).toLowerCase().trim().replace(/[^a-z0-9]+/g, ' ') : '';
+    const croaster = (c.purveyor || c.roaster) ? normalizeRoasterKey(c.purveyor || c.roaster) : '';
     const compositeKey = `${croaster}:::${cname}`;
 
     if (cid && seenIds.has(cid)) continue;
@@ -626,82 +326,14 @@ export function deduplicateCoffees(coffees = []) {
 }
 
 export function getAllShowcaseRoasters() {
-  const customRoasters = getCustomRoasters();
-  const allCustomCoffees = getCustomRoasterCoffees();
-
-  const seenKeys = new Set();
-  const roastersList = [];
-
-  // 1. Process built-in SHOWCASE_ROASTERS, recording all known canonical aliases
-  SHOWCASE_ROASTERS.forEach((sr) => {
-    const canonical = normalizeRoasterKey(sr.id) || normalizeRoasterKey(sr.slug) || normalizeRoasterKey(sr.name);
-    seenKeys.add(canonical);
-    if (sr.id) seenKeys.add(normalizeRoasterKey(sr.id));
-    if (sr.slug) seenKeys.add(normalizeRoasterKey(sr.slug));
-    if (sr.name) seenKeys.add(normalizeRoasterKey(sr.name));
-
-    // Merge in any custom coffees registered for this showcase roaster
-    const matchingCustomCoffees = allCustomCoffees.filter(
-      (c) => c.roaster && normalizeRoasterKey(c.roaster) === canonical
-    );
-
-    const mergedCoffees = deduplicateCoffees([...(sr.coffees || []), ...matchingCustomCoffees]);
-
-    roastersList.push({
-      ...sr,
-      shortName: sr.shortName || getRoasterShortName(sr.name),
-      coffees: mergedCoffees
-    });
-  });
-
-  // 2. Process custom registered roaster profiles (e.g. from Roaster Studio or Firestore)
-  customRoasters.forEach((cr) => {
-    if (!cr || !cr.name) return;
-    const canonical = normalizeRoasterKey(cr.id) || normalizeRoasterKey(cr.slug) || normalizeRoasterKey(cr.name);
-    if (!canonical || seenKeys.has(canonical)) return; // Prevents duplicate roasters
-
-    seenKeys.add(canonical);
-    if (cr.id) seenKeys.add(normalizeRoasterKey(cr.id));
-    if (cr.slug) seenKeys.add(normalizeRoasterKey(cr.slug));
-    if (cr.name) seenKeys.add(normalizeRoasterKey(cr.name));
-
-    const coffeesForRoaster = allCustomCoffees.filter(
-      (c) => c.roaster && normalizeRoasterKey(c.roaster) === canonical
-    );
-
-    const formatted = formatCustomRoasterAsShowcase(cr, deduplicateCoffees(coffeesForRoaster));
-    formatted.shortName = getRoasterShortName(formatted.name);
-    roastersList.push(formatted);
-  });
-
-  // 3. Process any custom coffees with roaster names not yet captured
-  const coffeeRoasterNames = Array.from(new Set(allCustomCoffees.map((c) => c.roaster).filter(Boolean)));
-  coffeeRoasterNames.forEach((rName) => {
-    const canonical = normalizeRoasterKey(rName);
-    if (!canonical || seenKeys.has(canonical)) return; // Skip if already present
-
-    seenKeys.add(canonical);
-    const coffeesForRoaster = allCustomCoffees.filter(
-      (c) => c.roaster && normalizeRoasterKey(c.roaster) === canonical
-    );
-
-    const formatted = formatCustomRoasterAsShowcase(
-      { name: rName, logoImage: coffeesForRoaster[0]?.logoImage },
-      deduplicateCoffees(coffeesForRoaster)
-    );
-    formatted.shortName = getRoasterShortName(formatted.name);
-    roastersList.push(formatted);
-  });
-
-  return roastersList;
+  return SHOWCASE_ROASTERS;
 }
 
-export function getShowcaseRoaster(idOrSlug = 'methodical') {
+export function getShowcaseRoaster(idOrSlug = 'ippodo') {
   const all = getAllShowcaseRoasters();
   if (!idOrSlug) return all[0];
 
   const targetKey = normalizeRoasterKey(idOrSlug);
-
   const matched = all.find((r) => {
     return (
       normalizeRoasterKey(r.id) === targetKey ||

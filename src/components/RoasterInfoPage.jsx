@@ -8,7 +8,6 @@ import {
   QrCode, 
   Sparkles, 
   ArrowRight, 
-  Coffee, 
   Building, 
   Globe, 
   HelpCircle,
@@ -35,7 +34,7 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
     email: '',
     website: '',
     location: '',
-    coffeeCount: '1-5',
+    teaCount: '1-5',
     sampleBarcodes: '',
     message: ''
   });
@@ -60,16 +59,16 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
   };
 
   const handleOpenGmail = () => {
-    const subject = encodeURIComponent(`Roastery Label Ingestion Request: ${formData.roasteryName || 'Specialty Coffee Brand'}`);
+    const subject = encodeURIComponent(`Tea Purveyor Label Ingestion Request: ${formData.roasteryName || 'Specialty Tea Brand'}`);
     const body = encodeURIComponent(
       `Hello Brew App HQ,\n\n` +
-      `I would like to add our specialty roastery and coffee labels to The Brew App global verified database.\n\n` +
+      `I would like to add our specialty tea purveyor and loose leaf labels to the LooseLeaf global verified database.\n\n` +
       `Roastery Brand: ${formData.roasteryName}\n` +
       `Contact Name: ${formData.contactName}\n` +
       `Email: ${formData.email}\n` +
       `Website: ${formData.website}\n` +
       `Location: ${formData.location}\n` +
-      `Number of Retail Coffees: ${formData.coffeeCount}\n` +
+      `Number of Retail Teas: ${formData.teaCount}\n` +
       `Sample Retail Barcodes (UPC/EAN): ${formData.sampleBarcodes}\n\n` +
       `Notes / Roaster Dial-In Details:\n${formData.message}\n\n` +
       `Looking forward to partnering!`
@@ -103,7 +102,7 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
             email: formData.email,
             website: formData.website,
             location: formData.location,
-            coffee_count: formData.coffeeCount,
+            tea_count: formData.teaCount,
             sample_barcodes: formData.sampleBarcodes,
             message: formData.message
           })
@@ -125,13 +124,13 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
       const subject = encodeURIComponent(`Roastery Label Ingestion Request: ${formData.roasteryName}`);
       const body = encodeURIComponent(
         `Hello Brew App HQ,\n\n` +
-        `I would like to add our specialty roastery and coffee labels to The Brew App global verified database.\n\n` +
+        `I would like to add our specialty tea purveyor and loose leaf labels to the LooseLeaf global verified database.\n\n` +
         `Roastery Brand: ${formData.roasteryName}\n` +
         `Contact Name: ${formData.contactName}\n` +
         `Email: ${formData.email}\n` +
         `Website: ${formData.website}\n` +
         `Location: ${formData.location}\n` +
-        `Number of Retail Coffees: ${formData.coffeeCount}\n` +
+        `Number of Retail Teas: ${formData.teaCount}\n` +
         `Sample Retail Barcodes (UPC/EAN): ${formData.sampleBarcodes}\n\n` +
         `Notes / Roaster Dial-In Details:\n${formData.message}\n\n` +
         `Looking forward to partnering!`
@@ -189,13 +188,13 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
           <div className="relative rounded-2xl bg-gradient-to-br from-[#2A1C12]/90 via-black/80 to-[#1A120B]/90 border border-amber-gold/30 p-6 sm:p-8 shadow-xl overflow-hidden">
             <div className="relative z-10 max-w-2xl space-y-3">
               <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-gold font-mono text-xs font-bold border border-amber-500/30 inline-block">
-                For Artisan & Specialty Coffee Roasters
+                For Artisan Tea Purveyors & Master Gardens
               </span>
               <h3 className="font-serif text-2xl sm:text-3xl font-bold text-cream-light leading-tight">
-                Turn Every Bag into an Interactive Barista Masterclass
+                Turn Every Tin into an Interactive Tea Masterclass
               </h3>
               <p className="text-sm text-cream-soft/90 leading-relaxed font-sans">
-                When customers purchase your coffee, they shouldn't have to guess extraction ratios, grind settings, or water temperatures. By adding your roastery labels to our verified catalog, scanning your bag barcode with any smartphone camera instantly loads your exact dialed-in recipe and synchronized multi-phase timer.
+                When customers purchase your fine tea, they shouldn't have to guess steeping ratios, leaf grades, or water temperatures. By adding your tea purveyor labels to our verified catalog, scanning your tin or pouch barcode with any smartphone camera instantly loads your exact dialed-in steeping parameters and synchronized multi-phase timer.
               </p>
             </div>
           </div>
@@ -206,7 +205,7 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-gold animate-pulse" />
                 <h4 className="font-serif text-lg sm:text-xl font-bold text-cream-light">
-                  Watch: The 20-Second Smart Bag Experience
+                  Watch: The 20-Second Smart Tin Experience
                 </h4>
               </div>
               <span className="text-xs font-mono text-cream-soft/70">
@@ -238,7 +237,7 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
                 </div>
                 <h5 className="font-serif font-bold text-cream-light">Submit Roastery & Labels</h5>
                 <p className="text-xs text-cream-soft/80 leading-relaxed">
-                  Send your coffee varieties, origins, harvest processing, and existing retail bag UPC/EAN barcodes via the form below or directly to HQ.
+                  Send your tea varieties, terroirs, harvest flushes, and existing retail tin UPC/EAN barcodes via the form below or directly to HQ.
                 </p>
               </div>
 
@@ -246,9 +245,9 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
                 <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-gold font-mono font-bold text-sm">
                   2
                 </div>
-                <h5 className="font-serif font-bold text-cream-light">Set Barista Dial-In Recipes</h5>
+                <h5 className="font-serif font-bold text-cream-light">Set Tea Master Dial-In Recipes</h5>
                 <p className="text-xs text-cream-soft/80 leading-relaxed">
-                  Define your recommended brew method (e.g. V60 or Kalita), golden ratio, water temperature, grind size, and bloom cadence for each roast lot.
+                  Define your recommended steeping method (e.g. Gongfu Gaiwan, Kyusu, or Western Teapot), water-to-leaf ratio, temperature, and infusion timing for each tea lot.
                 </p>
               </div>
 
@@ -258,7 +257,7 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
                 </div>
                 <h5 className="font-serif font-bold text-cream-light">Instant Camera Recognition</h5>
                 <p className="text-xs text-cream-soft/80 leading-relaxed">
-                  HQ ingests your profiles into the verified database. Any home barista scanning your bag barcode or Smart Bag sticker gets your certified recipe.
+                  HQ ingests your profiles into the verified database. Any tea enthusiast scanning your tin barcode or Smart Tin sticker gets your certified recipe.
                 </p>
               </div>
             </div>
@@ -271,7 +270,7 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
               <div>
                 <span className="font-bold text-cream-light block">Zero-Cost Program</span>
                 <span className="text-cream-soft/70 block mt-0.5">
-                  100% free for independent specialty roasters. We believe great coffee deserves precise extraction.
+                  100% free for independent specialty tea purveyors and gardens. We believe great tea deserves precise steeping.
                 </span>
               </div>
             </div>
@@ -366,7 +365,7 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
                 <p className="text-xs text-cream-soft max-w-lg mx-auto leading-relaxed">
                   {submissionResponse?.fallback 
                     ? `Your desktop mail client was opened with all technical specifications addressed to ${emailHq}. Please send the prefilled email to complete ingestion.`
-                    : `Your roastery profile and sample barcodes have been directly written to our War Room CRM. Our coffee dial-in pipeline will verify your coffees for QR bag integration.`}
+                    : `Your purveyor profile and sample barcodes have been directly written to our War Room CRM. Our tea dial-in pipeline will verify your teas for QR packaging integration.`}
                 </p>
 
                 <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -399,7 +398,7 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
                       required
                       value={formData.roasteryName}
                       onChange={(e) => setFormData({ ...formData, roasteryName: e.target.value })}
-                      placeholder="e.g. Methodical Coffee, Sweet Bloom"
+                      placeholder="e.g. Methodical Sweet Bloom"
                       className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-cream-light placeholder-cream-soft/40 focus:outline-none focus:border-amber-gold"
                     />
                   </div>
@@ -468,15 +467,15 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
                   </div>
 
                   <div>
-                    <label className="block text-cream-soft/80 mb-1">Number of Active Retail Coffees</label>
+                    <label className="block text-cream-soft/80 mb-1">Number of Active Retail Teas</label>
                     <select
-                      value={formData.coffeeCount}
-                      onChange={(e) => setFormData({ ...formData, coffeeCount: e.target.value })}
+                      value={formData.teaCount}
+                      onChange={(e) => setFormData({ ...formData, teaCount: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-cream-light focus:outline-none focus:border-amber-gold"
                     >
-                      <option value="1-5">1 - 5 Retail Coffees</option>
-                      <option value="6-15">6 - 15 Retail Coffees</option>
-                      <option value="16-30">16 - 30 Retail Coffees</option>
+                      <option value="1-5">1 - 5 Retail Teas</option>
+                      <option value="6-15">6 - 15 Retail Teas</option>
+                      <option value="16-30">16 - 30 Retail Teas</option>
                       <option value="30+">30+ Rotating Lots & Blends</option>
                     </select>
                   </div>
@@ -490,7 +489,7 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
                     rows={3}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Provide any details on your coffee varieties, recommended ratios, or questions regarding packaging stickers..."
+                    placeholder="Provide any details on your tea varieties, cultivars, recommended steeping ratios, or questions regarding packaging stickers..."
                     className="w-full px-3.5 py-2.5 rounded-xl bg-black/60 border border-white/15 text-cream-light placeholder-cream-soft/40 focus:outline-none focus:border-amber-gold"
                   />
                 </div>
@@ -529,7 +528,7 @@ export default function RoasterInfoPage({ isOpen, onClose, onOpenStudio }) {
                   </div>
 
                   <p className="text-[10px] text-cream-soft/60 leading-relaxed">
-                    <strong>How this email works:</strong> Clicking "Submit Request to HQ" packages your roastery credentials and transmits them directly to our barista team at {emailHq}. We will review and verify your bag recipes within 24 hours. You can also self-serve immediately using the Studio below.
+                    <strong>How this email works:</strong> Clicking "Submit Request to HQ" packages your tea purveyor credentials and transmits them directly to our tea curation team at {emailHq}. We will review and verify your tin recipes within 24 hours. You can also self-serve immediately using the Studio below.
                   </p>
                 </div>
 

@@ -1,4 +1,4 @@
-// Audio Chime & Barista Audio Synthesizer for The Brew App
+// Audio Chime & Tea Timer Audio Synthesizer for LooseLeaf
 
 let sharedAudioCtx = null;
 let activeAudioElement = null;
@@ -156,7 +156,7 @@ export function playClockTick(isMuted = false, tickNumber = 0) {
 }
 
 /**
- * Play a rich, authentic mechanical barista / kitchen timer bell chime.
+ * Play a rich, authentic mechanical tea timer bell chime.
  * Dual-engine: plays high-definition timer_chime.wav + Web Audio C6 harmonic bell.
  */
 export function playTimerStartChime(isMuted = false) {
@@ -245,7 +245,7 @@ export function stopSpeechAnnouncement() {
  * Prioritizes pre-rendered studio British female voice MP3s (/audio/timer/instructions/<method>_phase_<idx>.mp3)
  * with robust, resilient fallback to Web Speech API.
  * NEVER blocks timer countdown or UI execution.
- * Example: "Bloom Phase, 45 seconds. Saturate grounds evenly with 3x coffee weight in circular motion. Let coffee bloom and de-gas."
+ * Example: "Awaken Leaves Phase, 20 seconds. Rinse delicate leaves with warm water to release essential oils and prime the teapot."
  */
 export function announcePhase(
   phaseName = 'Bloom Phase', 

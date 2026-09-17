@@ -1,230 +1,33 @@
 export const AMAZON_AFFILIATE_TAG = 'thebrewapp13-20';
 
-// Category Tabs per Track
-export const PRODUCT_CATEGORIES = {
-  coffee: [
-    { id: 'all', label: 'All Coffee Gear' },
-    { id: 'method_kit', label: 'Coffee Kits' },
-    { id: 'grinders_scales', label: 'Grinders & Scales' },
-    { id: 'water_kettles', label: 'Water & Kettles' },
-    { id: 'beans_tea', label: 'Whole Bean Coffees' },
-    { id: 'top_rated', label: 'Top Rated ⭐ 4.9+' }
-  ],
-  tea: [
-    { id: 'all', label: 'All Tea Gear' },
-    { id: 'method_kit', label: 'Tea Steeping Kits' },
-    { id: 'teapots_whisks', label: 'Gaiwans & Whisks' },
-    { id: 'water_kettles', label: 'Kettles & Water' },
-    { id: 'beans_tea', label: 'Imperial Loose Leaf Teas' },
-    { id: 'top_rated', label: 'Top Rated ⭐ 4.9+' }
-  ]
-};
+// Category Tabs for Specialty Tea Gear
+const TEA_PRODUCT_CATEGORIES = [
+  { id: 'all', label: 'All Tea Gear' },
+  { id: 'method_kit', label: 'Tea Steeping Kits' },
+  { id: 'teapots_whisks', label: 'Gaiwans & Whisks' },
+  { id: 'water_kettles', label: 'Kettles & Water' },
+  { id: 'beans_tea', label: 'Imperial Loose Leaf Teas' },
+  { id: 'top_rated', label: 'Top Rated ⭐ 4.9+' }
+];
+
+export const PRODUCT_CATEGORIES = Object.assign([...TEA_PRODUCT_CATEGORIES], {
+  tea: TEA_PRODUCT_CATEGORIES
+});
 
 export const PRODUCTS_DATA = [
-  // ==========================================
-  // 1. COFFEE STORE PRODUCTS (track: 'coffee')
-  // ==========================================
-  {
-    id: 'v60_dripper_kit',
-    name: 'Hario V60 Ceramic Coffee Dripper Starter Set',
-    track: 'coffee',
-    category: 'method_kit',
-    methodIds: ['pour_over', 'classic_pour_over'],
-    badge: 'Barista Choice',
-    rating: 4.9,
-    reviewsCount: 3420,
-    priceRange: '$24 - $28',
-    topRated: true,
-    asin: 'B002VUSWGQ',
-    amazonUrl: `https://www.amazon.com/dp/B002VUSWGQ/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/pour_over_hero.jpg',
-    description: 'The iconic 60-degree spiral ribbed ceramic pour-over cone for maximum flow rate control and pristine citric clarity.'
-  },
-  {
-    id: 'v60_paper_filters',
-    name: 'Hario V60 Paper Filters Size 02 100 Count',
-    track: 'coffee',
-    category: 'method_kit',
-    methodIds: ['pour_over', 'classic_pour_over'],
-    badge: 'Essential Filters',
-    rating: 4.8,
-    reviewsCount: 8900,
-    priceRange: '$9 - $12',
-    asin: 'B001U7EOYA',
-    amazonUrl: `https://www.amazon.com/dp/B001U7EOYA/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/pour_over_hero.jpg',
-    description: 'High-density Japanese oxygen-bleached tabbed paper filters that trap sediment and oils for a tea-like body.'
-  },
-  {
-    id: 'chemex_8cup',
-    name: 'Chemex Classic 8 Cup Glass Pour Over Coffeemaker',
-    track: 'coffee',
-    category: 'method_kit',
-    methodIds: ['chemex'],
-    badge: 'Design Icon',
-    rating: 4.8,
-    reviewsCount: 5120,
-    priceRange: '$48 - $54',
-    asin: 'B000I1WP7W',
-    amazonUrl: `https://www.amazon.com/dp/B000I1WP7W/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/chemex_hero.jpg',
-    description: 'Non-porous Borosilicate glass carafe with polished wood collar and leather tie. Uses heavy Chemex bond filters.'
-  },
-  {
-    id: 'bodum_french_press',
-    name: 'Bodum Chambord French Press Coffee Maker 34 oz',
-    track: 'coffee',
-    category: 'method_kit',
-    methodIds: ['french_press'],
-    badge: 'Immersion Classic',
-    rating: 4.7,
-    reviewsCount: 12450,
-    priceRange: '$35 - $42',
-    asin: 'B00008XEWG',
-    amazonUrl: `https://www.amazon.com/dp/B00008XEWG/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/french_press.jpg',
-    description: 'Heat-resistant borosilicate glass with stainless steel frame and 3-part mesh plunger for heavy chocolate body.'
-  },
-  {
-    id: 'bialetti_moka_express',
-    name: 'Bialetti Moka Express Stovetop Espresso Maker 6 Cup',
-    track: 'coffee',
-    category: 'method_kit',
-    methodIds: ['moka_pot'],
-    badge: 'Italian Legend',
-    rating: 4.7,
-    reviewsCount: 21500,
-    priceRange: '$38 - $45',
-    asin: 'B0000CF3Q6',
-    amazonUrl: `https://www.amazon.com/dp/B0000CF3Q6/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/french_press.jpg',
-    description: 'Octagonal food-grade aluminum body made in Italy. Generates 1.5 bar steam pressure for syrupy crema-rich coffee.'
-  },
-  {
-    id: 'aeropress_original',
-    name: 'AeroPress Original Coffee and Espresso Maker',
-    track: 'coffee',
-    category: 'method_kit',
-    methodIds: ['aeropress'],
-    badge: 'Travel Champion',
-    rating: 4.9,
-    reviewsCount: 18900,
-    priceRange: '$39 - $44',
-    topRated: true,
-    asin: 'B0047BIWSK',
-    amazonUrl: `https://www.amazon.com/dp/B0047BIWSK/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/moka_pot_hero.jpg',
-    description: 'Patented air-pressure immersion technology brewing zero-bitterness coffee in 60 seconds.'
-  },
-  {
-    id: 'baratza_encore',
-    name: 'Baratza Encore Conical Burr Coffee Grinder',
-    track: 'coffee',
-    category: 'grinders_scales',
-    methodIds: ['pour_over', 'french_press', 'drip_brewer', 'moka_pot', 'aeropress'],
-    badge: 'Home Grinder King',
-    rating: 4.7,
-    reviewsCount: 9400,
-    priceRange: '$149 - $169',
-    asin: 'B007F183LK',
-    amazonUrl: `https://www.amazon.com/dp/B007F183LK/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/aeropress_hero.jpg',
-    description: '40 individual coarseness settings from 250 to 1200 microns. 40mm alloy steel burrs engineered in Europe.'
-  },
-  {
-    id: 'timemore_black_mirror',
-    name: 'Timemore Black Mirror Basic 2.0 Digital Coffee Scale with Timer',
-    track: 'coffee',
-    category: 'grinders_scales',
-    methodIds: ['pour_over', 'french_press', 'drip_brewer', 'moka_pot', 'espresso', 'aeropress'],
-    badge: 'Precision 0.1g',
-    rating: 4.7,
-    reviewsCount: 3100,
-    priceRange: '$52 - $59',
-    asin: 'B0CKYV8WRC',
-    amazonUrl: `https://www.amazon.com/dp/B0CKYV8WRC/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/medium_grind.jpg',
-    description: 'Ultra-fast 0.1g precision sensor with auto-starting brew timer, hidden LED display, and USB-C rechargeable battery.'
-  },
-  {
-    id: 'fellow_stagg_ekg',
-    name: 'Fellow Stagg EKG Electric Gooseneck Kettle 0.9L',
-    track: 'coffee',
-    category: 'water_kettles',
-    methodIds: ['pour_over', 'french_press', 'drip_brewer', 'aeropress'],
-    badge: 'Gold Standard',
-    rating: 4.8,
-    reviewsCount: 7800,
-    priceRange: '$165 - $195',
-    asin: 'B077JBQZPX',
-    amazonUrl: `https://www.amazon.com/dp/B077JBQZPX/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/coffee_setup.jpg',
-    description: 'PID degree-by-degree temperature control (135°F - 212°F) with precision counterbalanced gooseneck pour spout.'
-  },
-  {
-    id: 'third_wave_water',
-    name: 'Third Wave Water Coffee Mineral Packets 12 Pack',
-    track: 'coffee',
-    category: 'water_kettles',
-    methodIds: ['pour_over', 'french_press', 'drip_brewer', 'moka_pot', 'espresso', 'aeropress'],
-    badge: 'SCA Mineral Profile',
-    rating: 4.8,
-    reviewsCount: 1650,
-    priceRange: '$15 - $18',
-    asin: 'B07732KPT8',
-    amazonUrl: `https://www.amazon.com/dp/B07732KPT8/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/tea_kettle.jpg',
-    description: 'Remineralizes distilled or RO water with exact magnesium, calcium, and sodium ratios to eliminate papery sourness.'
-  },
-  {
-    id: 'stumptown_hair_bender',
-    name: 'Stumptown Coffee Roasters Hair Bender Whole Bean 12 oz',
-    track: 'coffee',
-    category: 'beans_tea',
-    methodIds: ['pour_over', 'french_press', 'aeropress', 'espresso'],
-    badge: 'Specialty Legend',
-    rating: 4.9,
-    reviewsCount: 3420,
-    priceRange: '$16 - $19',
-    topRated: true,
-    asin: 'B07QHDMQGH',
-    amazonUrl: `https://www.amazon.com/dp/B07QHDMQGH/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/coffee_setup.jpg',
-    description: 'The cup that started a movement. A complex, rich blend of Latin America, Africa, and Indonesia featuring sweet cherry, dark chocolate, and toffee.'
-  },
-  {
-    id: 'lavazza_super_crema',
-    name: 'Lavazza Super Crema Whole Bean Coffee Blend 2.2 lb',
-    track: 'coffee',
-    category: 'beans_tea',
-    methodIds: ['espresso', 'moka_pot', 'french_press', 'pour_over'],
-    badge: 'Crema Champion',
-    rating: 4.8,
-    reviewsCount: 38900,
-    priceRange: '$22 - $26',
-    topRated: true,
-    asin: 'B000SDKDM4',
-    amazonUrl: `https://www.amazon.com/dp/B000SDKDM4/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/avatar_roast_beans.jpg',
-    description: 'Medium espresso roast crafted in Italy. A velvet harmonic blend of washed and natural beans with notes of hazelnut, roasted almond, and brown sugar.'
-  },
-
-  // =======================================
-  // 2. TEA STORE PRODUCTS (track: 'tea')
-  // =======================================
   {
     id: 'gaiwan_tea_set',
     name: 'Gongfu Ceramic Gaiwan Teapot Tea Set',
     track: 'tea',
     category: 'method_kit',
-    methodIds: ['darjeeling_tea', 'chai_masala', 'english_breakfast', 'green_tea', 'matcha_ceremony', 'oolong_tea', 'ceylon_tea', 'white_tea', 'turmeric_tea'],
+    methodIds: ['darjeeling_tea', 'chai_masala', 'english_breakfast', 'green_tea', 'matcha_tea', 'oolong_tea', 'ceylon_tea', 'white_tea', 'turmeric_tea', 'puerh_tea'],
     badge: 'Ceremony Grade',
     rating: 4.8,
     reviewsCount: 840,
     priceRange: '$32 - $39',
     asin: 'B01AXZA9CU',
     amazonUrl: `https://www.amazon.com/dp/B01AXZA9CU/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/avatar_roast_beans.jpg',
+    image: '/tea_ceremony.jpg',
     description: 'Traditional 100mL porcelain lidded Gaiwan set for precision multi-steep Gongfu tea infusions.'
   },
   {
@@ -232,7 +35,7 @@ export const PRODUCTS_DATA = [
     name: 'Japanese Bamboo Chasen Matcha Whisk & Chawan Scoop Set',
     track: 'tea',
     category: 'teapots_whisks',
-    methodIds: ['matcha_ceremony'],
+    methodIds: ['matcha_tea'],
     badge: 'Uji Handcrafted',
     rating: 4.9,
     reviewsCount: 4210,
@@ -248,7 +51,7 @@ export const PRODUCTS_DATA = [
     name: 'COSORI Electric Gooseneck Kettle with Variable Temp Control & Presets',
     track: 'tea',
     category: 'water_kettles',
-    methodIds: ['darjeeling_tea', 'chai_masala', 'english_breakfast', 'green_tea', 'matcha_ceremony', 'oolong_tea', 'ceylon_tea', 'white_tea', 'turmeric_tea'],
+    methodIds: ['darjeeling_tea', 'chai_masala', 'english_breakfast', 'green_tea', 'matcha_tea', 'oolong_tea', 'ceylon_tea', 'white_tea', 'turmeric_tea', 'puerh_tea'],
     badge: 'Tea Temp Presets',
     rating: 4.8,
     reviewsCount: 14200,
@@ -256,7 +59,7 @@ export const PRODUCTS_DATA = [
     topRated: true,
     asin: 'B081LQMXKP',
     amazonUrl: `https://www.amazon.com/dp/B081LQMXKP/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/tea_ceremony.jpg',
+    image: '/tea_kettle.jpg',
     description: 'Precision temperature presets for Green Tea (180°F), White Tea (185°F), Oolong (190°F), and Black Tea (205°F).'
   },
   {
@@ -264,7 +67,7 @@ export const PRODUCTS_DATA = [
     name: 'Ippodo Tea Ummon-no-mukai Ceremonial Grade Matcha 40g Tin',
     track: 'tea',
     category: 'beans_tea',
-    methodIds: ['matcha_ceremony'],
+    methodIds: ['matcha_tea'],
     badge: 'Kyoto Imperial',
     rating: 4.9,
     reviewsCount: 1150,
@@ -272,7 +75,7 @@ export const PRODUCTS_DATA = [
     topRated: true,
     asin: 'B003KYSOCE',
     amazonUrl: `https://www.amazon.com/dp/B003KYSOCE/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/tea_kettle.jpg',
+    image: '/tea_ceremony.jpg',
     description: 'First-harvest shade-grown green tea leaves stone-ground in Kyoto, Japan. Deep emerald foam with intense savory umami.'
   },
   {
@@ -303,7 +106,7 @@ export const PRODUCTS_DATA = [
     priceRange: '$14 - $17',
     asin: 'B00VFYPK82',
     amazonUrl: `https://www.amazon.com/dp/B00VFYPK82/?tag=${AMAZON_AFFILIATE_TAG}`,
-    image: '/tea_ceremony.jpg',
+    image: '/tea_kettle.jpg',
     description: 'Robust blend of Assam second-flush orthodox black tea leaves delivering rich maltiness, amber cup, and bold body.'
   },
   {
@@ -311,7 +114,7 @@ export const PRODUCTS_DATA = [
     name: 'Yunnan Sourcing Aged Shou Ripe Pu-erh Tea Cake',
     track: 'tea',
     category: 'beans_tea',
-    methodIds: ['turmeric_tea', 'english_breakfast'],
+    methodIds: ['turmeric_tea', 'english_breakfast', 'puerh_tea'],
     badge: 'Aged Imperial',
     rating: 4.9,
     reviewsCount: 310,
@@ -323,4 +126,3 @@ export const PRODUCTS_DATA = [
     description: 'Post-fermented tea cake from Menghai with deep camphor wood, damp earth sweetness, and velvet chocolate body.'
   }
 ];
-

@@ -11,7 +11,6 @@ import {
   RefreshCw, 
   Tag, 
   Layers,
-  Coffee,
   Leaf,
   ChevronDown,
   ChevronUp
@@ -42,8 +41,7 @@ function sanitizeNewsText(str) {
 }
 
 export default function WorldNewsSection({ trackMode }) {
-  const isCoffee = trackMode === 'coffee';
-  const [isExpanded, setIsExpanded] = useState(false);
+const [isExpanded, setIsExpanded] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -63,7 +61,6 @@ export default function WorldNewsSection({ trackMode }) {
       // Category filter
       const matchesCategory = 
         selectedCategory === 'all' ||
-        (selectedCategory === 'coffee' && item.category === 'coffee') ||
         (selectedCategory === 'tea' && item.category === 'tea') ||
         (selectedCategory === 'origin' && (item.tag.toLowerCase().includes('origin') || item.tag.toLowerCase().includes('farming') || item.tag.toLowerCase().includes('harvest'))) ||
         (selectedCategory === 'competition' && (item.tag.toLowerCase().includes('competition') || item.tag.toLowerCase().includes('events')));
@@ -94,9 +91,7 @@ export default function WorldNewsSection({ trackMode }) {
     <section 
       id="world-news" 
       className={`mt-14 p-6 sm:p-8 md:p-10 rounded-3xl transition-all duration-700 shadow-2xl border ${
-        isCoffee 
-          ? 'glass-panel-coffee border-[#A66E38]/35' 
-          : 'glass-panel-tea border-sage-500/35'
+        'glass-panel-tea border-sage-500/35'
       }`}
     >
       {/* Section Header */}
@@ -104,8 +99,8 @@ export default function WorldNewsSection({ trackMode }) {
         isExpanded ? 'pb-6 border-b border-white/10' : ''
       }`}>
         <div>
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md text-[11px] font-mono font-extrabold uppercase tracking-widest text-amber-gold border border-amber-gold/30 mb-3 shadow">
-            <Globe2 className="w-3.5 h-3.5 text-amber-gold" />
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md text-[11px] font-mono font-extrabold uppercase tracking-widest text-sage-300 border border-sage-500/30 mb-3 shadow">
+            <Globe2 className="w-3.5 h-3.5 text-sage-300" />
             <span>Brew News Roundup • Curated RSS Feeds</span>
           </div>
 
@@ -117,19 +112,19 @@ export default function WorldNewsSection({ trackMode }) {
           </h3>
           
           <p className="text-xs sm:text-sm text-cream-soft/80 mt-2 max-w-2xl leading-relaxed">
-            Curated briefings, harvest dispatches, competition highlights, and market analytics pulled directly from Daily Coffee News, World Tea Press, and trade publications.
+            Curated briefings, harvest dispatches, competition highlights, and market analytics pulled directly from World Tea News, Global Tea Hut, and specialty tea publications.
           </p>
         </div>
 
         {/* Status Card & Expand/Collapse Controls */}
         <div className="flex flex-wrap items-center gap-3 self-start lg:self-center">
           <div className="p-3 sm:p-3.5 rounded-2xl bg-black/40 border border-white/10 flex items-center gap-3 shadow-inner">
-            <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-gold">
+            <div className="w-8 h-8 rounded-xl bg-sage-500/20 border border-sage-400/40 flex items-center justify-center text-sage-300">
               <Newspaper className="w-4 h-4" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-amber-gold">
-                <span className="w-2 h-2 rounded-full bg-amber-gold" />
+              <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-sage-300">
+                <span className="w-2 h-2 rounded-full bg-sage-500" />
                 <span>Curated via RSS</span>
               </div>
               <div className="text-[10px] text-cream-soft/70 font-mono">
@@ -143,9 +138,7 @@ export default function WorldNewsSection({ trackMode }) {
             onClick={() => setIsExpanded((prev) => !prev)}
             className={`px-5 sm:px-6 py-3.5 rounded-2xl text-xs font-mono font-extrabold uppercase tracking-wider flex items-center gap-2 shadow-xl transition-all active:scale-95 whitespace-nowrap ${
               isExpanded
-                ? isCoffee 
-                  ? 'btn-tactile-coffee text-[#140C08]' 
-                  : 'btn-tactile-tea text-white'
+                ? 'btn-tactile-tea text-white'
                 : 'bg-white/[0.08] text-cream-light hover:bg-white/[0.15] border border-white/[0.12]'
             }`}
             title={isExpanded ? 'Collapse Brew News section' : 'Expand Brew News section'}
@@ -173,11 +166,11 @@ export default function WorldNewsSection({ trackMode }) {
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-3.5 py-2 rounded-2xl text-xs font-mono font-bold uppercase tracking-wider transition-all whitespace-nowrap active:scale-95 flex items-center gap-1.5 ${
                   isSelected
-                    ? 'btn-tactile-amber text-espresso-950 shadow-lg shadow-amber-gold/20 scale-105'
+                    ? 'btn-tactile-tea text-espresso-950 shadow-lg shadow-amber-gold/20 scale-105'
                     : 'bg-white/[0.06] text-cream-soft/80 hover:bg-white/[0.12] hover:text-cream-light border border-white/10'
                 }`}
               >
-                {cat.id === 'coffee' && <Coffee className="w-3.5 h-3.5" />}
+                
                 {cat.id === 'tea' && <Leaf className="w-3.5 h-3.5" />}
                 {cat.id === 'all' && <Layers className="w-3.5 h-3.5" />}
                 <span>{cat.label}</span>
@@ -194,7 +187,7 @@ export default function WorldNewsSection({ trackMode }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search news briefs, origins, topics..."
-            className="w-full pl-9 pr-8 py-2.5 rounded-2xl bg-black/40 border border-white/15 text-xs text-cream-light placeholder-cream-soft/50 focus:outline-none focus:border-amber-gold transition-all shadow-inner"
+            className="w-full pl-9 pr-8 py-2.5 rounded-2xl bg-black/40 border border-white/15 text-xs text-cream-light placeholder-cream-soft/50 focus:outline-none focus:border-sage-500 transition-all shadow-inner"
           />
           {searchQuery && (
             <button
@@ -217,7 +210,7 @@ export default function WorldNewsSection({ trackMode }) {
             return (
               <article
                 key={article.id}
-                className="p-6 sm:p-7 rounded-3xl bg-espresso-950/70 border border-white/10 hover:border-amber-gold/50 transition-all duration-300 flex flex-col justify-between group shadow-xl hover:-translate-y-1 hover:shadow-2xl"
+                className="p-6 sm:p-7 rounded-3xl bg-espresso-950/70 border border-white/10 hover:border-sage-500/50 transition-all duration-300 flex flex-col justify-between group shadow-xl hover:-translate-y-1 hover:shadow-2xl"
               >
                 <div>
                   {/* Article Metadata Header */}
@@ -227,7 +220,7 @@ export default function WorldNewsSection({ trackMode }) {
                       <span className={`px-2.5 py-1 rounded-xl text-[10px] font-mono font-extrabold uppercase tracking-wider border shadow-sm ${
                         isTeaArticle
                           ? 'bg-sage-500/20 text-sage-300 border-sage-500/40'
-                          : 'bg-amber-500/20 text-amber-gold border-amber-400/40'
+                          : 'bg-sage-500/20 text-sage-300 border-sage-400/40'
                       }`}>
                         {article.source}
                       </span>
@@ -240,7 +233,7 @@ export default function WorldNewsSection({ trackMode }) {
 
                     <div className="flex items-center gap-3 text-[11px] font-mono text-cream-soft/60">
                       <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-amber-gold" />
+                        <Calendar className="w-3 h-3 text-sage-300" />
                         <span>{article.publishedDate}</span>
                       </span>
                       <span className="flex items-center gap-1">
@@ -251,7 +244,7 @@ export default function WorldNewsSection({ trackMode }) {
                   </div>
 
                   {/* Headline */}
-                  <h4 className="font-serif text-lg sm:text-xl font-bold text-cream-light mb-3 leading-snug group-hover:text-amber-gold transition-colors">
+                  <h4 className="font-serif text-lg sm:text-xl font-bold text-cream-light mb-3 leading-snug group-hover:text-sage-300 transition-colors">
                     {sanitizeNewsText(article.title)}
                   </h4>
 
@@ -263,8 +256,8 @@ export default function WorldNewsSection({ trackMode }) {
                   {/* Executive Key Points */}
                   {article.keyPoints && article.keyPoints.length > 0 && (
                     <div className="p-3.5 rounded-2xl bg-black/40 border border-white/[0.08] mb-6 shadow-inner">
-                      <div className="text-[10px] font-mono font-extrabold text-amber-gold uppercase tracking-wider mb-2 flex items-center gap-1">
-                        <Sparkles className="w-3 h-3 text-amber-gold" />
+                      <div className="text-[10px] font-mono font-extrabold text-sage-300 uppercase tracking-wider mb-2 flex items-center gap-1">
+                        <Sparkles className="w-3 h-3 text-sage-300" />
                         <span>Key Takeaways</span>
                       </div>
                       <ul className="space-y-1.5 text-[11px] text-cream-soft/85 font-medium">
@@ -289,7 +282,7 @@ export default function WorldNewsSection({ trackMode }) {
                     href={article.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-amber-gold hover:text-espresso-950 text-cream-light text-xs font-mono font-bold transition-all border border-white/15 flex items-center gap-1.5 active:scale-95 group/link shadow"
+                    className="px-4 py-2 rounded-xl bg-white/[0.08] hover:bg-sage-500 hover:text-espresso-950 text-cream-light text-xs font-mono font-bold transition-all border border-white/15 flex items-center gap-1.5 active:scale-95 group/link shadow"
                     title={`Read full coverage on ${article.source}`}
                   >
                     <span>Read on {article.source}</span>

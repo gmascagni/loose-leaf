@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, X, Coffee, Leaf, ShoppingBag, BookOpen, GraduationCap, ChevronRight, Star, Compass } from 'lucide-react';
+import { Search, X, Leaf, ShoppingBag, BookOpen, GraduationCap, ChevronRight, Star, Compass } from 'lucide-react';
 import { BREW_METHODS, TERROIR_ATLAS } from '../data/brewData';
 import { PRODUCTS_DATA } from '../data/productsData';
 import { COMMUNITY_RECIPES } from '../data/communityRecipesData';
@@ -43,7 +43,7 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
     if (!searchQuery) return true;
     return (
       rec.title.toLowerCase().includes(searchQuery) ||
-      rec.beanName.toLowerCase().includes(searchQuery) ||
+      (rec.teaName || rec.beanName).toLowerCase().includes(searchQuery) ||
       rec.author.toLowerCase().includes(searchQuery)
     );
   });
@@ -92,17 +92,17 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-20 px-4 bg-black/85 backdrop-blur-xl animate-fade-in">
       
-      <div className="relative max-w-3xl w-full rounded-3xl bg-[#14110E] border-2 border-amber-gold/50 shadow-2xl overflow-hidden text-cream-light flex flex-col max-h-[85vh]">
+      <div className="relative max-w-3xl w-full rounded-3xl bg-[#14110E] border-2 border-sage-500/50 shadow-2xl overflow-hidden text-cream-light flex flex-col max-h-[85vh]">
         
         {/* Search Input Bar */}
         <div className="p-4 sm:p-6 border-b border-white/10 flex items-center gap-3 bg-black/40">
-          <Search className="w-6 h-6 text-amber-gold flex-shrink-0 animate-pulse" />
+          <Search className="w-6 h-6 text-sage-300 flex-shrink-0 animate-pulse" />
           <input
             type="text"
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search recipes, grind sizes, gear, V60, kettles, origins..."
+            placeholder="Search tea recipes, leaf grades, gaiwans, kyusus, terroirs..."
             className="w-full bg-transparent text-lg sm:text-xl font-serif text-cream-light placeholder-stone-500 focus:outline-none"
           />
           <button
@@ -120,31 +120,31 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
         >
           <button
             onClick={() => setActiveCategory('all')}
-            className={`px-3 py-1 rounded-xl transition-all ${activeCategory === 'all' ? 'bg-amber-gold text-espresso-950 shadow-md font-extrabold' : 'text-stone-400 hover:text-cream-light'}`}
+            className={`px-3 py-1 rounded-xl transition-all ${activeCategory === 'all' ? 'bg-sage-500 text-espresso-950 shadow-md font-extrabold' : 'text-stone-400 hover:text-cream-light'}`}
           >
             All Results ({totalResultsCount})
           </button>
           <button
             onClick={() => setActiveCategory('recipes')}
-            className={`px-3 py-1 rounded-xl transition-all ${activeCategory === 'recipes' ? 'bg-amber-gold text-espresso-950 shadow-md font-extrabold' : 'text-stone-400 hover:text-cream-light'}`}
+            className={`px-3 py-1 rounded-xl transition-all ${activeCategory === 'recipes' ? 'bg-sage-500 text-espresso-950 shadow-md font-extrabold' : 'text-stone-400 hover:text-cream-light'}`}
           >
             Recipes ({matchingRecipes.length})
           </button>
           <button
             onClick={() => setActiveCategory('methods')}
-            className={`px-3 py-1 rounded-xl transition-all ${activeCategory === 'methods' ? 'bg-amber-gold text-espresso-950 shadow-md font-extrabold' : 'text-stone-400 hover:text-cream-light'}`}
+            className={`px-3 py-1 rounded-xl transition-all ${activeCategory === 'methods' ? 'bg-sage-500 text-espresso-950 shadow-md font-extrabold' : 'text-stone-400 hover:text-cream-light'}`}
           >
             Methods ({matchingMethods.length})
           </button>
           <button
             onClick={() => setActiveCategory('gear')}
-            className={`px-3 py-1 rounded-xl transition-all ${activeCategory === 'gear' ? 'bg-amber-gold text-espresso-950 shadow-md font-extrabold' : 'text-stone-400 hover:text-cream-light'}`}
+            className={`px-3 py-1 rounded-xl transition-all ${activeCategory === 'gear' ? 'bg-sage-500 text-espresso-950 shadow-md font-extrabold' : 'text-stone-400 hover:text-cream-light'}`}
           >
             Gear ({matchingProducts.length})
           </button>
           <button
             onClick={() => setActiveCategory('origins')}
-            className={`px-3 py-1 rounded-xl transition-all ${activeCategory === 'origins' ? 'bg-amber-gold text-espresso-950 shadow-md font-extrabold' : 'text-stone-400 hover:text-cream-light'}`}
+            className={`px-3 py-1 rounded-xl transition-all ${activeCategory === 'origins' ? 'bg-sage-500 text-espresso-950 shadow-md font-extrabold' : 'text-stone-400 hover:text-cream-light'}`}
           >
             Terroirs ({matchingOrigins.length})
           </button>
@@ -156,7 +156,7 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
           {/* 1. Shared Community Recipes */}
           {(activeCategory === 'all' || activeCategory === 'recipes') && matchingRecipes.length > 0 && (
             <div>
-              <div className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-amber-gold mb-3 flex items-center gap-1.5">
+              <div className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-sage-300 mb-3 flex items-center gap-1.5">
                 <BookOpen className="w-3.5 h-3.5" />
                 <span>Community Recipes ({matchingRecipes.length})</span>
               </div>
@@ -165,18 +165,18 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
                   <div
                     key={recipe.id}
                     onClick={() => handleSelectRecipe(recipe)}
-                    className="p-3.5 rounded-2xl bg-black/40 border border-white/10 hover:border-amber-gold/50 transition-all flex items-center justify-between gap-3 group cursor-pointer active:scale-[0.99]"
+                    className="p-3.5 rounded-2xl bg-black/40 border border-white/10 hover:border-sage-500/50 transition-all flex items-center justify-between gap-3 group cursor-pointer active:scale-[0.99]"
                   >
                     <div>
-                      <div className="font-serif font-bold text-cream-light text-sm group-hover:text-amber-gold transition-colors">
+                      <div className="font-serif font-bold text-cream-light text-sm group-hover:text-sage-300 transition-colors">
                         {recipe.title}
                       </div>
                       <div className="text-[11px] text-stone-400 mt-0.5">
-                        {recipe.methodName} • {recipe.beanName} • <strong className="text-amber-gold font-mono">Ratio 1:{recipe.ratio}</strong>
+                        {recipe.methodName} • {recipe.teaName || recipe.beanName} • <strong className="text-sage-300 font-mono">Ratio 1:{recipe.ratio}</strong>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-1 text-amber-gold font-mono font-bold text-xs bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-gold/30">
-                      <Star className="w-3 h-3 fill-current text-amber-gold" />
+                    <div className="flex items-center space-x-1 text-sage-300 font-mono font-bold text-xs bg-sage-500/10 px-2.5 py-1 rounded-lg border border-sage-500/30">
+                      <Star className="w-3 h-3 fill-current text-sage-300" />
                       <span>{recipe.rating}</span>
                     </div>
                   </div>
@@ -188,26 +188,26 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
           {/* 2. Brewing Devices & Methods */}
           {(activeCategory === 'all' || activeCategory === 'methods') && matchingMethods.length > 0 && (
             <div>
-              <div className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-amber-gold mb-3 flex items-center gap-1.5">
-                <Coffee className="w-3.5 h-3.5" />
-                <span>Brewing Devices & Varietals ({matchingMethods.length})</span>
+              <div className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-sage-300 mb-3 flex items-center gap-1.5">
+                <Leaf className="w-3.5 h-3.5 text-sage-400" />
+                <span>Steeping Vessels & Cultivars ({matchingMethods.length})</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {matchingMethods.map((method) => (
                   <div
                     key={method.id}
                     onClick={() => handleSelectMethod(method)}
-                    className="p-3.5 rounded-2xl bg-black/40 border border-white/10 hover:border-amber-gold/50 transition-all flex items-center justify-between gap-2 group cursor-pointer"
+                    className="p-3.5 rounded-2xl bg-black/40 border border-white/10 hover:border-sage-500/50 transition-all flex items-center justify-between gap-2 group cursor-pointer"
                   >
                     <div>
-                      <div className="font-serif font-bold text-cream-light group-hover:text-amber-gold transition-colors">
+                      <div className="font-serif font-bold text-cream-light group-hover:text-sage-300 transition-colors">
                         {method.name}
                       </div>
                       <div className="text-[10px] font-mono text-stone-400 mt-0.5">
                         Temp: {method.tempF}°F • Ratio: 1:{method.ratio}
                       </div>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-stone-500 group-hover:text-amber-gold transition-colors" />
+                    <ChevronRight className="w-4 h-4 text-stone-500 group-hover:text-sage-300 transition-colors" />
                   </div>
                 ))}
               </div>
@@ -217,9 +217,9 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
           {/* 3. Gear & Amazon Affiliate Products */}
           {(activeCategory === 'all' || activeCategory === 'gear') && matchingProducts.length > 0 && (
             <div>
-              <div className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-amber-gold mb-3 flex items-center gap-1.5">
+              <div className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-sage-300 mb-3 flex items-center gap-1.5">
                 <ShoppingBag className="w-3.5 h-3.5" />
-                <span>Curated Brew Gear & Beans ({matchingProducts.length})</span>
+                <span>Curated Tea Gear & Teaware ({matchingProducts.length})</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {matchingProducts.map((prod) => (
@@ -231,14 +231,14 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
                     data-product-name={prod.name}
                     data-link-id={prod.id}
                     data-context="global_search"
-                    className="p-3 rounded-2xl bg-black/40 border border-white/10 hover:border-amber-gold/50 transition-all flex items-center gap-3 group"
+                    className="p-3 rounded-2xl bg-black/40 border border-white/10 hover:border-sage-500/50 transition-all flex items-center gap-3 group"
                   >
                     <img src={prod.image} alt={prod.name} className="w-12 h-12 rounded-xl object-cover border border-white/10" />
                     <div className="overflow-hidden">
-                      <div className="font-serif font-bold text-cream-light truncate group-hover:text-amber-gold transition-colors text-xs">
+                      <div className="font-serif font-bold text-cream-light truncate group-hover:text-sage-300 transition-colors text-xs">
                         {prod.name}
                       </div>
-                      <div className="text-[10px] font-mono text-amber-gold mt-0.5">
+                      <div className="text-[10px] font-mono text-sage-300 mt-0.5">
                         {prod.priceRange} • ⭐ {prod.rating}
                       </div>
                     </div>
@@ -251,7 +251,7 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
           {/* 4. Terroirs & Origins */}
           {(activeCategory === 'all' || activeCategory === 'origins') && matchingOrigins.length > 0 && (
             <div>
-              <div className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-amber-gold mb-3 flex items-center gap-1.5">
+              <div className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-sage-300 mb-3 flex items-center gap-1.5">
                 <GraduationCap className="w-3.5 h-3.5" />
                 <span>Terroirs & Origin Terroir Atlas ({matchingOrigins.length})</span>
               </div>
@@ -260,14 +260,14 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
                   <div
                     key={orig.id}
                     onClick={() => handleSelectOrigin(orig)}
-                    className="p-3.5 rounded-2xl bg-black/40 border border-white/10 hover:border-amber-gold/50 transition-all flex flex-col justify-between gap-2 group cursor-pointer active:scale-[0.99]"
+                    className="p-3.5 rounded-2xl bg-black/40 border border-white/10 hover:border-sage-500/50 transition-all flex flex-col justify-between gap-2 group cursor-pointer active:scale-[0.99]"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="font-serif font-bold text-cream-light text-sm flex items-center gap-2 group-hover:text-amber-gold transition-colors">
+                      <div className="font-serif font-bold text-cream-light text-sm flex items-center gap-2 group-hover:text-sage-300 transition-colors">
                         <span className="text-base">{orig.flag || '🌍'}</span>
                         <span>{orig.country}</span>
                       </div>
-                      <span className="text-[10px] font-mono text-amber-gold bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-gold/30">
+                      <span className="text-[10px] font-mono text-sage-300 bg-sage-500/10 px-2 py-0.5 rounded-full border border-sage-500/30">
                         {orig.altitude || 'High Altitude'}
                       </span>
                     </div>
@@ -294,12 +294,12 @@ export default function GlobalSearchModal({ isOpen, onClose, onSelectMethod, onS
           {/* No Matching Results Empty Callout */}
           {totalResultsCount === 0 && (
             <div className="p-8 text-center bg-black/40 rounded-2xl border border-white/10 space-y-3">
-              <Compass className="w-8 h-8 text-amber-gold mx-auto animate-spin-slow" />
+              <Compass className="w-8 h-8 text-sage-300 mx-auto animate-spin-slow" />
               <p className="text-stone-300 font-medium">
-                No matching results found for <strong className="text-amber-gold">"{query}"</strong>.
+                No matching results found for <strong className="text-sage-300">"{query}"</strong>.
               </p>
               <p className="text-stone-400 text-[11px]">
-                Try searching for <code className="text-amber-gold">V60</code>, <code className="text-amber-gold">Ethiopia</code>, <code className="text-amber-gold">Kettle</code>, or <code className="text-amber-gold">Grinder</code>.
+                Try searching for <code className="text-sage-300">V60</code>, <code className="text-sage-300">Ethiopia</code>, <code className="text-sage-300">Kettle</code>, or <code className="text-sage-300">Grinder</code>.
               </p>
             </div>
           )}

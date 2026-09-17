@@ -12,16 +12,14 @@ import {
   playClockTick,
   playMechanicalClick
 } from '../utils/audioSynth';
-import V60ProTipModal from './V60ProTipModal';
+import TeaSteepingProTipModal from './TeaSteepingProTipModal';
 
 export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams, unitSystem = 'imperial', isMuted, setIsMuted, onPrevStep, onOpenJournal }) {
-  const isCoffee = trackMode === 'coffee';
-
   // Default fallback phases if method phases are not loaded
   const defaultPhases = [
-    { name: 'Bloom Phase', durationSec: 45, waterMultiplier: 3, instruction: 'Saturate grounds evenly in gentle circular motions. Allow bed to expand and de-gas.' },
-    { name: 'Main Concentric Pour', durationSec: 60, waterMultiplier: 0.6, instruction: 'Pour in steady spirals from center outward. Maintain consistent slurry level.' },
-    { name: 'Final Drawdown', durationSec: 60, waterMultiplier: 1.0, instruction: 'Gently top up remaining water in center. Allow full even drawdown.' }
+    { name: 'Leaf Awaken & Rinse', durationSec: 15, waterMultiplier: 10, instruction: 'Flash rinse tea leaves with hot water to hydrate and open delicate curls, then discard rinse.' },
+    { name: 'Primary Infusion', durationSec: 60, waterMultiplier: 25, instruction: 'Pour steadily along the gaiwan or pot perimeter. Steep to develop liquor body and floral aroma.' },
+    { name: 'Final Decant & Serve', durationSec: 45, waterMultiplier: 0, instruction: 'Decant completely into a cha hai pitcher or cups so leaves do not over-extract.' }
   ];
 
   const rawPhases = activeMethod?.phases && activeMethod.phases.length > 0 ? activeMethod.phases : defaultPhases;
@@ -221,7 +219,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
         setTimeLeft(secondsToRun);
       }
 
-      // 1. Play authentic barista bell chime immediately
+      // 1. Play authentic tea timer bell chime immediately
       playTimerStartChime(localMuted);
 
       // 2. Set wall-clock target timestamp
@@ -233,7 +231,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
       setIsRunning(true);
 
       // 4. Asynchronous Spoken Voice Guidance:
-      // When the clock starts, speak the Active Extraction Instruction for the current phase!
+      // When the clock starts, speak the Active Steeping Instruction for the current phase!
       // If user pauses and resumes within the same phase, do NOT re-read from start repeatedly.
       const phaseIdx = currentPhaseIndex;
       const hasAnnounced = announcedPhasesRef.current.has(phaseIdx);
@@ -241,7 +239,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
       if (!localMuted && !hasAnnounced) {
         announcedPhasesRef.current.add(phaseIdx);
         setIsAnnouncing(true);
-        const nameToSay = activePhase?.name || 'Extraction Phase';
+        const nameToSay = activePhase?.name || 'Steeping Phase';
         const instructionToSay = activePhase?.instruction || '';
         setAnnouncementText(instructionToSay || nameToSay);
 
@@ -385,27 +383,21 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
   const [isProTipOpen, setIsProTipOpen] = useState(false);
 
   return (
-    <div className={`p-5 sm:p-8 md:p-10 lg:p-12 rounded-3xl ${
-      isCoffee ? 'glass-panel-coffee border-[#A66E38]/40' : 'glass-panel-tea border-sage-500/40'
-    } shadow-2xl transition-all duration-500 relative overflow-hidden`}>
+    <div className="p-5 sm:p-8 md:p-10 lg:p-12 rounded-3xl glass-panel-tea border-sage-500/40 shadow-2xl transition-all duration-500 relative overflow-hidden">
       
       {/* Background Radial Glow */}
-      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-3xl pointer-events-none ${
-        isCoffee ? 'bg-[#A66E38]/10' : 'bg-emerald-500/10'
-      }`} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-3xl pointer-events-none bg-emerald-500/10" />
 
       {/* Header Info */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-white/10 relative z-10">
         <div>
-          <div className={`inline-flex items-center space-x-2 text-xs font-mono font-extrabold uppercase tracking-[0.2em] mb-1.5 ${
-            isCoffee ? 'text-[#D2A06E]' : 'text-sage-300'
-          }`}>
+          <div className="inline-flex items-center space-x-2 text-xs font-mono font-extrabold uppercase tracking-[0.2em] mb-1.5 text-sage-300">
             <Sparkles className="w-4 h-4 animate-pulse" />
-            <span>Step 04 of 04 • Multi-Phase Extraction Timer</span>
+            <span>Step 04 of 04 • Multi-Phase Steeping Timer</span>
           </div>
 
           <h3 className="font-serif text-3xl md:text-4xl font-extrabold text-cream-light drop-shadow-md">
-            {activeMethod?.name || 'Guided Extraction'}
+            {activeMethod?.name || 'Guided Steep'}
           </h3>
           <p className="text-xs md:text-sm text-stone-300 mt-1">
             Phase {currentPhaseIndex + 1} of {phases.length || 1}: <strong className="text-cream-light font-bold">{activePhase?.name}</strong>
@@ -419,12 +411,12 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
             {isCompleted ? (
               <div className="px-4 py-2 rounded-2xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono font-bold text-xs flex items-center gap-2 shadow-lg animate-bounce">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Extraction Complete! ☕</span>
+                <span>Steep Complete! 🍃</span>
               </div>
             ) : isRunning ? (
               <div className="px-4 py-2 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono font-bold text-xs flex items-center gap-2 shadow-lg animate-pulse">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
-                <span>Pouring in Progress</span>
+                <span>Steeping in Progress</span>
               </div>
             ) : (!isRunning && remainingAtPauseRef.current !== null && timeLeft < totalPhaseTime) ? (
               <div className="px-4 py-2 rounded-2xl bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono font-bold text-xs flex items-center gap-2 shadow-md">
@@ -484,7 +476,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
           style={{ touchAction: 'manipulation' }}
           className="relative w-56 h-56 flex items-center justify-center flex-shrink-0 cursor-pointer group select-none transition-transform active:scale-95"
           title={isRunning ? "Click to Pause Timer" : "Click to Chime & Start Countdown"}
-          aria-label={isRunning ? "Pause extraction timer" : "Start extraction timer"}
+          aria-label={isRunning ? "Pause steeping timer" : "Start steeping timer"}
         >
           <svg className="w-full h-full transform -rotate-90 pointer-events-none group-hover:scale-102 transition-transform duration-300" viewBox="0 0 200 200">
             {/* Background Track */}
@@ -502,9 +494,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
               cx="100"
               cy="100"
               r={radius}
-              className={`transition-all duration-300 ${
-                isCoffee ? 'text-[#D2A06E]' : 'text-sage-400'
-              } drop-shadow-[0_0_12px_rgba(210,160,110,0.3)]`}
+              className="transition-all duration-300 text-sage-400 drop-shadow-[0_0_12px_rgba(110,210,160,0.3)]"
               strokeWidth="12"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
@@ -537,7 +527,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
           </div>
         </div>
 
-        {/* Phase Instruction & Active Target Pour Box */}
+        {/* Phase Instruction & Active Target Steep Box */}
         <div className="max-w-md w-full space-y-4 text-center lg:text-left">
           <div className={`p-6 rounded-3xl bg-black/40 border shadow-inner space-y-3 transition-all duration-300 ${
             isAnnouncing
@@ -546,8 +536,8 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
           }`}>
             <div className="flex items-center justify-between gap-2">
               <div className="text-[10px] font-mono uppercase tracking-widest text-stone-400 font-extrabold flex items-center gap-1.5">
-                <Sparkles className={`w-3.5 h-3.5 ${isCoffee ? 'text-[#D2A06E]' : 'text-sage-300'}`} />
-                <span>Active Extraction Instruction</span>
+                <Sparkles className="w-3.5 h-3.5 text-sage-300" />
+                <span>Active Steeping Instruction</span>
               </div>
 
               {/* Dedicated Listen / Replay Instruction Button */}
@@ -559,8 +549,8 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
                     ? 'bg-amber-500/25 border-amber-400/60 text-amber-200 animate-pulse ring-1 ring-amber-400/40'
                     : 'bg-white/10 hover:bg-white/20 border-white/15 text-stone-200 hover:text-white'
                 }`}
-                title="Tap to hear Active Extraction Instruction spoken aloud"
-                aria-label="Hear Active Extraction Instruction"
+                title="Tap to hear Active Steeping Instruction spoken aloud"
+                aria-label="Hear Active Steeping Instruction"
               >
                 <Volume2 className={`w-3.5 h-3.5 ${isAnnouncing ? 'text-amber-300 animate-bounce' : 'text-stone-300'}`} />
                 <span>{isAnnouncing ? 'Speaking...' : '🔊 Listen'}</span>
@@ -568,7 +558,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
             </div>
             
             <p className="text-sm md:text-base text-cream-light font-medium leading-relaxed">
-              {activePhase?.instruction || 'Follow standard extraction pulse pouring technique.'}
+              {activePhase?.instruction || 'Follow gentle pouring technique along vessel walls.'}
             </p>
 
             {/* Active Voice Guidance Banner */}
@@ -584,12 +574,8 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
           {(targetPhaseWaterMl || activeMethod?.tempC || activeMethod?.tempF) && (
             <div className="space-y-2">
               {targetPhaseWaterMl && (
-                <div className={`p-4 rounded-2xl border flex items-center justify-between text-xs font-mono font-bold shadow-md ${
-                  isCoffee
-                    ? 'bg-[#A66E38]/15 text-[#D2A06E] border-[#A66E38]/30'
-                    : 'bg-sage-500/15 text-sage-300 border-sage-500/30'
-                }`}>
-                  <span>Target Pour Water:</span>
+                <div className="p-4 rounded-2xl border flex items-center justify-between text-xs font-mono font-bold shadow-md bg-sage-500/15 text-sage-300 border-sage-500/30">
+                  <span>Target Steep Water:</span>
                   <span className="text-cream-light text-sm font-black">
                     ~{targetPhaseWaterMl} mL ({Math.round(targetPhaseWaterMl / 29.5735 * 10) / 10} fl oz)
                   </span>
@@ -598,19 +584,15 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
 
               {/* Water Temperature Indicator */}
               {(activeMethod?.tempC || activeMethod?.tempF) && (
-                <div className={`p-3.5 rounded-2xl border flex items-center justify-between text-xs font-mono font-bold shadow-md ${
-                  isCoffee
-                    ? 'bg-[#A66E38]/15 text-[#D2A06E] border-[#A66E38]/30'
-                    : 'bg-sage-500/15 text-sage-300 border-sage-500/30'
-                }`}>
+                <div className="p-3.5 rounded-2xl border flex items-center justify-between text-xs font-mono font-bold shadow-md bg-sage-500/15 text-sage-300 border-sage-500/30">
                   <div className="flex items-center gap-1.5">
                     <Thermometer className="w-3.5 h-3.5 text-cyan-300" />
                     <span>Water Temp:</span>
                   </div>
                   <span className="text-cream-light font-black">
                     {unitSystem === 'metric'
-                      ? `${activeMethod?.tempC || 93}°C (${activeMethod?.tempF || 200}°F)`
-                      : `${activeMethod?.tempF || 200}°F (${activeMethod?.tempC || 93}°C)`}
+                      ? `${activeMethod?.tempC || 90}°C (${activeMethod?.tempF || 194}°F)`
+                      : `${activeMethod?.tempF || 194}°F (${activeMethod?.tempC || 90}°C)`}
                   </span>
                 </div>
               )}
@@ -641,13 +623,11 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
           className={`px-7 sm:px-10 py-4 sm:py-4.5 rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center gap-3 shadow-2xl transition-all hover:scale-105 active:scale-95 cursor-pointer ${
             isRunning
               ? 'bg-amber-600 text-cream-light border border-amber-500 shadow-amber-600/30'
-              : isCoffee
-              ? 'btn-tactile-coffee text-[#140C08]'
               : 'btn-tactile-tea text-white'
           }`}
         >
           {isRunning ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current" />}
-          <span>{isRunning ? 'Pause Timer' : (!isRunning && remainingAtPauseRef.current !== null && timeLeft < totalPhaseTime) ? 'Resume Timer' : 'Start Extraction'}</span>
+          <span>{isRunning ? 'Pause Timer' : (!isRunning && remainingAtPauseRef.current !== null && timeLeft < totalPhaseTime) ? 'Resume Timer' : 'Start Steeping'}</span>
         </button>
 
         <button
@@ -681,10 +661,8 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
 
       {/* Phase Roadmap Progress Timeline */}
       <div className="mt-10 pt-8 border-t border-white/[0.08]">
-        <label className={`block text-[11px] font-mono uppercase tracking-[0.2em] font-extrabold mb-4 ${
-          isCoffee ? 'text-[#D2A06E]' : 'text-sage-300'
-        }`}>
-          Extraction Phase Roadmap:
+        <label className="block text-[11px] font-mono uppercase tracking-[0.2em] font-extrabold mb-4 text-sage-300">
+          Steeping Phase Roadmap:
         </label>
         
         <div className="space-y-3">
@@ -696,9 +674,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
                 key={idx}
                 className={`p-4 rounded-2xl border flex items-center justify-between text-xs transition-all ${
                   isCurrent
-                    ? isCoffee
-                      ? 'bg-[#A66E38]/20 border-[#C48B56]/60 text-cream-light font-bold shadow-lg shadow-[#A66E38]/10 backdrop-blur-md'
-                      : 'bg-emerald-500/20 border-emerald-400/60 text-cream-light font-bold shadow-lg shadow-emerald-500/10 backdrop-blur-md'
+                    ? 'bg-emerald-500/20 border-emerald-400/60 text-cream-light font-bold shadow-lg shadow-emerald-500/10 backdrop-blur-md'
                     : isPast
                     ? 'bg-white/[0.03] border-white/[0.04] text-stone-500 line-through'
                     : 'bg-[#120F0D] border-white/[0.08] text-stone-300 shadow'
@@ -707,9 +683,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
                 <div className="flex items-center space-x-3">
                   <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-mono font-extrabold shadow ${
                     isCurrent
-                      ? isCoffee
-                        ? 'bg-[#C48B56] text-[#140C08]'
-                        : 'bg-sage-300 text-slate-950'
+                      ? 'bg-sage-300 text-slate-950'
                       : 'bg-slate-800 text-stone-400 border border-white/10'
                   }`}>
                     {idx + 1}
@@ -732,10 +706,8 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
       {/* Contextual Amazon Affiliate Recommendation Box */}
       <div className="mt-8 p-4 rounded-2xl bg-black/60 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
         <div className="flex items-center space-x-2 text-stone-300">
-          <TimerIcon className={`w-4 h-4 flex-shrink-0 animate-pulse ${
-            isCoffee ? 'text-[#D2A06E]' : 'text-sage-300'
-          }`} />
-          <span>Precision extractions require electric gooseneck kettles with built-in timers & degree PID control (Fellow Stagg EKG, COSORI Smart Kettle).</span>
+          <TimerIcon className="w-4 h-4 flex-shrink-0 animate-pulse text-sage-300" />
+          <span>Precision steeping benefits from variable-temperature gooseneck kettles with degree PID control (Fellow Stagg EKG, COSORI Smart Kettle) to avoid scorching delicate greens and whites.</span>
         </div>
         <a
           href="https://www.amazon.com/s?k=Electric+Gooseneck+Kettle+with+Timer+and+Variable+Temperature&tag=thebrewapp13-20"
@@ -744,11 +716,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
           data-product-name="Electric Gooseneck Kettles with Timers"
           data-link-id="gooseneck_kettles_with_timers"
           data-context="step4_guided_timer_kettle"
-          className={`px-4 py-2 rounded-xl border font-extrabold text-[11px] uppercase tracking-wider transition-all whitespace-nowrap flex-shrink-0 ${
-            isCoffee
-              ? 'bg-[#A66E38]/20 text-[#D2A06E] hover:bg-[#A66E38]/30 border-[#A66E38]/40'
-              : 'bg-sage-500/20 text-sage-300 hover:bg-sage-500/30 border-sage-500/40'
-          }`}
+          className="px-4 py-2 rounded-xl border font-extrabold text-[11px] uppercase tracking-wider transition-all whitespace-nowrap flex-shrink-0 bg-sage-500/20 text-sage-300 hover:bg-sage-500/30 border-sage-500/40"
         >
           Check Kettles with Timers on Amazon ↗
         </a>
@@ -764,7 +732,7 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
             className="w-full sm:w-auto py-4 px-8 rounded-2xl bg-white/[0.08] text-cream-light font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 hover:bg-white/[0.15] transition-all border border-white/[0.12]"
           >
             <ChevronLeft className="w-4 h-4" />
-            <span>Step 03: Grind & Specs</span>
+            <span>Step 03: Leaf Grade & Specs</span>
           </button>
         )}
 
@@ -773,18 +741,16 @@ export default function MultiPhaseTimer({ trackMode, activeMethod, dryDoseGrams,
             type="button"
             onClick={onOpenJournal}
             style={{ touchAction: 'manipulation' }}
-            className={`w-full sm:w-auto py-4 px-9 rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-2xl hover:scale-105 active:scale-95 transition-all ${
-              isCoffee ? 'btn-tactile-coffee text-[#140C08]' : 'btn-tactile-tea text-white'
-            }`}
+            className="w-full sm:w-auto py-4 px-9 rounded-2xl font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-2xl hover:scale-105 active:scale-95 transition-all btn-tactile-tea text-white"
           >
             <BookOpen className="w-4 h-4" />
-            <span>Log This Brew to Journal</span>
+            <span>Log This Steep to Journal</span>
           </button>
         )}
       </div>
 
-      {/* V60 Pro Tip Masterclass Modal Popup */}
-      <V60ProTipModal
+      {/* Tea Steeping Pro Tip Masterclass Modal Popup */}
+      <TeaSteepingProTipModal
         isOpen={isProTipOpen}
         onClose={() => setIsProTipOpen(false)}
       />

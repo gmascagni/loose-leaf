@@ -14,11 +14,11 @@ export function getMethodJsonLd(method) {
     "supply": [
       {
         "@type": "HowToSupply",
-        "name": method.category === 'tea' ? "Specialty Loose Leaf Tea" : "Specialty Single-Origin Coffee"
+        "name": "Specialty Loose Leaf Tea & Botanicals"
       },
       {
         "@type": "HowToSupply",
-        "name": `Hot Water (${method.tempF || 200}°F / ${method.tempC || 93}°C)`
+        "name": `Hot Water (${method.tempF || 190}°F / ${method.tempC || 88}°C)`
       }
     ],
     "tool": [
@@ -28,7 +28,7 @@ export function getMethodJsonLd(method) {
       },
       {
         "@type": "HowToTool",
-        "name": "Burr Grinder & Precision Scale"
+        "name": "Precision Gram Scale & Tea Strainer / Gaiwan"
       },
       {
         "@type": "HowToTool",
@@ -48,7 +48,7 @@ export function updatePageSeo(title, description, canonicalUrl, ogImage) {
   if (typeof document === 'undefined') return;
 
   // Title
-  document.title = title ? `${title} | The Brew App` : 'The Brew App: The Art of Extraction | Precision Coffee & Tea Guide';
+  document.title = title ? `${title} | LooseLeaf` : 'LooseLeaf: The Fine Tea & Steeping Guide';
 
   // Description
   const metaDesc = document.querySelector('meta[name="description"]');

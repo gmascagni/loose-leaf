@@ -3,7 +3,7 @@ import {
   Store,
   MapPin,
   ExternalLink,
-  Coffee,
+  Leaf,
   Sparkles,
   Droplet,
   Award,
@@ -32,15 +32,16 @@ import { trackEvent } from '../utils/analytics';
 import { useAppOrchestrator } from '../context/AppOrchestratorContext';
 
 export default function RoasterProfilePage({
-  initialRoasterId = 'methodical',
+  initialRoasterId = 'ippodo',
   onBackToApp,
-  onBrewCoffee,
+  onBrewTea,
+  onBrew,
   onOpenWaterLabWithProfile,
   onOpenRoasterPortalWithBean,
   onOpenRoasterInfo
 }) {
   const [activeRoasterId, setActiveRoasterId] = useState(initialRoasterId);
-  const [activeTab, setActiveTab] = useState('coffees'); // 'coffees' | 'story' | 'water' | 'cafes'
+  const [activeTab, setActiveTab] = useState('teas'); // 'teas' | 'story' | 'water' | 'cafes'
   const [copiedLink, setCopiedLink] = useState(false);
   const [scannedBeanName, setScannedBeanName] = useState('');
   const [savedToJournalId, setSavedToJournalId] = useState(null);
@@ -95,35 +96,35 @@ export default function RoasterProfilePage({
     }
   };
 
-  const handleSaveToJournal = (coffee) => {
+  const handleSaveToJournal = (tea) => {
     try {
       const existing = JSON.parse(localStorage.getItem('the_brew_app_journal_v1') || '[]');
       const newEntry = {
         id: Date.now().toString(),
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        trackMode: 'coffee',
-        methodName: coffee.brewMethod ? coffee.brewMethod.replace(/_/g, ' ') : 'Pour Over',
-        beanName: coffee.beanName,
+        trackMode: 'tea',
+        methodName: tea.brewMethod ? tea.brewMethod.replace(/_/g, ' ') : 'Gongfu Infusion',
+        beanName: tea.teaName || tea.beanName, teaName: tea.teaName || tea.beanName,
         roaster: roaster.name,
-        doseStr: `${coffee.dryDoseGrams || 18} g`,
-        waterStr: `${coffee.waterGrams || 297} mL`,
-        ratioStr: `1 : ${coffee.recommendedRatio || 16.5}`,
-        grindStr: coffee.recommendedGrind || 'Medium-Fine',
-        tempStr: `${coffee.tempF || 202}°F`,
+        doseStr: `${tea.dryDoseGrams || 5} g`,
+        waterStr: `${tea.waterGrams || 250} mL`,
+        ratioStr: `1 : ${tea.recommendedRatio || 50}`,
+        grindStr: tea.leafGrade || tea.recommendedGrind || 'Whole Leaf', leafGrade: tea.leafGrade || 'Whole Leaf',
+        tempStr: `${tea.tempF || 185}°F`,
         rating: 5,
         isFavorite: true,
-        tastingNotes: coffee.tastingNotes || [],
-        notes: `${coffee.description || ''} (Origin: ${coffee.origin}, Elevation: ${coffee.elevation})`
+        tastingNotes: tea.tastingNotes || [],
+        notes: `${tea.description || ''} (Origin: ${tea.origin}, Elevation: ${tea.elevation})`
       };
       localStorage.setItem('the_brew_app_journal_v1', JSON.stringify([newEntry, ...existing]));
-      setSavedToJournalId(coffee.id);
+      setSavedToJournalId(tea.id);
       setTimeout(() => setSavedToJournalId(null), 2500);
     } catch (err) {
       console.error('Error saving to journal:', err);
     }
   };
 
-  const scannedCoffee = scannedBeanName && roaster.coffees ? roaster.coffees.find(
+  const scannedTea = scannedBeanName && roaster.teas ? roaster.teas.find(
     (c) => c.beanName.toLowerCase() === scannedBeanName.toLowerCase() ||
            c.beanName.toLowerCase().includes(scannedBeanName.toLowerCase()) ||
            scannedBeanName.toLowerCase().includes(c.beanName.toLowerCase())
@@ -255,18 +256,18 @@ export default function RoasterProfilePage({
             {roaster.isCustomRoaster ? (
               <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs font-extrabold border border-emerald-500/40 flex items-center gap-1.5 shadow-sm">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Verified Independent Roastery</span>
+                <span>Verified Independent Tea Master</span>
               </span>
             ) : (
               <span className="px-3 py-1 rounded-full bg-amber-500/25 text-amber-300 font-mono text-xs font-extrabold border border-amber-500/50 flex items-center gap-1.5 shadow-sm">
                 <Sparkles className="w-3.5 h-3.5 text-amber-gold" />
-                <span>Showcase Roaster Partner</span>
+                <span>Showcase Tea House Partner</span>
               </span>
             )}
 
             <span className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-gold font-mono text-xs font-bold border border-amber-500/30 flex items-center gap-1.5">
               <Store className="w-3.5 h-3.5" />
-              <span>Specialty Coffee Roastery</span>
+              <span>Specialty Tea Purveyor & Garden</span>
             </span>
 
             <span className="px-3 py-1 rounded-full bg-white/[0.05] text-cream-soft font-mono text-xs border border-white/10 flex items-center gap-1.5">
@@ -281,7 +282,7 @@ export default function RoasterProfilePage({
 
             <span className="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Smart Bag Verified Spec</span>
+              <span>Smart Tin Verified Spec</span>
             </span>
           </div>
 
@@ -322,7 +323,7 @@ export default function RoasterProfilePage({
                   Showcase Preview
                 </span>
                 <span className="leading-relaxed">
-                  Featured roaster showcase demonstrating The Brew App Smart Bag ecosystem. Coffee dial-in recipes are tuned to roaster specifications.
+                  Featured tea purveyor showcase demonstrating the LooseLeaf Smart Tin ecosystem. Steeping parameters are tuned to garden specifications.
                 </span>
               </div>
               {onOpenRoasterInfo && (
@@ -353,13 +354,13 @@ export default function RoasterProfilePage({
                   <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-amber-gold bg-amber-950/80 px-2 py-0.5 rounded border border-amber-gold/30">
                     60-Second Video Demo
                   </span>
-                  <span className="text-[11px] font-mono text-cream-soft/70">Packaging Barcode Scan & V60 Timer</span>
+                  <span className="text-[11px] font-mono text-cream-soft/70">Packaging Barcode Scan & Steeping Timer</span>
                 </div>
                 <h3 className="font-serif text-base sm:text-lg font-bold text-cream-light leading-snug">
-                  Watch How Smart Bag Scanning Works for {roaster.shortName || roaster.name}
+                  Watch How Smart Tin Scanning Works for {roaster.shortName || roaster.name}
                 </h3>
                 <p className="text-xs text-cream-soft/80 font-sans max-w-xl">
-                  See how smartphone camera bag scanning automatically loads the roaster's golden ratio, water temperature, and synchronized multi-phase timer.
+                  See how smartphone camera tin scanning automatically loads the purveyor's infusion ratio, water temperature, and synchronized multi-phase timer.
                 </p>
               </div>
             </div>
@@ -404,20 +405,20 @@ export default function RoasterProfilePage({
 
             <button
               onClick={() => {
-                setActiveTab('coffees');
+                setActiveTab('teas');
                 document.getElementById('roaster-tabs')?.scrollIntoView({ behavior: 'smooth' });
               }}
               className="px-5 py-3 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] text-cream-light font-mono text-xs font-bold border border-white/15 flex items-center gap-2 transition"
             >
-              <Coffee className="w-3.5 h-3.5 text-amber-gold" />
-              <span>Browse Coffees & Dial-In Recipes ({roaster.coffees?.length || 0})</span>
+              <Leaf className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Browse Teas & Steeping Recipes ({roaster.teas?.length || 0})</span>
             </button>
 
             <button
               type="button"
               onClick={() => setIsVideoModalOpen(true)}
               className="px-5 py-3 rounded-2xl bg-[#2A1810] hover:bg-[#3D2216] text-amber-gold border border-amber-gold/50 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-amber-950/40 hover:scale-105 active:scale-95 transition"
-              title="Watch 60s Smart Bag Walkthrough Video & Live V60 Dial-In"
+              title="Watch 60s Smart Tin Walkthrough Video & Live Steeping Timer"
             >
               <Play className="w-3.5 h-3.5 fill-current text-amber-gold" />
               <span>Watch Video (60s)</span>
@@ -436,15 +437,15 @@ export default function RoasterProfilePage({
         <div id="roaster-tabs" className="border-b border-white/10 pt-4">
           <div className="flex items-center gap-2 overflow-x-auto pb-3 text-xs font-mono">
             <button
-              onClick={() => setActiveTab('coffees')}
+              onClick={() => setActiveTab('teas')}
               className={`px-4 py-2.5 rounded-xl transition flex items-center gap-2 font-bold whitespace-nowrap ${
-                activeTab === 'coffees'
+                activeTab === 'teas'
                   ? 'bg-amber-gold text-espresso-950 shadow'
                   : 'text-cream-soft hover:text-cream-light bg-white/[0.04]'
               }`}
             >
-              <Coffee className="w-4 h-4" />
-              <span>Certified Coffees & Dial-In Recipes ({roaster.coffees.length})</span>
+              <Leaf className="w-4 h-4" />
+              <span>Certified Teas & Steeping Recipes ({roaster.teas.length})</span>
             </button>
 
             <button
@@ -480,19 +481,19 @@ export default function RoasterProfilePage({
               }`}
             >
               <Building className="w-4 h-4" />
-              <span>Cafes & Roastery Labs ({roaster.cafes.length})</span>
+              <span>Tearooms & Tasting Rooms ({roaster.cafes.length})</span>
             </button>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* TAB 1: CERTIFIED COFFEE LINEUP & DIAL-IN STATION                          */}
+        {/* TAB 1: CERTIFIED TEA LINEUP & STEEPING STATION                          */}
         {/* ========================================================================= */}
-        {activeTab === 'coffees' && (
+        {activeTab === 'teas' && (
           <div className="space-y-8 animate-fade-in">
             
             {/* Scanned Bag Notification Banner (rendered when arriving from a bag barcode scan) */}
-            {scannedCoffee && (
+            {scannedTea && (
               <div className="p-5 rounded-3xl bg-gradient-to-r from-emerald-950/60 via-black/80 to-amber-950/40 border-2 border-emerald-500/60 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
                 <div className="flex items-start sm:items-center gap-3.5">
                   <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
@@ -501,17 +502,17 @@ export default function RoasterProfilePage({
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="px-2 py-0.5 rounded-md bg-emerald-500/30 text-emerald-300 font-mono text-[10px] font-bold uppercase tracking-wider border border-emerald-500/50">
-                        ✨ Smart Bag Scanned
+                        ✨ Smart Tin Scanned
                       </span>
                       <span className="text-xs font-mono text-cream-soft">
                         Matched from your physical packaging
                       </span>
                     </div>
                     <h4 className="font-serif text-lg sm:text-xl font-bold text-cream-light mt-0.5">
-                      {scannedCoffee.beanName}
+                      {scannedTea.beanName}
                     </h4>
                     <p className="text-xs text-cream-soft font-sans">
-                      Roaster golden ratio 1:{scannedCoffee.recommendedRatio} • {scannedCoffee.tempF}°F • {scannedCoffee.recommendedGrind} grind
+                      Purveyor ratio 1:{scannedTea.recommendedRatio} • {scannedTea.tempF}°F • {scannedTea.leafGrade || scannedTea.recommendedGrind}
                     </p>
                   </div>
                 </div>
@@ -519,25 +520,24 @@ export default function RoasterProfilePage({
                 <div className="flex items-center gap-2.5 shrink-0">
                   <button
                     onClick={() => {
-                      const payload = { ...scannedCoffee, roaster: roaster.name };
-                      if (onBrewCoffee) {
-                        onBrewCoffee(payload);
-                      }
+                      const payload = { ...scannedTea, roaster: roaster.name };
+                      const brewFn = onBrewTea || onBrew;
+                      if (brewFn) { brewFn(payload); }
                       if (orchestrator) {
                         orchestrator.brew(payload);
                       }
                     }}
                     className="px-5 py-3 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-espresso-950 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-emerald-500/20 hover:scale-105 active:scale-95 transition"
                   >
-                    <Coffee className="w-4 h-4" />
-                    <span>Start Brew Timer</span>
+                    <Sparkles className="w-4 h-4" />
+                    <span>Start Steep Timer</span>
                   </button>
                   <button
-                    onClick={() => handleSaveToJournal(scannedCoffee)}
+                    onClick={() => handleSaveToJournal(scannedTea)}
                     className="p-3 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 text-cream-light transition"
-                    title="Save this bag to your personal coffee cellar"
+                    title="Save this tin to your personal tea cellar"
                   >
-                    <Bookmark className={`w-4 h-4 ${savedToJournalId === scannedCoffee.id ? 'text-amber-gold fill-amber-gold' : 'text-cream-soft'}`} />
+                    <Bookmark className={`w-4 h-4 ${savedToJournalId === scannedTea.id ? 'text-amber-gold fill-amber-gold' : 'text-cream-soft'}`} />
                   </button>
                 </div>
               </div>
@@ -548,27 +548,27 @@ export default function RoasterProfilePage({
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-amber-gold animate-ping" />
                   <h3 className="font-serif text-lg sm:text-xl font-bold text-cream-light">
-                    Roaster-Certified Dial-In Station
+                    Purveyor-Certified Dial-In Station
                   </h3>
                 </div>
                 <p className="text-xs text-cream-soft font-sans">
-                  Click <strong>"Dial-In & Brew"</strong> on any lot below to automatically transfer the roaster's golden ratio, water temperature, grind setting, and bloom steps into The Brew App live timer.
+                  Click <strong>"Dial-In & Steep"</strong> on any lot below to automatically transfer the purveyor's infusion ratio, water temperature, and steeping steps into the LooseLeaf live timer.
                 </p>
               </div>
 
               <span className="px-3 py-1.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-xs font-mono text-amber-300 font-bold shrink-0">
-                Official Dial-In Recipes
+                Official Steeping Recipes
               </span>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {roaster.coffees.map((coffee) => {
-                const isThisCoffeeScanned = scannedCoffee && scannedCoffee.id === coffee.id;
+              {roaster.teas.map((tea) => {
+                const isThisTeaScanned = scannedTea && scannedTea.id === tea.id;
                 return (
                   <div
-                    key={coffee.id}
+                    key={tea.id}
                     className={`rounded-3xl bg-black/40 border p-6 flex flex-col justify-between gap-6 transition-all duration-300 shadow-xl group hover:shadow-2xl relative overflow-hidden ${
-                      isThisCoffeeScanned
+                      isThisTeaScanned
                         ? 'border-emerald-500/60 ring-2 ring-emerald-500/30 bg-emerald-950/10'
                         : 'border-white/10 hover:border-amber-gold/50 hover:shadow-amber-gold/5'
                     }`}
@@ -577,34 +577,34 @@ export default function RoasterProfilePage({
                     <div className="space-y-4">
                       <div className="flex items-center justify-between gap-2">
                         <span className={`px-2.5 py-1 rounded-full font-mono text-[10px] font-bold border ${
-                          isThisCoffeeScanned
+                          isThisTeaScanned
                             ? 'bg-emerald-500/25 text-emerald-300 border-emerald-500/50'
                             : 'bg-amber-500/20 text-amber-gold border-amber-500/30'
                         }`}>
-                          {isThisCoffeeScanned ? '✨ Scanned from Your Bag' : `${coffee.badge} • Roaster Spec`}
+                          {isThisTeaScanned ? '✨ Scanned from Your Tin' : `${tea.badge} • Single Garden`}
                         </span>
                         <span className="font-mono text-[11px] text-emerald-400 font-bold flex items-center gap-1">
                           <Award className="w-3.5 h-3.5" />
-                          <span>SCA {coffee.cuppingScore}</span>
+                          <span>Grade {tea.cuppingScore}</span>
                         </span>
                       </div>
 
                       <div>
                         <h4 className="font-serif text-xl font-bold text-cream-light group-hover:text-amber-gold transition leading-snug">
-                          {coffee.beanName}
+                          {tea.beanName}
                         </h4>
                         <p className="text-xs font-mono text-cream-soft/70 mt-1">
-                          {coffee.origin}
+                          {tea.origin}
                         </p>
                       </div>
 
                       <p className="text-xs text-cream-soft font-sans leading-relaxed">
-                        {coffee.description}
+                        {tea.description}
                       </p>
 
                       {/* Tasting Notes Chips */}
                       <div className="flex flex-wrap gap-1.5">
-                        {coffee.tastingNotes.map((note, i) => (
+                        {tea.tastingNotes.map((note, i) => (
                           <span
                             key={i}
                             className="px-2.5 py-0.5 rounded-lg bg-white/[0.05] border border-white/10 text-[11px] font-mono text-cream-light"
@@ -618,15 +618,15 @@ export default function RoasterProfilePage({
                       <div className="p-3.5 rounded-2xl bg-[#140C08] border border-white/5 space-y-1.5 text-xs font-mono">
                         <div className="flex justify-between text-cream-soft">
                           <span>Process:</span>
-                          <span className="text-cream-light font-bold">{coffee.process}</span>
+                          <span className="text-cream-light font-bold">{tea.process}</span>
                         </div>
                         <div className="flex justify-between text-cream-soft">
                           <span>Varietal:</span>
-                          <span className="text-cream-light">{coffee.varietal}</span>
+                          <span className="text-cream-light">{tea.varietal}</span>
                         </div>
                         <div className="flex justify-between text-cream-soft">
                           <span>Elevation:</span>
-                          <span className="text-amber-gold">{coffee.elevation}</span>
+                          <span className="text-amber-gold">{tea.elevation}</span>
                         </div>
                       </div>
 
@@ -634,27 +634,27 @@ export default function RoasterProfilePage({
                       <div className="p-4 rounded-2xl bg-amber-500/[0.08] border border-amber-500/25 space-y-2">
                         <div className="flex items-center justify-between text-[11px] font-mono text-amber-gold font-bold uppercase tracking-wider">
                           <span>Dial-In Parameters:</span>
-                          <span className="capitalize">{coffee.brewMethod.replace(/_/g, ' ')}</span>
+                          <span className="capitalize">{tea.brewMethod.replace(/_/g, ' ')}</span>
                         </div>
 
                         <div className="grid grid-cols-3 gap-2 text-center font-mono text-xs">
                           <div className="p-2 rounded-xl bg-black/40 border border-white/5">
                             <span className="text-[10px] text-cream-soft/60 block">Ratio</span>
-                            <strong className="text-cream-light font-bold">1:{coffee.recommendedRatio}</strong>
+                            <strong className="text-cream-light font-bold">1:{tea.recommendedRatio}</strong>
                           </div>
                           <div className="p-2 rounded-xl bg-black/40 border border-white/5">
                             <span className="text-[10px] text-cream-soft/60 block">Water Temp</span>
-                            <strong className="text-amber-gold font-bold">{coffee.tempF}°F</strong>
+                            <strong className="text-amber-gold font-bold">{tea.tempF}°F</strong>
                           </div>
                           <div className="p-2 rounded-xl bg-black/40 border border-white/5">
                             <span className="text-[10px] text-cream-soft/60 block">Time</span>
-                            <strong className="text-cream-light font-bold">{coffee.brewTime}</strong>
+                            <strong className="text-cream-light font-bold">{tea.brewTime}</strong>
                           </div>
                         </div>
 
                         <div className="text-[11px] font-mono text-cream-soft/80 flex items-center justify-between pt-1">
                           <span>Grind Setting:</span>
-                          <span className="text-cream-light font-bold">{coffee.recommendedGrind}</span>
+                          <span className="text-cream-light font-bold">{tea.leafGrade || tea.recommendedGrind}</span>
                         </div>
                       </div>
                     </div>
@@ -666,48 +666,47 @@ export default function RoasterProfilePage({
                       <button
                         onClick={() => {
                           const payload = {
-                            ...coffee,
+                            ...tea,
                             roaster: roaster.name
                           };
-                          if (onBrewCoffee) {
-                            onBrewCoffee(payload);
-                          }
+                          const brewFn = onBrewTea || onBrew;
+                          if (brewFn) { brewFn(payload); }
                           if (orchestrator) {
                             orchestrator.brew(payload);
                           }
                         }}
                         className="w-full py-3 rounded-xl bg-amber-gold hover:bg-amber-gold/90 text-espresso-950 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg transition hover:scale-[1.02] active:scale-[0.98]"
                       >
-                        <Coffee className="w-4 h-4" />
-                        <span>Dial-In & Brew ({coffee.dryDoseGrams}g : {coffee.waterGrams}g)</span>
+                        <Sparkles className="w-4 h-4" />
+                        <span>Dial-In & Steep ({tea.dryDoseGrams || 5}g : {tea.waterGrams || 250}g)</span>
                       </button>
 
                       {/* Secondary Customer Actions: Reorder from Roaster & Save to Cellar */}
                       <div className="grid grid-cols-2 gap-2">
                         {/* Buy Direct from Roaster */}
                         <a
-                          href={coffee.directUrl || roaster.shopUrl}
+                          href={tea.directUrl || roaster.shopUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="py-2.5 px-3 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-xs font-mono text-cream-light flex items-center justify-center gap-1.5 transition font-bold"
-                          title="Purchase directly on roaster's website"
+                          title="Purchase directly on purveyor's website"
                         >
                           <ExternalLink className="w-3.5 h-3.5 text-amber-gold shrink-0" />
-                          <span className="truncate">Buy Beans ({coffee.price || '$22.00'})</span>
+                          <span className="truncate">Buy Tea ({tea.price || '$22.00'})</span>
                         </a>
 
                         {/* Save to Personal Cellar / Journal */}
                         <button
-                          onClick={() => handleSaveToJournal(coffee)}
+                          onClick={() => handleSaveToJournal(tea)}
                           className={`py-2.5 px-3 rounded-xl border text-xs font-mono flex items-center justify-center gap-1.5 transition font-bold ${
-                            savedToJournalId === coffee.id
+                            savedToJournalId === tea.id
                               ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                               : 'bg-white/[0.06] hover:bg-white/[0.12] border-white/10 text-cream-light'
                           }`}
-                          title="Save this lot to your personal coffee cellar"
+                          title="Save this lot to your personal tea cellar"
                         >
-                          <Bookmark className={`w-3.5 h-3.5 shrink-0 ${savedToJournalId === coffee.id ? 'text-emerald-400 fill-emerald-400' : 'text-amber-gold'}`} />
-                          <span className="truncate">{savedToJournalId === coffee.id ? 'Saved in Cellar!' : 'Save to Cellar'}</span>
+                          <Bookmark className={`w-3.5 h-3.5 shrink-0 ${savedToJournalId === tea.id ? 'text-emerald-400 fill-emerald-400' : 'text-amber-gold'}`} />
+                          <span className="truncate">{savedToJournalId === tea.id ? 'Saved in Cellar!' : 'Save to Cellar'}</span>
                         </button>
                       </div>
 
@@ -762,10 +761,10 @@ export default function RoasterProfilePage({
                 </div>
                 <div>
                   <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-gold">
-                    Roaster Engineering & Machinery
+                    Artisan Tea Processing & Firing Craft
                   </span>
                   <h4 className="font-serif text-xl font-bold text-cream-light">
-                    The Science of Heat Transfer
+                    The Science of Oxidation & Firing
                   </h4>
                 </div>
               </div>
@@ -804,10 +803,10 @@ export default function RoasterProfilePage({
                   </div>
                   <div>
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400">
-                      Roaster-Approved Mineral Profile
+                      Purveyor-Approved Mineral Profile
                     </span>
                     <h3 className="font-serif text-2xl font-bold text-cream-light">
-                      {roaster.name} Cupping Room Water Specification
+                      {roaster.name} Tasting Room Water Specification
                     </h3>
                   </div>
                 </div>
@@ -923,14 +922,14 @@ export default function RoasterProfilePage({
             </div>
             <button
               onClick={() => {
-                const defaultBean = roaster.coffees && roaster.coffees[0];
+                const defaultBean = roaster.teas && roaster.teas[0];
                 const payload = {
                   roaster: roaster.name,
                   beanName: defaultBean?.beanName || '',
-                  brewMethod: defaultBean?.brewMethod || 'pour_over',
-                  recommendedRatio: defaultBean?.recommendedRatio || 16.5,
-                  tempF: defaultBean?.tempF || 202,
-                  recommendedGrind: defaultBean?.recommendedGrind || 'Medium-Fine',
+                  brewMethod: defaultBean?.brewMethod || 'gongfu_tea',
+                  recommendedRatio: defaultBean?.recommendedRatio || 50,
+                  tempF: defaultBean?.tempF || 185,
+                  recommendedGrind: defaultBean?.leafGrade || defaultBean?.recommendedGrind || 'Whole Leaf',
                   upc: defaultBean?.upc || '',
                   customUrl: defaultBean?.directUrl || roaster.shopUrl
                 };
@@ -941,10 +940,10 @@ export default function RoasterProfilePage({
                 }
               }}
               className="px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-cream-soft hover:text-cream-light border border-white/10 flex items-center gap-2 transition"
-              title="Open Smart Bag Packaging & Label Studio"
+              title="Open Smart Tin Packaging & Label Studio"
             >
               <QrCode className="w-3.5 h-3.5 text-amber-gold" />
-              <span>Roaster Packaging & Label Studio</span>
+              <span>Purveyor Packaging & Label Studio</span>
             </button>
           </div>
         )}
@@ -964,7 +963,7 @@ export default function RoasterProfilePage({
             <div className="p-4 border-b border-white/10 flex items-center justify-between bg-black/40">
               <div className="flex items-center gap-2">
                 <Play className="w-4 h-4 text-amber-gold fill-current" />
-                <span className="font-mono text-xs font-bold text-amber-gold uppercase tracking-wider">Smart Bag Dial-In Walkthrough</span>
+                <span className="font-mono text-xs font-bold text-amber-gold uppercase tracking-wider">Smart Tin Dial-In Walkthrough</span>
               </div>
               <button 
                 type="button"
@@ -985,8 +984,8 @@ export default function RoasterProfilePage({
               />
             </div>
             <div className="p-3.5 bg-black/60 text-center border-t border-white/10 space-y-1">
-              <p className="text-xs text-stone-200 font-mono font-bold">Precision V60 Pour-Over Dial-In & Live Timer</p>
-              <p className="text-[11px] text-amber-gold/80 font-mono">Camera Barcode Scanning • Multi-Phase Bloom Coaching</p>
+              <p className="text-xs text-stone-200 font-mono font-bold">Precision Smart Tin Dial-In & Live Timer</p>
+              <p className="text-[11px] text-amber-gold/80 font-mono">Camera Barcode Scanning • Multi-Phase Steeping Coaching</p>
             </div>
           </div>
         </div>
